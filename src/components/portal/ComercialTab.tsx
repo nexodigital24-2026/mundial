@@ -278,6 +278,10 @@ export default function ComercialTab() {
               <Layers className="w-4 h-4 mr-1" />
               Mapa de Posiciones
             </TabsTrigger>
+            <TabsTrigger value="pastillas">
+              <Megaphone className="w-4 h-4 mr-1" />
+              Pastillas
+            </TabsTrigger>
           </TabsList>
           <Button size="sm" onClick={openCreate}>
             <Plus className="w-4 h-4 mr-1" />
@@ -512,9 +516,134 @@ export default function ComercialTab() {
             </CardContent>
           </Card>
         </TabsContent>
-      </Tabs>
 
-      {/* Create/Edit Dialog */}
+        {/* Pastillas Grid Tab */}
+        <TabsContent value="pastillas">
+          <div className="space-y-4">
+            {(Object.keys(positionLabels) as BannerPosition[]).map(pos => {
+              const posBanners = banners.filter(b => b.position === pos);
+              const activePosBanners = posBanners.filter(b => b.active);
+              if (posBanners.length === 0) return null;
+
+              return (
+                <Card key={pos}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm font-bold flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: positionPresets[pos].bgColor }} />
+                        {positionLabels[pos]}
+                        <Badge variant="secondary" className="text-[10px]">
+                          {activePosBanners.length}/{posBanners.length} activos
+                        </Badge>
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {posBanners.map((banner) => (
+                        <div
+                          key={banner.id}
+                          className={`relative rounded-lg border overflow-hidden transition-all ${banner.active ? 'border-border hover:shadow-md' : 'border-border opacity-50'}`}
+                        >
+                          {/* Pastilla preview */}
+                          <div
+                            className={`${borderRadiusClass[banner.borderRadius]} relative overflow-hidden`}
+                            style={{
+                              backgroundColor: banner.bgColor,
+                              aspectRatio: `${banner.width}/${banner.height}`,
+                              maxWidth: '100%',
+                            }}
+                          >
+                            {/* Shimmer effect */}
+                            <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500" style={{
+                              background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.15) 55%, transparent 60%)',
+                            }} />
+                            <div className="absolute inset-0 flex flex-col justify-between px-3 py-1.5">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <div className="w-5 h-5 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0">
+                                  <Megaphone className="w-2.5 h-2.5" style={{ color: getContrastColor(banner.bgColor) }} />
+                                </div>
+                                <p className="text-xs font-semibold truncate" style={{ color: getContrastColor(banner.bgColor) }}>
+                                  {banner.title}
+                                </p>
+                              </div>
+                              <p className="text-[8px] opacity-40" style={{ color: getContrastColor(banner.bgColor) }}>
+                                Publicado por Nuevo Día
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Controls below preview */}
+                          <div className="p-2 bg-muted/30 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] text-muted-foreground">
+                                {banner.width}×{banner.height} • {banner.displayDuration}s
+                              </span>
+                              <Switch
+                                checked={banner.active}
+                                onCheckedChange={() => toggleBannerActive(banner.id)}
+                                className="scale-75"
+                              />
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Input
+                                type="number"
+                                min="50"
+                                max="2000"
+                                value={banner.width}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || banner.width;
+                                  setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, width: val } : b));
+                                }}
+                                className="h-6 text-[10px] w-16"
+                                placeholder="Ancho"
+                              />
+                              <span className="text-[10px] text-muted-foreground">×</span>
+                              <Input
+                                type="number"
+                                min="50"
+                                max="2000"
+                                value={banner.height}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || banner.height;
+                                  setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, height: val } : b));
+                                }}
+                                className="h-6 text-[10px] w-16"
+                                placeholder="Alto"
+                              />
+                              <Input
+                                type="number"
+                                min="1"
+                                max="60"
+                                value={banner.displayDuration}
+                                onChange={(e) => {
+                                  const val = parseInt(e.target.value) || banner.displayDuration;
+                                  setBanners(prev => prev.map(b => b.id === banner.id ? { ...b, displayDuration: val } : b));
+                                }}
+                                className="h-6 text-[10px] w-12"
+                                placeholder="Dur."
+                              />
+                              <span className="text-[10px] text-muted-foreground">s</span>
+                            </div>
+                            {/* Position indicator */}
+                            <div className="flex items-center gap-1">
+                              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: positionPresets[banner.position].bgColor }} />
+                              <span className="text-[9px] text-muted-foreground">{positionLabels[banner.position]}</span>
+                              <Badge variant="outline" className="text-[8px] ml-auto">
+                                Prioridad {banner.priority}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </TabsContent>
+      </Tabs>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>

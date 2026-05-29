@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { banners as defaultBanners, type Banner, type BannerPosition } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { X, ExternalLink, Megaphone, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ExternalLink, Megaphone, ChevronLeft, ChevronRight, Timer } from 'lucide-react';
 
 interface BannerDisplayProps {
   position: BannerPosition;
@@ -40,6 +40,23 @@ function incrementImpressions(_bannerId: string) {
 function BannerPastilla({ banner, style, className = '' }: { banner: Banner; style?: React.CSSProperties; className?: string }) {
   const aspectRatio = banner.width / banner.height;
   const radius = borderRadiusMap[banner.borderRadius];
+  const [countdown, setCountdown] = useState(banner.displayDuration);
+  const [isHovered, setIsHovered] = useState(false);
+  const bannerIdRef = useRef(banner.id);
+
+  // Countdown timer for display duration
+  useEffect(() => {
+    bannerIdRef.current = banner.id;
+    const timer = setInterval(() => {
+      setCountdown(prev => {
+        if (prev <= 1) {
+          return banner.displayDuration; // Reset for next rotation
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [banner.displayDuration, banner.id]);
 
   return (
     <a
@@ -50,26 +67,68 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
       style={{
         backgroundColor: banner.bgColor,
         aspectRatio: `${aspectRatio}`,
-        maxWidth: `min(${banner.width}px, 100%)`,
+        maxWidth: `min(${banner.width}px, 90%)`,
         ...style,
       }}
       onClick={() => incrementImpressions(banner.id)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Shimmer/shine effect on hover */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-opacity duration-500"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 55%, transparent 60%)',
+          animation: isHovered ? 'shimmer 1.5s ease-in-out infinite' : 'none',
+        }}
+      />
+
       {/* Content overlay */}
-      <div className="absolute inset-0 flex items-center justify-between px-4 py-2">
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0">
-            <Megaphone className="w-4 h-4 text-current opacity-70" />
+      <div className="absolute inset-0 flex flex-col justify-between px-4 py-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0">
+              <Megaphone className="w-4 h-4 text-current opacity-70" />
+            </div>
+            <div className="min-w-0">
+              <p className="font-semibold text-sm truncate group-hover:underline" style={{ color: getContrastColor(banner.bgColor) }}>
+                {banner.title}
+              </p>
+              <Badge variant="secondary" className="text-[9px] mt-0.5">{positionLabels[banner.position]}</Badge>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="font-semibold text-sm truncate group-hover:underline" style={{ color: getContrastColor(banner.bgColor) }}>
-              {banner.title}
-            </p>
-            <Badge variant="secondary" className="text-[9px] mt-0.5">{positionLabels[banner.position]}</Badge>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Countdown timer badge */}
+            <Badge
+              className="text-[9px] border-0 flex items-center gap-1"
+              style={{
+                backgroundColor: 'rgba(0,0,0,0.2)',
+                color: getContrastColor(banner.bgColor),
+              }}
+            >
+              <Timer className="w-2.5 h-2.5" />
+              {countdown}s
+            </Badge>
+            <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" style={{ color: getContrastColor(banner.bgColor) }} />
           </div>
         </div>
-        <ExternalLink className="w-4 h-4 flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity" style={{ color: getContrastColor(banner.bgColor) }} />
+        {/* Published by text */}
+        <p
+          className="text-[9px] opacity-50 font-medium mt-auto"
+          style={{ color: getContrastColor(banner.bgColor) }}
+        >
+          Publicado por Nuevo Día
+        </p>
       </div>
+
+      {/* Shimmer keyframe animation via inline style */}
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </a>
   );
 }

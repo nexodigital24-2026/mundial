@@ -1196,6 +1196,91 @@ export const banners: Banner[] = [
   },
 ];
 
+// ==================== SLIDER SLIDES (4) ====================
+export interface SliderSlide {
+  id: string;
+  title: string;          // Main headline (e.g., "Argentina golea 4-0")
+  subtitle: string;       // Subheading (e.g., "Messi brillante con doblete")
+  matchId: string | null; // Link to a match (optional)
+  homeTeamId: string | null;
+  awayTeamId: string | null;
+  homeScore: number | null;
+  awayScore: number | null;
+  category: string;       // e.g., "En Vivo", "Resultado", "Próximo Partido"
+  imageUrl: string;       // Background image URL (can be empty)
+  bgColor: string;        // Fallback background color
+  active: boolean;
+  order: number;          // Display order (1-4)
+  linkTo: string;         // Navigation target tab
+}
+
+export const sliderSlides: SliderSlide[] = [
+  {
+    id: 'slide1',
+    title: 'Argentina golea 4-0',
+    subtitle: 'Messi brillante con doblete ante Argelia',
+    matchId: 'm19',
+    homeTeamId: 'arg',
+    awayTeamId: 'alg',
+    homeScore: 4,
+    awayScore: 0,
+    category: 'Resultado',
+    imageUrl: '',
+    bgColor: '#1B5E20',
+    active: true,
+    order: 1,
+    linkTo: 'resultados',
+  },
+  {
+    id: 'slide2',
+    title: 'México vs Chequia',
+    subtitle: 'Empate emocionante en el Azteca — Min 62',
+    matchId: 'm25',
+    homeTeamId: 'mex',
+    awayTeamId: 'cze',
+    homeScore: 1,
+    awayScore: 1,
+    category: 'En Vivo',
+    imageUrl: '',
+    bgColor: '#0D47A1',
+    active: true,
+    order: 2,
+    linkTo: 'en-vivo',
+  },
+  {
+    id: 'slide3',
+    title: 'Francia vs Noruega',
+    subtitle: 'Haaland da la vuelta con doblete — Min 58',
+    matchId: 'm29',
+    homeTeamId: 'fra',
+    awayTeamId: 'nor',
+    homeScore: 1,
+    awayScore: 2,
+    category: 'En Vivo',
+    imageUrl: '',
+    bgColor: '#BF360C',
+    active: true,
+    order: 3,
+    linkTo: 'en-vivo',
+  },
+  {
+    id: 'slide4',
+    title: 'Próximos Partidos',
+    subtitle: 'Jornada 3 — 12 partidos por jugar',
+    matchId: null,
+    homeTeamId: null,
+    awayTeamId: null,
+    homeScore: null,
+    awayScore: null,
+    category: 'Próximo',
+    imageUrl: '',
+    bgColor: '#4A148C',
+    active: true,
+    order: 4,
+    linkTo: 'grupos',
+  },
+];
+
 // ==================== HELPERS ====================
 export function getTeamById(id: string): Team | undefined {
   return teams.find(t => t.id === id);

@@ -1,10 +1,11 @@
 'use client';
 
-import { matches, news, getTeamById } from '@/lib/mock-data';
+import { matches, news, getTeamById, sliderSlides } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import LiveMatch from './LiveMatch';
 import MatchCard from './MatchCard';
 import BannerDisplay from './BannerDisplay';
+import MatchSlider from './MatchSlider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -44,58 +45,8 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Hero Banner - Nuevo Día branding */}
-      <section className="relative bg-gradient-to-br from-nd-green via-nd-green-dark to-nd-green rounded-2xl overflow-hidden text-white">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-orange blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-nd-orange blur-3xl" />
-        </div>
-        <div className="relative px-6 sm:px-10 py-8 sm:py-14">
-          <div className="flex flex-col sm:flex-row items-start gap-6">
-            <div className="flex-1 max-w-3xl">
-              <div className="flex items-center gap-2 mb-3">
-                <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-xs">
-                  📻 100.9 FM
-                </Badge>
-                <Badge className="bg-white/20 text-white border-white/30 text-xs">
-                  ⚽ Mundial 2026 — 12 Grupos
-                </Badge>
-                {connected && (
-                  <Badge className="bg-green-500/80 text-white border-0 text-xs flex items-center gap-1">
-                    <RadioTower className="w-3 h-3" />
-                    En Vivo
-                  </Badge>
-                )}
-              </div>
-              <h2 className="text-3xl sm:text-5xl font-extrabold mb-2 tracking-tight">
-                Nuevo Día <span className="text-nd-orange">Mundial</span>
-              </h2>
-              <p className="text-base sm:text-lg text-white/80 mb-6 max-w-xl">
-                Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. Actualización en tiempo real sin recargar la página.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  onClick={() => onNavigate('grupos')}
-                  className="bg-nd-orange text-nd-black hover:bg-nd-orange-dark font-bold"
-                >
-                  Ver Grupos <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => onNavigate('resultados')}
-                  className="border-white/30 text-white hover:bg-white/10"
-                >
-                  Resultados
-                </Button>
-              </div>
-            </div>
-            <div className="hidden sm:flex flex-col items-center gap-2">
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={200} height={63} className="rounded-xl shadow-lg opacity-90 object-contain" />
-              <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Match Slider - Nuevo Día branding */}
+      <MatchSlider slides={sliderSlides} onNavigate={onNavigate} />
 
       {/* Content-top Banner */}
       <BannerDisplay position="content-top" />

@@ -65,3 +65,68 @@ Stage Summary:
 - Goals, minutes, and stats update without page reload
 - Connection status indicator shown in bottom-right corner
 - Goal flash animations and notification banners for scored goals
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Implement MatchSlider, SliderEditor, BannerPastilla improvements, and Pastillas management
+
+Work Log:
+- Added SliderSlide interface and sliderSlides mock data to /home/z/my-project/src/lib/mock-data.ts
+  - 4 slides: Argentina vs Argelia (Resultado), México vs Chequia (En Vivo), Francia vs Noruega (En Vivo), Próximos Partidos (Próximo)
+  - Each slide has id, title, subtitle, matchId, teamIds, scores, category, imageUrl, bgColor, active, order, linkTo
+- Created /home/z/my-project/src/components/portal/MatchSlider.tsx
+  - Hero-style carousel/slider with auto-rotation through 4 slides
+  - 4 full passes then stops auto-rotation
+  - Team flags + names + scores display per slide
+  - Category badges: "En Vivo" with pulsing red dot, "Resultado", "Próximo"
+  - Navigation dots at bottom with orange active indicator
+  - Left/right arrow navigation
+  - Deep green gradient backgrounds per slide with decorative elements
+  - "Nuevo Día Mundial" branding with orange accent
+  - CTA buttons: "Ver En Vivo" / "Ver Grupos" / "Resultados"
+  - Logo on right side (same as previous hero)
+  - Responsive: stacks on mobile, smaller text
+- Updated /home/z/my-project/src/components/portal/EditorTab.tsx
+  - Added "Slider" tab (5th tab in grid)
+  - Imports: SliderSlide type, sliderSlides data, Switch, ChevronUp, ChevronDown, Eye, Palette icons
+  - Slider editing state: editingSlideId, slideForm
+  - Slide list sorted by order with up/down reorder buttons
+  - Click to expand inline edit form with: title, subtitle, category dropdown, match dropdown, linkTo, bgColor picker, order
+  - Live preview of slide being edited with gradient background
+  - Active/inactive toggle via Switch
+  - Save/Cancel buttons
+- Updated /home/z/my-project/src/components/portal/HomeTab.tsx
+  - Replaced static Hero Banner section with MatchSlider component
+  - Added imports: sliderSlides, MatchSlider
+  - MatchSlider placed at top of page with onNavigate callback
+- Updated /home/z/my-project/src/components/portal/BannerDisplay.tsx
+  - BannerPastilla improvements:
+    - Added shimmer/shine effect on hover with CSS animation
+    - Added "Publicado por Nuevo Día" text at bottom
+    - Made dimensions responsive (maxWidth: 90% instead of 100%)
+    - Added countdown timer badge with Timer icon showing remaining display seconds
+    - Improved layout: flex-col with justify-between for top content and bottom text
+    - Timer icon import added
+- Updated /home/z/my-project/src/components/portal/ComercialTab.tsx
+  - Added "Pastillas" tab alongside "Banners" and "Mapa de Posiciones"
+  - Pastillas tab shows visual grid of all banners grouped by position
+  - Each pastilla card has:
+    - Live preview with correct aspect ratio, background color, rounded corners
+    - Shimmer effect on hover
+    - "Publicado por Nuevo Día" small text
+    - Toggle active/inactive via Switch
+    - Inline edit: width, height, display duration inputs
+    - Position indicator with color dot and label
+    - Priority badge
+  - Cards organized in responsive grid (1/2/3 columns)
+  - Empty positions hidden from grid
+- Build compiled successfully with no errors
+- Pre-existing lint errors in LiveMatch.tsx and MatchCard.tsx (not from our changes)
+
+Stage Summary:
+- MatchSlider replaces static hero with dynamic 4-slide carousel
+- SliderEditor allows full inline editing with live preview
+- BannerPastilla enhanced with shimmer, countdown timer, and responsive sizing
+- Pastillas management tab in ComercialTab with visual grid and inline controls
+- All text in Spanish, responsive design maintained

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { matches as initialMatches, news as initialNews, scorers as initialScorers, redCards as initialRedCards, matchSyntheses as initialSyntheses, getTeamById, type Match, type NewsItem, type Scorer, type RedCard, type MatchSynthesis } from '@/lib/mock-data';
+import { matches as initialMatches, news as initialNews, scorers as initialScorers, redCards as initialRedCards, matchSyntheses as initialSyntheses, sliderSlides as initialSliderSlides, getTeamById, type Match, type NewsItem, type Scorer, type RedCard, type MatchSynthesis, type SliderSlide } from '@/lib/mock-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,11 +11,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import {
   PenTool, Shield, Trophy, FileText, Newspaper,
-  Plus, Edit, Trash2, Save, X, AlertTriangle, BarChart3
+  Plus, Edit, Trash2, Save, X, AlertTriangle, BarChart3,
+  Image as ImageIcon, ChevronUp, ChevronDown, Eye, Palette
 } from 'lucide-react';
 
 export default function EditorTab() {
@@ -25,6 +27,11 @@ export default function EditorTab() {
   const [localScorers, setLocalScorers] = useState<Scorer[]>(initialScorers);
   const [localRedCards, setLocalRedCards] = useState<RedCard[]>(initialRedCards);
   const [localSyntheses, setLocalSyntheses] = useState<MatchSynthesis[]>(initialSyntheses);
+  const [localSlides, setLocalSlides] = useState<SliderSlide[]>(initialSliderSlides);
+
+  // Slider editing state
+  const [editingSlideId, setEditingSlideId] = useState<string | null>(null);
+  const [slideForm, setSlideForm] = useState<Partial<SliderSlide>>({});
 
   // Edit match dialog
   const [editMatchDialog, setEditMatchDialog] = useState(false);
@@ -137,11 +144,12 @@ export default function EditorTab() {
       </h2>
 
       <Tabs defaultValue="matches">
-        <TabsList className="grid w-full grid-cols-4 max-w-lg">
+        <TabsList className="grid w-full grid-cols-5 max-w-xl">
           <TabsTrigger value="matches" className="text-xs sm:text-sm">Partidos</TabsTrigger>
           <TabsTrigger value="news" className="text-xs sm:text-sm">Noticias</TabsTrigger>
           <TabsTrigger value="players" className="text-xs sm:text-sm">Jugadores</TabsTrigger>
           <TabsTrigger value="synthesis" className="text-xs sm:text-sm">Síntesis</TabsTrigger>
+          <TabsTrigger value="slider" className="text-xs sm:text-sm">Slider</TabsTrigger>
         </TabsList>
 
         {/* MATCHES TAB */}
@@ -337,6 +345,309 @@ export default function EditorTab() {
                           </Badge>
                         ))}
                       </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* SLIDER TAB */}
+        <TabsContent value="slider" className="mt-4 space-y-4">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <ImageIcon className="w-5 h-5 text-primary" />
+                Gestión del Slider Principal
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {[...localSlides].sort((a, b) => a.order - b.order).map((slide, idx) => {
+                  const homeTeam = slide.homeTeamId ? getTeamById(slide.homeTeamId) : null;
+                  const awayTeam = slide.awayTeamId ? getTeamById(slide.awayTeamId) : null;
+                  const isEditing = editingSlideId === slide.id;
+
+                  return (
+                    <div key={slide.id} className={`rounded-lg border ${isEditing ? 'border-primary shadow-md' : 'border-border'} overflow-hidden`}>
+                      {/* Slide header / preview */}
+                      <div
+                        className="p-4 flex items-center justify-between cursor-pointer"
+                        style={{ backgroundColor: slide.bgColor + '20' }}
+                        onClick={() => {
+                          if (isEditing) {
+                            setEditingSlideId(null);
+                            setSlideForm({});
+                          } else {
+                            setEditingSlideId(slide.id);
+                            setSlideForm({ ...slide });
+                          }
+                        }}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex flex-col gap-0.5">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="w-6 h-6"
+                              disabled={idx === 0}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const sorted = [...localSlides].sort((a, b) => a.order - b.order);
+                                if (idx > 0) {
+                                  const prevSlide = sorted[idx - 1];
+                                  setLocalSlides(prev => prev.map(s => {
+                                    if (s.id === slide.id) return { ...s, order: prevSlide.order };
+                                    if (s.id === prevSlide.id) return { ...s, order: slide.order };
+                                    return s;
+                                  }));
+                                }
+                              }}
+                            >
+                              <ChevronUp className="w-3 h-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="w-6 h-6"
+                              disabled={idx === localSlides.length - 1}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const sorted = [...localSlides].sort((a, b) => a.order - b.order);
+                                if (idx < sorted.length - 1) {
+                                  const nextSlide = sorted[idx + 1];
+                                  setLocalSlides(prev => prev.map(s => {
+                                    if (s.id === slide.id) return { ...s, order: nextSlide.order };
+                                    if (s.id === nextSlide.id) return { ...s, order: slide.order };
+                                    return s;
+                                  }));
+                                }
+                              }}
+                            >
+                              <ChevronDown className="w-3 h-3" />
+                            </Button>
+                          </div>
+                          <Badge variant="outline" className="text-xs flex-shrink-0">#{slide.order}</Badge>
+                          <Badge className={`text-[10px] flex-shrink-0 ${slide.category === 'En Vivo' ? 'bg-red-100 text-red-700' : slide.category === 'Resultado' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'}`}>
+                            {slide.category}
+                          </Badge>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-sm truncate">{slide.title}</p>
+                            <p className="text-xs text-muted-foreground truncate">{slide.subtitle}</p>
+                          </div>
+                          {homeTeam && awayTeam && (
+                            <span className="text-xs flex-shrink-0">
+                              {homeTeam.flag} {slide.homeScore} - {slide.awayScore} {awayTeam.flag}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Switch
+                            checked={slide.active}
+                            onCheckedChange={(checked) => {
+                              setLocalSlides(prev => prev.map(s => s.id === slide.id ? { ...s, active: checked } : s));
+                            }}
+                          />
+                          <Button variant="ghost" size="sm">
+                            <Edit className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Edit form */}
+                      {isEditing && (
+                        <div className="p-4 bg-muted/30 border-t space-y-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>Título</Label>
+                              <Input
+                                value={slideForm.title ?? ''}
+                                onChange={(e) => setSlideForm(prev => ({ ...prev, title: e.target.value }))}
+                                placeholder="Título del slide"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Subtítulo</Label>
+                              <Input
+                                value={slideForm.subtitle ?? ''}
+                                onChange={(e) => setSlideForm(prev => ({ ...prev, subtitle: e.target.value }))}
+                                placeholder="Subtítulo del slide"
+                              />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="space-y-2">
+                              <Label>Categoría</Label>
+                              <Select
+                                value={slideForm.category ?? 'Resultado'}
+                                onValueChange={(v) => setSlideForm(prev => ({ ...prev, category: v }))}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="En Vivo">En Vivo</SelectItem>
+                                  <SelectItem value="Resultado">Resultado</SelectItem>
+                                  <SelectItem value="Próximo">Próximo Partido</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Partido (Match ID)</Label>
+                              <Select
+                                value={slideForm.matchId ?? 'none'}
+                                onValueChange={(v) => {
+                                  const matchId = v === 'none' ? null : v;
+                                  if (matchId) {
+                                    const match = localMatches.find(m => m.id === matchId);
+                                    if (match) {
+                                      setSlideForm(prev => ({
+                                        ...prev,
+                                        matchId,
+                                        homeTeamId: match.homeTeamId,
+                                        awayTeamId: match.awayTeamId,
+                                        homeScore: match.homeScore,
+                                        awayScore: match.awayScore,
+                                        title: prev.title || `${getTeamById(match.homeTeamId)?.name} vs ${getTeamById(match.awayTeamId)?.name}`,
+                                      }));
+                                    }
+                                  } else {
+                                    setSlideForm(prev => ({
+                                      ...prev,
+                                      matchId: null,
+                                      homeTeamId: null,
+                                      awayTeamId: null,
+                                      homeScore: null,
+                                      awayScore: null,
+                                    }));
+                                  }
+                                }}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">Sin partido</SelectItem>
+                                  {localMatches.filter(m => m.status === 'live' || m.status === 'completed').map(m => {
+                                    const h = getTeamById(m.homeTeamId);
+                                    const a = getTeamById(m.awayTeamId);
+                                    return (
+                                      <SelectItem key={m.id} value={m.id}>
+                                        {h?.flag} {h?.name} vs {a?.flag} {a?.name}
+                                      </SelectItem>
+                                    );
+                                  })}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Navegar a</Label>
+                              <Select
+                                value={slideForm.linkTo ?? 'grupos'}
+                                onValueChange={(v) => setSlideForm(prev => ({ ...prev, linkTo: v }))}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="grupos">Grupos</SelectItem>
+                                  <SelectItem value="resultados">Resultados</SelectItem>
+                                  <SelectItem value="en-vivo">En Vivo</SelectItem>
+                                  <SelectItem value="goleadores">Goleadores</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>Color de Fondo</Label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="color"
+                                  value={slideForm.bgColor ?? '#1B5E20'}
+                                  onChange={(e) => setSlideForm(prev => ({ ...prev, bgColor: e.target.value }))}
+                                  className="w-10 h-10 rounded border cursor-pointer"
+                                />
+                                <Input
+                                  value={slideForm.bgColor ?? '#1B5E20'}
+                                  onChange={(e) => setSlideForm(prev => ({ ...prev, bgColor: e.target.value }))}
+                                  className="flex-1"
+                                />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Orden</Label>
+                              <Input
+                                type="number"
+                                min="1"
+                                max="4"
+                                value={slideForm.order ?? 1}
+                                onChange={(e) => setSlideForm(prev => ({ ...prev, order: parseInt(e.target.value) || 1 }))}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Live Preview */}
+                          <div className="space-y-2">
+                            <Label className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Eye className="w-3 h-3" />
+                              Vista Previa
+                            </Label>
+                            <div
+                              className="rounded-lg p-4 text-white"
+                              style={{ background: `linear-gradient(135deg, ${slideForm.bgColor ?? '#1B5E20'} 0%, ${slideForm.bgColor ?? '#1B5E20'}cc 100%)` }}
+                            >
+                              <div className="flex items-center gap-2 mb-2">
+                                <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-[10px]">📻 100.9 FM</Badge>
+                                {slideForm.category === 'En Vivo' && (
+                                  <Badge className="bg-red-500 text-white border-0 text-[10px]">En Vivo</Badge>
+                                )}
+                              </div>
+                              <h3 className="text-lg font-bold mb-1">Nuevo Día <span className="text-nd-orange">Mundial</span></h3>
+                              <p className="text-sm font-semibold">{slideForm.title ?? 'Título'}</p>
+                              <p className="text-xs text-white/70">{slideForm.subtitle ?? 'Subtítulo'}</p>
+                              {slideForm.homeTeamId && slideForm.awayTeamId && (
+                                <div className="flex items-center gap-2 mt-2">
+                                  <span>{getTeamById(slideForm.homeTeamId)?.flag}</span>
+                                  <span className="font-bold">{slideForm.homeScore ?? '-'}</span>
+                                  <span className="text-white/50">:</span>
+                                  <span className="font-bold">{slideForm.awayScore ?? '-'}</span>
+                                  <span>{getTeamById(slideForm.awayTeamId)?.flag}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Save/Cancel */}
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => {
+                                setLocalSlides(prev => prev.map(s =>
+                                  s.id === slide.id ? { ...s, ...slideForm } as SliderSlide : s
+                                ));
+                                setEditingSlideId(null);
+                                setSlideForm({});
+                              }}
+                              className="flex-1"
+                              disabled={!slideForm.title}
+                            >
+                              <Save className="w-4 h-4 mr-1" />
+                              Guardar
+                            </Button>
+                            <Button
+                              variant="outline"
+                              onClick={() => {
+                                setEditingSlideId(null);
+                                setSlideForm({});
+                              }}
+                            >
+                              <X className="w-4 h-4 mr-1" />
+                              Cancelar
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}
