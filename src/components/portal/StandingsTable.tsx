@@ -1,6 +1,6 @@
 'use client';
 
-import { Standing, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
+import { Standing, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor, getContrastTextColor, isLightColor } from '@/lib/mock-data';
 import {
   Table,
   TableBody,
@@ -9,16 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-// Helper to determine if a color is light or dark for text contrast
-function isLightColor(hex: string): boolean {
-  const c = hex.replace('#', '');
-  const r = parseInt(c.substr(0, 2), 16);
-  const g = parseInt(c.substr(2, 2), 16);
-  const b = parseInt(c.substr(4, 2), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness > 155;
-}
 
 interface StandingsTableProps {
   standings: Standing[];
@@ -51,7 +41,7 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
             const team = getTeamById(s.teamId);
             const isQualified = s.pos <= 2;
             const teamColor = team?.color ?? '#666666';
-            const textColor = isLightColor(teamColor) ? '#1a1a1a' : '#FFFFFF';
+            const textColor = getContrastTextColor(teamColor);
             const flagUrl = team ? getTeamFlagUrl(team.id, 80) : '';
             const code = team ? getTeamCode(team.id).toUpperCase() : '';
             return (
@@ -82,7 +72,7 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
                         <span className="text-sm">{team?.flag}</span>
                       )}
                       <span
-                        className="text-[9px] font-extrabold tracking-wider opacity-70"
+                        className="text-[9px] font-extrabold tracking-wider"
                         style={{ color: textColor }}
                       >
                         {code}

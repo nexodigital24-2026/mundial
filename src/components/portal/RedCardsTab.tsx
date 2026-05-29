@@ -1,6 +1,6 @@
 'use client';
 
-import { redCards, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
+import { redCards, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor, getContrastTextColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -73,6 +73,7 @@ export default function RedCardsTab() {
                           const flagUrl = team ? getTeamFlagUrl(team.id, 40) : '';
                           const code = team ? getTeamCode(team.id).toUpperCase() : '';
                           const color = team ? getTeamColor(team.id) : '#666';
+                          const textColor = getContrastTextColor(color);
                           return (
                             <span className="inline-flex items-center gap-1 rounded px-1 py-0.5" style={{ backgroundColor: color }}>
                               {flagUrl ? (
@@ -80,7 +81,7 @@ export default function RedCardsTab() {
                               ) : (
                                 <span className="text-xs">{team?.flag}</span>
                               )}
-                              <span className="text-[7px] font-extrabold tracking-wider text-white/80">{code}</span>
+                              <span className="text-[7px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                             </span>
                           );
                         })()}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { scorers, getTeamById, getTeamName, getTeamFlag, getTeamFlagUrl, getTeamColor, getTeamCode, getStandingsByGroup, getTeamsByGroup, allGroups, type GroupLetter } from '@/lib/mock-data';
+import { scorers, getTeamById, getTeamName, getTeamFlag, getTeamFlagUrl, getTeamColor, getTeamCode, getContrastTextColor, getStandingsByGroup, getTeamsByGroup, allGroups, type GroupLetter } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import StandingsTable from './StandingsTable';
 import MatchCard from './MatchCard';
@@ -10,16 +10,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trophy, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-
-// Helper to determine if a color is light or dark for text contrast
-function isLightColor(hex: string): boolean {
-  const c = hex.replace('#', '');
-  const r = parseInt(c.substr(0, 2), 16);
-  const g = parseInt(c.substr(2, 2), 16);
-  const b = parseInt(c.substr(4, 2), 16);
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-  return brightness > 155;
-}
 
 export default function GroupsTab() {
   const [activeGroup, setActiveGroup] = useState<string>('A');
@@ -91,7 +81,7 @@ export default function GroupsTab() {
             {/* Teams preview — colored pastillas with flag images */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {groupTeams.map((team) => {
-                const textColor = isLightColor(team.color) ? '#1a1a1a' : '#FFFFFF';
+                const textColor = getContrastTextColor(team.color);
                 const code = team.code.toUpperCase();
                 const flagUrl = getTeamFlagUrl(team.id, 160);
                 return (

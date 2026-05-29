@@ -1322,6 +1322,27 @@ export function getTeamColor(id: string): string {
   return teams.find(t => t.id === id)?.color ?? '#666666';
 }
 
+/**
+ * Determine if a hex color is "light" (needs dark text) or "dark" (needs light text).
+ * Uses the W3C relative luminance formula for brightness.
+ */
+export function isLightColor(hex: string): boolean {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substr(0, 2), 16);
+  const g = parseInt(c.substr(2, 2), 16);
+  const b = parseInt(c.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155;
+}
+
+/**
+ * Returns the appropriate text color for readability over a given background color.
+ * Light backgrounds get dark text, dark backgrounds get white text.
+ */
+export function getContrastTextColor(bgColor: string): string {
+  return isLightColor(bgColor) ? '#1a1a1a' : 'rgba(255,255,255,0.95)';
+}
+
 export function getTeamFlagUrl(id: string, width: number = 80): string {
   const code = teams.find(t => t.id === id)?.code;
   if (!code) return '';

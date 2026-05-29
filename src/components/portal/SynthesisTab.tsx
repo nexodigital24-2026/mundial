@@ -1,6 +1,6 @@
 'use client';
 
-import { matchSyntheses, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
+import { matchSyntheses, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor, getContrastTextColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -39,10 +39,11 @@ export default function SynthesisTab() {
                       const hFlagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
                       const hCode = home ? getTeamCode(home.id).toUpperCase() : '';
                       const hColor = home ? getTeamColor(home.id) : '#666';
+                      const hTextColor = getContrastTextColor(hColor);
                       return (
                         <span className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: hColor }}>
                           {hFlagUrl ? <img src={hFlagUrl} alt={home?.name} className="w-4 h-3 object-cover rounded-sm" /> : <span>{home?.flag}</span>}
-                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{hCode}</span>
+                          <span className="text-[8px] font-extrabold tracking-wider" style={{ color: hTextColor }}>{hCode}</span>
                         </span>
                       );
                     })()}
@@ -54,10 +55,11 @@ export default function SynthesisTab() {
                       const aFlagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
                       const aCode = away ? getTeamCode(away.id).toUpperCase() : '';
                       const aColor = away ? getTeamColor(away.id) : '#666';
+                      const aTextColor = getContrastTextColor(aColor);
                       return (
                         <span className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: aColor }}>
                           {aFlagUrl ? <img src={aFlagUrl} alt={away?.name} className="w-4 h-3 object-cover rounded-sm" /> : <span>{away?.flag}</span>}
-                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{aCode}</span>
+                          <span className="text-[8px] font-extrabold tracking-wider" style={{ color: aTextColor }}>{aCode}</span>
                         </span>
                       );
                     })()}

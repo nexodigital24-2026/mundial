@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { type SliderSlide, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
+import { type SliderSlide, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor, getContrastTextColor } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -163,6 +163,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                       const flagUrl = getTeamFlagUrl(homeTeam.id, 160);
                       const code = getTeamCode(homeTeam.id).toUpperCase();
                       const color = getTeamColor(homeTeam.id);
+                      const textColor = getContrastTextColor(color);
                       return (
                         <div className="flex items-center gap-1.5 rounded-lg px-2 py-1" style={{ backgroundColor: color }}>
                           {flagUrl ? (
@@ -170,7 +171,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                           ) : (
                             <span className="text-2xl">{homeTeam.flag}</span>
                           )}
-                          <span className="text-[10px] font-extrabold tracking-wider text-white/80">{code}</span>
+                          <span className="text-[10px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                         </div>
                       );
                     })()}
@@ -195,6 +196,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                       const flagUrl = getTeamFlagUrl(awayTeam.id, 160);
                       const code = getTeamCode(awayTeam.id).toUpperCase();
                       const color = getTeamColor(awayTeam.id);
+                      const textColor = getContrastTextColor(color);
                       return (
                         <div className="flex items-center gap-1.5 rounded-lg px-2 py-1" style={{ backgroundColor: color }}>
                           {flagUrl ? (
@@ -202,7 +204,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                           ) : (
                             <span className="text-2xl">{awayTeam.flag}</span>
                           )}
-                          <span className="text-[10px] font-extrabold tracking-wider text-white/80">{code}</span>
+                          <span className="text-[10px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                         </div>
                       );
                     })()}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
+import { getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor, getContrastTextColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import {
   Accordion,
@@ -56,6 +56,7 @@ export default function ResultsTab() {
                           const flagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
                           const code = home ? getTeamCode(home.id).toUpperCase() : '';
                           const color = home ? getTeamColor(home.id) : '#666';
+                          const textColor = getContrastTextColor(color);
                           return (
                             <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
                               {flagUrl ? (
@@ -63,7 +64,7 @@ export default function ResultsTab() {
                               ) : (
                                 <span className="text-sm">{home?.flag}</span>
                               )}
-                              <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                              <span className="text-[8px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                             </div>
                           );
                         })()}
@@ -78,6 +79,7 @@ export default function ResultsTab() {
                           const flagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
                           const code = away ? getTeamCode(away.id).toUpperCase() : '';
                           const color = away ? getTeamColor(away.id) : '#666';
+                          const textColor = getContrastTextColor(color);
                           return (
                             <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
                               {flagUrl ? (
@@ -85,7 +87,7 @@ export default function ResultsTab() {
                               ) : (
                                 <span className="text-sm">{away?.flag}</span>
                               )}
-                              <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                              <span className="text-[8px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                             </div>
                           );
                         })()}
@@ -126,6 +128,7 @@ export default function ResultsTab() {
                       const flagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
                       const code = home ? getTeamCode(home.id).toUpperCase() : '';
                       const color = home ? getTeamColor(home.id) : '#666';
+                      const textColor = getContrastTextColor(color);
                       return (
                         <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
                           {flagUrl ? (
@@ -133,7 +136,7 @@ export default function ResultsTab() {
                           ) : (
                             <span className="text-sm">{home?.flag}</span>
                           )}
-                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                          <span className="text-[8px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                         </div>
                       );
                     })()}
@@ -148,6 +151,7 @@ export default function ResultsTab() {
                       const flagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
                       const code = away ? getTeamCode(away.id).toUpperCase() : '';
                       const color = away ? getTeamColor(away.id) : '#666';
+                      const textColor = getContrastTextColor(color);
                       return (
                         <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
                           {flagUrl ? (
@@ -155,7 +159,7 @@ export default function ResultsTab() {
                           ) : (
                             <span className="text-sm">{away?.flag}</span>
                           )}
-                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                          <span className="text-[8px] font-extrabold tracking-wider" style={{ color: textColor }}>{code}</span>
                         </div>
                       );
                     })()}
