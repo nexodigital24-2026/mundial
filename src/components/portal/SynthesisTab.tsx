@@ -1,6 +1,7 @@
 'use client';
 
-import { matchSyntheses, matches, getTeamById } from '@/lib/mock-data';
+import { matchSyntheses, getTeamById } from '@/lib/mock-data';
+import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 
 export default function SynthesisTab() {
+  const { allMatches } = useRealtime();
   return (
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -22,7 +24,7 @@ export default function SynthesisTab() {
 
       <div className="space-y-6">
         {matchSyntheses.map((synth) => {
-          const match = matches.find((m) => m.id === synth.matchId);
+          const match = allMatches.find((m) => m.id === synth.matchId);
           if (!match) return null;
           const home = getTeamById(match.homeTeamId);
           const away = getTeamById(match.awayTeamId);

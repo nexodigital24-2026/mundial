@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AuthProvider } from '@/lib/auth-context';
+import { RealtimeProvider, useRealtime } from '@/lib/realtime-context';
 import Navbar from '@/components/portal/Navbar';
 import Footer from '@/components/portal/Footer';
 import HomeTab from '@/components/portal/HomeTab';
@@ -15,6 +16,7 @@ import AdminTab from '@/components/portal/AdminTab';
 import EditorTab from '@/components/portal/EditorTab';
 import ComercialTab from '@/components/portal/ComercialTab';
 import LoginTab from '@/components/portal/LoginTab';
+import { Wifi, WifiOff } from 'lucide-react';
 
 const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: string) => void }>> = {
   inicio: HomeTab,
@@ -30,8 +32,46 @@ const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: str
   login: LoginTab,
 };
 
+function ConnectionIndicator({ connected }: { connected: boolean }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  useEffect(() => {
+    if (connected) {
+      const timer = setTimeout(() => setShowTooltip(false), 4000);
+      setShowTooltip(true);
+      return () => clearTimeout(timer);
+    } else {
+      setShowTooltip(true);
+    }
+  }, [connected]);
+
+  if (!showTooltip) return null;
+
+  return (
+    <div className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3 py-2 rounded-full shadow-lg text-xs font-semibold transition-all duration-500 ${
+      connected
+        ? 'bg-nd-green text-white'
+        : 'bg-red-500 text-white animate-pulse'
+    }`}>
+      {connected ? (
+        <>
+          <Wifi className="w-3.5 h-3.5" />
+          <span>En vivo</span>
+          <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse-live" />
+        </>
+      ) : (
+        <>
+          <WifiOff className="w-3.5 h-3.5" />
+          <span>Conectando...</span>
+        </>
+      )}
+    </div>
+  );
+}
+
 function AppContent() {
   const [activeTab, setActiveTab] = useState('inicio');
+  const { connected, goalEvents } = useRealtime();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -49,6 +89,11 @@ function AppContent() {
       </main>
 
       <Footer />
+
+      {/* Real-time connection indicator */}
+      <ConnectionIndicator connected={connected} />
+
+      {/* Goal notification toasts are handled by LiveMatch/MatchCard components */}
     </div>
   );
 }
@@ -56,7 +101,9 @@ function AppContent() {
 export default function HomePage() {
   return (
     <AuthProvider>
-      <AppContent />
+      <RealtimeProvider>
+        <AppContent />
+      </RealtimeProvider>
     </AuthProvider>
   );
 }

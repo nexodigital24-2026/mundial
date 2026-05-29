@@ -1,6 +1,7 @@
 'use client';
 
 import { matches, news, getTeamById } from '@/lib/mock-data';
+import { useRealtime } from '@/lib/realtime-context';
 import LiveMatch from './LiveMatch';
 import MatchCard from './MatchCard';
 import BannerDisplay from './BannerDisplay';
@@ -18,6 +19,8 @@ import {
   ArrowRight,
   Newspaper,
   Radio,
+  Zap,
+  RadioTower,
 } from 'lucide-react';
 
 interface HomeTabProps {
@@ -25,8 +28,10 @@ interface HomeTabProps {
 }
 
 export default function HomeTab({ onNavigate }: HomeTabProps) {
-  const liveMatches = matches.filter((m) => m.status === 'live');
-  const upcomingMatches = matches.filter((m) => m.status === 'upcoming').slice(0, 3);
+  const { allMatches, goalEvents, connected } = useRealtime();
+
+  const liveMatches = allMatches.filter((m) => m.status === 'live');
+  const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
 
   const quickLinks = [
     { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green' },
@@ -55,12 +60,18 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                 <Badge className="bg-white/20 text-white border-white/30 text-xs">
                   ⚽ Mundial 2026 — 12 Grupos
                 </Badge>
+                {connected && (
+                  <Badge className="bg-green-500/80 text-white border-0 text-xs flex items-center gap-1">
+                    <RadioTower className="w-3 h-3" />
+                    En Vivo
+                  </Badge>
+                )}
               </div>
               <h2 className="text-3xl sm:text-5xl font-extrabold mb-2 tracking-tight">
                 Nuevo Día <span className="text-nd-orange">Mundial</span>
               </h2>
               <p className="text-base sm:text-lg text-white/80 mb-6 max-w-xl">
-                Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. 48 selecciones, 12 grupos.
+                Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. Actualización en tiempo real sin recargar la página.
               </p>
               <div className="flex flex-wrap gap-3">
                 <Button
@@ -79,7 +90,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
               </div>
             </div>
             <div className="hidden sm:flex flex-col items-center gap-2">
-              <Image src="/main-logo.svg" alt="Radio Nuevo Día" width={200} height={63} className="rounded-xl shadow-lg opacity-90 object-contain bg-white px-3 py-2" />
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={200} height={63} className="rounded-xl shadow-lg opacity-90 object-contain bg-white px-3 py-2" />
               <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
             </div>
           </div>
@@ -89,18 +100,56 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
       {/* Content-top Banner */}
       <BannerDisplay position="content-top" />
 
-      {/* Live Matches */}
+      {/* Live Matches with Real-time indicator */}
       {liveMatches.length > 0 && (
         <section>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-3 mb-4">
             <span className="w-3 h-3 bg-red-500 rounded-full animate-pulse-live" />
             <h2 className="text-xl font-bold text-foreground">Partidos en Vivo</h2>
+            {connected && (
+              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs flex items-center gap-1">
+                <Zap className="w-3 h-3" />
+                Tiempo Real
+              </Badge>
+            )}
           </div>
+          <p className="text-sm text-muted-foreground mb-3">
+            Los goles y minutos se actualizan automáticamente en tu pantalla — sin recargar la página
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {liveMatches.map((match) => (
               <LiveMatch key={match.id} match={match} />
             ))}
           </div>
+
+          {/* Recent goal events ticker */}
+          {goalEvents.length > 0 && (
+            <div className="mt-4 bg-nd-orange/5 border border-nd-orange/20 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="w-4 h-4 text-nd-orange" />
+                <span className="text-xs font-bold text-nd-orange uppercase tracking-wider">Últimos Goles</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {goalEvents.slice(0, 5).map((evt) => {
+                  const team = getTeamById(evt.team);
+                  return (
+                    <Badge key={evt.id} variant="secondary" className="text-xs bg-white border border-nd-orange/30">
+                      ⚽ {evt.player} ({team?.flag} {team?.name}) {evt.minute}&apos;
+                    </Badge>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* No live matches message */}
+      {liveMatches.length === 0 && (
+        <section className="bg-muted/50 rounded-xl p-6 text-center">
+          <Radio className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+          <p className="text-muted-foreground font-medium">No hay partidos en vivo en este momento</p>
+          <p className="text-sm text-muted-foreground/70 mt-1">Las actualizaciones aparecerán aquí automáticamente cuando comience el próximo partido</p>
         </section>
       )}
 

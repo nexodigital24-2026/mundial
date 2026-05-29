@@ -1,20 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { matches, scorers, getTeamById, getTeamName, getTeamFlag, getStandingsByGroup, getTeamsByGroup, allGroups, type GroupLetter } from '@/lib/mock-data';
+import { scorers, getTeamById, getTeamName, getTeamFlag, getStandingsByGroup, getTeamsByGroup, allGroups, type GroupLetter } from '@/lib/mock-data';
+import { useRealtime } from '@/lib/realtime-context';
 import StandingsTable from './StandingsTable';
 import MatchCard from './MatchCard';
 import BannerDisplay from './BannerDisplay';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trophy, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Trophy, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export default function GroupsTab() {
   const [activeGroup, setActiveGroup] = useState<string>('A');
+  const { allMatches, connected } = useRealtime();
 
   const groupStandings = getStandingsByGroup(activeGroup as GroupLetter);
-  const groupMatches = matches.filter((m) => m.group === activeGroup);
+  const groupMatches = allMatches.filter((m) => m.group === activeGroup);
   const upcomingGroupMatches = groupMatches.filter((m) => m.status === 'upcoming');
   const completedGroupMatches = groupMatches.filter((m) => m.status === 'completed');
   const liveGroupMatches = groupMatches.filter((m) => m.status === 'live');
@@ -44,6 +47,12 @@ export default function GroupsTab() {
         <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
           <Trophy className="w-5 h-5 text-primary" />
           Grupos del Mundial
+          {connected && (
+            <Badge className="bg-green-50 text-green-700 border-green-200 text-[10px] flex items-center gap-0.5">
+              <Zap className="w-2.5 h-2.5" />
+              Live
+            </Badge>
+          )}
         </h2>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" onClick={goToPrevGroup} className="w-8 h-8">

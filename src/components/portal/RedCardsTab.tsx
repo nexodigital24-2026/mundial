@@ -1,12 +1,14 @@
 'use client';
 
-import { redCards, getTeamById, matches } from '@/lib/mock-data';
+import { redCards, getTeamById } from '@/lib/mock-data';
+import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ShieldAlert, Clock, AlertTriangle } from 'lucide-react';
 
 export default function RedCardsTab() {
+  const { allMatches } = useRealtime();
   return (
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
@@ -44,7 +46,7 @@ export default function RedCardsTab() {
       <div className="space-y-3">
         {redCards.map((card) => {
           const team = getTeamById(card.teamId);
-          const match = matches.find((m) => m.id === card.matchId);
+          const match = allMatches.find((m) => m.id === card.matchId);
           const homeTeam = match ? getTeamById(match.homeTeamId) : undefined;
           const awayTeam = match ? getTeamById(match.awayTeamId) : undefined;
 

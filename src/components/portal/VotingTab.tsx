@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { votingMatches, getTeamById, matches, type VotingMatch } from '@/lib/mock-data';
+import { votingMatches, getTeamById, type VotingMatch } from '@/lib/mock-data';
+import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -36,6 +37,7 @@ function buildLocalVoteData(): VotingMatch[] {
 export default function VotingTab() {
   const [votes, setVotes] = useState<VotingState>(loadVotesFromStorage);
   const [localVoteData, setLocalVoteData] = useState<VotingMatch[]>(buildLocalVoteData);
+  const { allMatches } = useRealtime();
 
   // Save votes to localStorage whenever they change
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function VotingTab() {
 
       <div className="space-y-6">
         {localVoteData.map((vm) => {
-          const match = matches.find((m) => m.id === vm.matchId);
+          const match = allMatches.find((m) => m.id === vm.matchId);
           const home = match ? getTeamById(match.homeTeamId) : undefined;
           const away = match ? getTeamById(match.awayTeamId) : undefined;
           const hasVoted = !!votes[vm.matchId];

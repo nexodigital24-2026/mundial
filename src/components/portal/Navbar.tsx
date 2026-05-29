@@ -112,7 +112,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
           <div className="flex items-center justify-between h-14">
             {/* Logo + Brand */}
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-              <Image src="/main-logo.svg" alt="Radio Nuevo Día" width={140} height={44} className="object-contain bg-white rounded-md px-2 py-1" />
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={140} height={44} className="object-contain bg-white rounded-md px-2 py-1" />
             </div>
 
             {/* Desktop nav */}
