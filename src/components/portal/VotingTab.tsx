@@ -1,0 +1,209 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { votingMatches, getTeamById, matches, type VotingMatch } from '@/lib/mock-data';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Star, Check, Vote } from 'lucide-react';
+
+interface VotingState {
+  [matchId: string]: string; // matchId -> candidateId
+}
+
+function loadVotesFromStorage(): VotingState {
+  if (typeof window === 'undefined') return {};
+  const saved = localStorage.getItem('ndm-votes');
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch {
+      // ignore
+    }
+  }
+  return {};
+}
+
+function buildLocalVoteData(): VotingMatch[] {
+  return votingMatches.map((vm) => ({
+    ...vm,
+    candidates: vm.candidates.map((c) => ({ ...c })),
+  }));
+}
+
+export default function VotingTab() {
+  const [votes, setVotes] = useState<VotingState>(loadVotesFromStorage);
+  const [localVoteData, setLocalVoteData] = useState<VotingMatch[]>(buildLocalVoteData);
+
+  // Save votes to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('ndm-votes', JSON.stringify(votes));
+  }, [votes]);
+
+  const handleVote = useCallback((matchId: string, candidateId: string) => {
+    setVotes((prev) => {
+      if (prev[matchId]) return prev; // Already voted
+      return { ...prev, [matchId]: candidateId };
+    });
+
+    // Increment vote count locally
+    setLocalVoteData((prev) =>
+      prev.map((vm) =>
+        vm.matchId === matchId
+          ? {
+              ...vm,
+              candidates: vm.candidates.map((c) =>
+                c.id === candidateId ? { ...c, votes: c.votes + 1 } : c
+              ),
+            }
+          : vm
+      )
+    );
+  }, []);
+
+  return (
+    <div className="space-y-6 animate-fade-in">
+      <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
+        <Star className="w-5 h-5 text-gold" />
+        Votación — Figura del Partido
+      </h2>
+
+      <p className="text-sm text-muted-foreground">
+        Elige a la figura del partido para cada encuentro. Tu voto se guarda y no puedes votar más de una vez por partido.
+      </p>
+
+      <div className="space-y-6">
+        {localVoteData.map((vm) => {
+          const match = matches.find((m) => m.id === vm.matchId);
+          const home = match ? getTeamById(match.homeTeamId) : undefined;
+          const away = match ? getTeamById(match.awayTeamId) : undefined;
+          const hasVoted = !!votes[vm.matchId];
+          const totalVotes = vm.candidates.reduce((sum, c) => sum + c.votes, 0);
+
+          return (
+            <Card key={vm.matchId} className="overflow-hidden shadow-sm">
+              {/* Match header */}
+              <CardHeader className="bg-primary/5 pb-3">
+                <CardTitle className="text-base flex items-center justify-between flex-wrap gap-2">
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <span>{home?.flag}</span>
+                    <span>{home?.name}</span>
+                    <span className="text-muted-foreground">vs</span>
+                    <span>{away?.flag}</span>
+                    <span>{away?.name}</span>
+                  </span>
+                  {hasVoted && (
+                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs">
+                      <Check className="w-3 h-3 mr-1" /> Votado
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+
+              <CardContent className="p-4 sm:p-6 space-y-4">
+                {vm.candidates
+                  .sort((a, b) => b.votes - a.votes)
+                  .map((candidate, idx) => {
+                    const candidateTeam = getTeamById(candidate.teamId);
+                    const votePercent =
+                      totalVotes > 0
+                        ? Math.round((candidate.votes / totalVotes) * 100)
+                        : 0;
+                    const isSelected = votes[vm.matchId] === candidate.id;
+                    const isLeading = idx === 0;
+
+                    return (
+                      <div
+                        key={candidate.id}
+                        className={`rounded-xl p-3 sm:p-4 transition-all duration-300 ${
+                          isSelected
+                            ? 'bg-primary/10 border-2 border-primary'
+                            : isLeading && hasVoted
+                            ? 'bg-yellow-50 border border-yellow-300'
+                            : 'bg-muted/30 border border-transparent hover:bg-muted/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-10 h-10 flex-shrink-0">
+                            <AvatarFallback
+                              className={`font-semibold text-sm ${
+                                isSelected
+                                  ? 'bg-primary text-white'
+                                  : 'bg-primary/10 text-primary'
+                              }`}
+                            >
+                              {candidate.name
+                                .split('.')
+                                .pop()
+                                ?.trim()
+                                ?.substring(0, 2)
+                                .toUpperCase() ?? '??'}
+                            </AvatarFallback>
+                          </Avatar>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1 flex-wrap">
+                              <span className="font-semibold text-sm text-foreground">
+                                {candidate.name}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {candidateTeam?.flag} {candidateTeam?.name}
+                              </span>
+                              {isLeading && hasVoted && (
+                                <Badge className="bg-yellow-100 text-yellow-700 text-[10px] py-0">
+                                  Líder
+                                </Badge>
+                              )}
+                            </div>
+
+                            {/* Vote bar */}
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1">
+                                <Progress
+                                  value={votePercent}
+                                  className="h-3"
+                                />
+                              </div>
+                              <span className="text-sm font-bold text-primary w-12 text-right">
+                                {votePercent}%
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5">
+                              {candidate.votes} votos
+                            </p>
+                          </div>
+
+                          {/* Vote button */}
+                          {!hasVoted && (
+                            <Button
+                              size="sm"
+                              onClick={() => handleVote(vm.matchId, candidate.id)}
+                              className="flex-shrink-0"
+                            >
+                              <Vote className="w-4 h-4 mr-1" />
+                              Votar
+                            </Button>
+                          )}
+                          {isSelected && (
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                              <Check className="w-5 h-5 text-white" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                <p className="text-xs text-muted-foreground text-center">
+                  Total de votos: {totalVotes}
+                </p>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
