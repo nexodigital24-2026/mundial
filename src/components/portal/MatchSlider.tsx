@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { type SliderSlide, getTeamById } from '@/lib/mock-data';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import {
   ChevronLeft,
   ChevronRight,
@@ -204,9 +203,12 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               </div>
             </div>
 
-            {/* Right: Logo */}
+            {/* Right: Brand text */}
             <div className="hidden sm:flex flex-col items-center gap-2">
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={200} height={63} className="rounded-xl shadow-lg opacity-90 object-contain" />
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-3 flex flex-col items-center">
+                <span className="text-white font-extrabold text-xl tracking-tight">Nuevo Día</span>
+                <span className="text-nd-orange font-extrabold text-xl tracking-tight">Mundial</span>
+              </div>
               <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
             </div>
           </div>

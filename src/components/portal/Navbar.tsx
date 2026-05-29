@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X, Shield, PenTool, Briefcase, LogIn, LogOut, Lock } from 'lucide-react';
-import Image from 'next/image';
+import { Menu, X, Shield, PenTool, LogIn, LogOut, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -21,7 +20,6 @@ const publicTabs = [
 const adminTabs = [
   { id: 'admin', label: 'Admin', icon: Shield, role: 'admin' as const },
   { id: 'editor', label: 'Editor', icon: PenTool, role: 'editor' as const },
-  { id: 'comercial', label: 'Comercial', icon: Briefcase, role: 'comercial' as const },
 ];
 
 interface NavbarProps {
@@ -110,9 +108,10 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
       <div className="bg-gradient-to-r from-nd-green via-nd-green-dark to-nd-green">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
-            {/* Logo + Brand */}
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={140} height={44} className="object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
+            {/* Brand */}
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleTabClick('inicio')}>
+              <span className="text-white font-extrabold text-lg tracking-tight">Nuevo Día</span>
+              <span className="text-nd-orange font-extrabold text-lg tracking-tight">Mundial</span>
             </div>
 
             {/* Desktop nav */}

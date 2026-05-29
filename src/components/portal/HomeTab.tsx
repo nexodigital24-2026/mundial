@@ -4,12 +4,10 @@ import { matches, news, getTeamById, sliderSlides } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import LiveMatch from './LiveMatch';
 import MatchCard from './MatchCard';
-import BannerDisplay from './BannerDisplay';
 import MatchSlider from './MatchSlider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
 import {
   Trophy,
   CircleDot,
@@ -47,9 +45,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
     <div className="space-y-8 animate-fade-in">
       {/* Match Slider - Nuevo Día branding */}
       <MatchSlider slides={sliderSlides} onNavigate={onNavigate} />
-
-      {/* Content-top Banner */}
-      <BannerDisplay position="content-top" />
 
       {/* Live Matches with Real-time indicator */}
       {liveMatches.length > 0 && (
@@ -104,9 +99,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
         </section>
       )}
 
-      {/* Hero Banner Ad */}
-      <BannerDisplay position="hero" />
-
       {/* Upcoming Matches */}
       <section>
         <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
@@ -148,9 +140,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
           ))}
         </div>
       </section>
-
-      {/* Content-bottom Banner */}
-      <BannerDisplay position="content-bottom" />
 
       {/* Quick Access */}
       <section>

@@ -5,7 +5,6 @@ import { scorers, getTeamById, getTeamName, getTeamFlag, getStandingsByGroup, ge
 import { useRealtime } from '@/lib/realtime-context';
 import StandingsTable from './StandingsTable';
 import MatchCard from './MatchCard';
-import BannerDisplay from './BannerDisplay';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -163,8 +162,6 @@ export default function GroupsTab() {
         </Tabs>
       </div>
 
-      {/* Sidebar Banner */}
-      <BannerDisplay position="sidebar" />
     </div>
   );
 }

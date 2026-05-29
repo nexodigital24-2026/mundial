@@ -1,27 +1,21 @@
 'use client';
 
-import Image from 'next/image';
 import { Radio } from 'lucide-react';
-import BannerDisplay from './BannerDisplay';
 
 export default function Footer() {
   return (
     <footer className="mt-auto">
-      {/* Footer Banners */}
-      <div className="bg-background border-b border-nd-green/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-          <BannerDisplay position="footer" />
-        </div>
-      </div>
-
-      {/* Main footer - green background with yellow accents */}
+      {/* Main footer - green background with orange accents */}
       <div className="bg-gradient-to-b from-nd-green-dark to-nd-green text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={140} height={44} className="object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
+                <div className="flex items-center gap-1">
+                  <span className="text-white font-extrabold text-xl tracking-tight">Nuevo Día</span>
+                  <span className="text-nd-orange font-extrabold text-xl tracking-tight">Mundial</span>
+                </div>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <Radio className="w-3 h-3 text-nd-orange" />
                   <span className="text-[10px] text-nd-orange font-semibold tracking-wider">100.9 FM — EL DIARIO</span>

@@ -14,9 +14,9 @@ export const metadata: Metadata = {
   description: "Radio Nuevo Día — El Diario. Portal deportivo del Mundial 2026. Resultados en vivo, 12 grupos, goleadores y más. 100.9 FM",
   keywords: ["Mundial", "Fútbol", "Nuevo Día Mundial", "Radio Nuevo Día", "100.9 FM", "Resultados", "Goleadores"],
   icons: {
-    icon: "/logo-nuevo-dia.png",
-    shortcut: "/logo-nuevo-dia.png",
-    apple: "/logo-nuevo-dia.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
   },
 };
 

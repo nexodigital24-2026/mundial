@@ -14,9 +14,7 @@ import SynthesisTab from '@/components/portal/SynthesisTab';
 import VotingTab from '@/components/portal/VotingTab';
 import AdminTab from '@/components/portal/AdminTab';
 import EditorTab from '@/components/portal/EditorTab';
-import ComercialTab from '@/components/portal/ComercialTab';
 import LoginTab from '@/components/portal/LoginTab';
-import BannerDisplay from '@/components/portal/BannerDisplay';
 import { Wifi, WifiOff } from 'lucide-react';
 
 const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: string) => void }>> = {
@@ -29,7 +27,6 @@ const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: str
   votacion: VotingTab,
   admin: AdminTab,
   editor: EditorTab,
-  comercial: ComercialTab,
   login: LoginTab,
 };
 
@@ -85,9 +82,6 @@ function AppContent() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
 
-      {/* Banner below navbar */}
-      <BannerDisplay position="navbar-below" />
-
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
         <ActiveComponent onNavigate={handleTabChange} />
       </main>
@@ -96,16 +90,6 @@ function AppContent() {
 
       {/* Real-time connection indicator */}
       <ConnectionIndicator connected={connected} />
-
-      {/* Sticky bottom banner */}
-      <BannerDisplay position="sticky-bottom" />
-
-      {/* Floating side banners */}
-      <BannerDisplay position="floating-left" />
-      <BannerDisplay position="floating-right" />
-
-      {/* Interstitial overlay */}
-      <BannerDisplay position="interstitial" />
     </div>
   );
 }
