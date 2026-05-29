@@ -1,10 +1,18 @@
 'use client';
 
 import { Trophy } from 'lucide-react';
+import BannerDisplay from './BannerDisplay';
 
 export default function Footer() {
   return (
     <footer className="bg-primary text-primary-foreground mt-auto">
+      {/* Footer Banners */}
+      <div className="bg-background border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <BannerDisplay position="footer" />
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -14,7 +22,7 @@ export default function Footer() {
               <span className="text-lg font-bold text-white">Nuevo Día Mundial</span>
             </div>
             <p className="text-white/70 text-sm">
-              El portal deportivo más completo del Mundial 2026. Resultados en vivo, estadísticas y toda la información del torneo.
+              El portal deportivo más completo del Mundial 2026. Resultados en vivo, estadísticas y toda la información del torneo con 48 selecciones y 12 grupos.
             </p>
           </div>
 
@@ -25,6 +33,8 @@ export default function Footer() {
               <li className="hover:text-white transition-colors cursor-pointer">Grupos y Posiciones</li>
               <li className="hover:text-white transition-colors cursor-pointer">Resultados</li>
               <li className="hover:text-white transition-colors cursor-pointer">Goleadores</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Expulsados</li>
+              <li className="hover:text-white transition-colors cursor-pointer">Síntesis</li>
               <li className="hover:text-white transition-colors cursor-pointer">Votación Figura</li>
             </ul>
           </div>
@@ -37,6 +47,9 @@ export default function Footer() {
               <li>@nuevodiawmundial</li>
               <li>© 2026 Nuevo Día Mundial</li>
             </ul>
+            <div className="mt-4 pt-3 border-t border-white/20">
+              <p className="text-[11px] text-white/50">Patrocinadores oficiales: Adidas, Coca-Cola, Visa, Hyundai, Qatar Airways, McDonald&apos;s, Wanda, Hisense</p>
+            </div>
           </div>
         </div>
 

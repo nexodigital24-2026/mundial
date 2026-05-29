@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AuthProvider } from '@/lib/auth-context';
 import Navbar from '@/components/portal/Navbar';
 import Footer from '@/components/portal/Footer';
 import HomeTab from '@/components/portal/HomeTab';
@@ -10,6 +11,10 @@ import ScorersTab from '@/components/portal/ScorersTab';
 import RedCardsTab from '@/components/portal/RedCardsTab';
 import SynthesisTab from '@/components/portal/SynthesisTab';
 import VotingTab from '@/components/portal/VotingTab';
+import AdminTab from '@/components/portal/AdminTab';
+import EditorTab from '@/components/portal/EditorTab';
+import ComercialTab from '@/components/portal/ComercialTab';
+import LoginTab from '@/components/portal/LoginTab';
 
 const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: string) => void }>> = {
   inicio: HomeTab,
@@ -19,9 +24,13 @@ const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: str
   expulsados: RedCardsTab,
   sintesis: SynthesisTab,
   votacion: VotingTab,
+  admin: AdminTab,
+  editor: EditorTab,
+  comercial: ComercialTab,
+  login: LoginTab,
 };
 
-export default function HomePage() {
+function AppContent() {
   const [activeTab, setActiveTab] = useState('inicio');
 
   const handleTabChange = (tab: string) => {
@@ -41,5 +50,13 @@ export default function HomePage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

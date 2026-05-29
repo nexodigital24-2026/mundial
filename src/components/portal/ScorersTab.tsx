@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { scorers, teams, getTeamName } from '@/lib/mock-data';
+import { scorers, teams, getTeamName, allGroups, type GroupLetter } from '@/lib/mock-data';
 import ScorerRow from './ScorerRow';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,7 +15,7 @@ import { Search, Filter } from 'lucide-react';
 
 export default function ScorersTab() {
   const [search, setSearch] = useState('');
-  const [groupFilter, setGroupFilter] = useState<'all' | 'A' | 'B'>('all');
+  const [groupFilter, setGroupFilter] = useState<string>('all');
 
   const filteredScorers = useMemo(() => {
     let result = [...scorers].sort((a, b) => b.goals - a.goals || b.assists - a.assists);
@@ -56,7 +56,7 @@ export default function ScorersTab() {
         </div>
         <Select
           value={groupFilter}
-          onValueChange={(v) => setGroupFilter(v as 'all' | 'A' | 'B')}
+          onValueChange={(v) => setGroupFilter(v)}
         >
           <SelectTrigger className="w-full sm:w-44">
             <Filter className="w-4 h-4 mr-2" />
@@ -64,8 +64,9 @@ export default function ScorersTab() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todos los grupos</SelectItem>
-            <SelectItem value="A">Grupo A</SelectItem>
-            <SelectItem value="B">Grupo B</SelectItem>
+            {allGroups.map((g) => (
+              <SelectItem key={g} value={g}>Grupo {g}</SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>

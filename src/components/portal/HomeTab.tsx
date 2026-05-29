@@ -3,6 +3,7 @@
 import { matches, news, getTeamById } from '@/lib/mock-data';
 import LiveMatch from './LiveMatch';
 import MatchCard from './MatchCard';
+import BannerDisplay from './BannerDisplay';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -42,13 +43,13 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
         <div className="relative px-6 sm:px-10 py-10 sm:py-16">
           <div className="max-w-3xl">
             <Badge className="bg-white/20 text-white border-white/30 mb-4 text-sm">
-              ⚽ Torneo 2026
+              ⚽ Mundial 2026 — 12 Grupos
             </Badge>
             <h2 className="text-3xl sm:text-5xl font-extrabold mb-3 tracking-tight">
               Nuevo Día Mundial
             </h2>
             <p className="text-lg sm:text-xl text-white/80 mb-6 max-w-xl">
-              Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo.
+              Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. 48 selecciones, 12 grupos.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button
@@ -69,6 +70,9 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
         </div>
       </section>
 
+      {/* Content-top Banner */}
+      <BannerDisplay position="content-top" />
+
       {/* Live Matches */}
       {liveMatches.length > 0 && (
         <section>
@@ -83,6 +87,9 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
           </div>
         </section>
       )}
+
+      {/* Hero Banner Ad */}
+      <BannerDisplay position="hero" />
 
       {/* Upcoming Matches */}
       <section>
@@ -125,6 +132,9 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
           ))}
         </div>
       </section>
+
+      {/* Content-bottom Banner */}
+      <BannerDisplay position="content-bottom" />
 
       {/* Quick Access */}
       <section>
