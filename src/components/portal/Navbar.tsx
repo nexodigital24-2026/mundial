@@ -63,9 +63,9 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
       <div className="bg-nd-green text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-9">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold tracking-wider opacity-90">📻 100.9 FM</span>
+            <span className="text-xs font-semibold tracking-wider opacity-90">🌐 Nexo Digital</span>
           </div>
-          <span className="text-[10px] font-medium tracking-widest uppercase opacity-70 hidden sm:block">Radio Nuevo Día — El Diario</span>
+          <span className="text-[10px] font-medium tracking-widest uppercase opacity-70 hidden sm:block">Nexo Digital</span>
           <div className="flex items-center gap-3">
             {isAuthenticated && user ? (
               <div className="flex items-center gap-2">
@@ -110,7 +110,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
           <div className="flex items-center justify-between h-14">
             {/* Brand */}
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-              <span className="text-white font-extrabold text-lg tracking-tight">Nuevo Día</span>
+              <span className="text-white font-extrabold text-lg tracking-tight">Nexo Digital</span>
               <span className="text-nd-orange font-extrabold text-lg tracking-tight">Mundial</span>
             </div>
 

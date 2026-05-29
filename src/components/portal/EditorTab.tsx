@@ -573,12 +573,12 @@ export default function EditorTab() {
                               )}
                               <div className="absolute inset-0 p-4 flex flex-col justify-end text-white">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-[10px]">📻 100.9 FM</Badge>
+                                  <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-[10px]">🌐 Nexo Digital</Badge>
                                   {slideForm.category === 'En Vivo' && (
                                     <Badge className="bg-red-500 text-white border-0 text-[10px]">En Vivo</Badge>
                                   )}
                                 </div>
-                                <h3 className="text-lg font-bold mb-0.5">Nuevo Día <span className="text-nd-orange">Mundial</span></h3>
+                                <h3 className="text-lg font-bold mb-0.5">Nexo Digital <span className="text-nd-orange">Mundial</span></h3>
                                 <p className="text-sm font-semibold">{slideForm.title ?? 'Título'}</p>
                                 <p className="text-xs text-white/70">{slideForm.subtitle ?? 'Subtítulo'}</p>
                               </div>

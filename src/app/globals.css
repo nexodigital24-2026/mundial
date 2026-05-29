@@ -41,7 +41,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Nuevo Día brand colors — exact match from main-logo.svg */
+  /* Nexo Digital brand colors */
   --color-nd-green: #026602;
   --color-nd-green-dark: #014d01;
   --color-nd-green-light: #E8F5E9;

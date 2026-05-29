@@ -10,9 +10,9 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Radio Nuevo Día Mundial - 100.9 FM | Portal del Mundial 2026",
-  description: "Radio Nuevo Día — El Diario. Portal deportivo del Mundial 2026. Resultados en vivo, 12 grupos, goleadores y más. 100.9 FM",
-  keywords: ["Mundial", "Fútbol", "Nuevo Día Mundial", "Radio Nuevo Día", "100.9 FM", "Resultados", "Goleadores"],
+  title: "Nexo Digital Mundial | Portal del Mundial 2026",
+  description: "Nexo Digital. Portal deportivo del Mundial 2026. Resultados en vivo, 12 grupos, goleadores y más.",
+  keywords: ["Mundial", "Fútbol", "Nexo Digital Mundial", "Nexo Digital", "Resultados", "Goleadores"],
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",

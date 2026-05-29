@@ -36,11 +36,11 @@ interface ContentEditEntry {
 }
 
 const defaultUsers: LocalUser[] = [
-  { id: 'u1', email: 'admin@nuevodiaworld.com', name: 'Administrador', role: 'admin', active: true, createdAt: '2026-05-01' },
-  { id: 'u2', email: 'editor@nuevodiaworld.com', name: 'Editor Deportivo', role: 'editor', active: true, createdAt: '2026-05-15' },
-  { id: 'u3', email: 'comercial@nuevodiaworld.com', name: 'Comercial', role: 'comercial', active: true, createdAt: '2026-05-20' },
-  { id: 'u4', email: 'editor2@nuevodiaworld.com', name: 'Redactor Junior', role: 'editor', active: true, createdAt: '2026-06-01' },
-  { id: 'u5', email: 'comercial2@nuevodiaworld.com', name: 'Ventas Sr.', role: 'comercial', active: false, createdAt: '2026-06-05' },
+  { id: 'u1', email: 'admin@nexodigitalmundial.com', name: 'Administrador', role: 'admin', active: true, createdAt: '2026-05-01' },
+  { id: 'u2', email: 'editor@nexodigitalmundial.com', name: 'Editor Deportivo', role: 'editor', active: true, createdAt: '2026-05-15' },
+  { id: 'u3', email: 'comercial@nexodigitalmundial.com', name: 'Comercial', role: 'comercial', active: true, createdAt: '2026-05-20' },
+  { id: 'u4', email: 'editor2@nexodigitalmundial.com', name: 'Redactor Junior', role: 'editor', active: true, createdAt: '2026-06-01' },
+  { id: 'u5', email: 'comercial2@nexodigitalmundial.com', name: 'Ventas Sr.', role: 'comercial', active: false, createdAt: '2026-06-05' },
 ];
 
 const defaultEdits: ContentEditEntry[] = [
@@ -191,7 +191,7 @@ export default function AdminTab() {
                   <Label>Correo Electrónico</Label>
                   <Input
                     type="email"
-                    placeholder="correo@nuevodiaworld.com"
+                    placeholder="correo@nexodigitalmundial.com"
                     value={newUser.email}
                     onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
                   />

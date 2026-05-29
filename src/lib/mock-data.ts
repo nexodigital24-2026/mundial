@@ -1,4 +1,4 @@
-// Mock Data for "Nuevo Día Mundial" Sports Portal - World Cup 2026
+// Mock Data for "Nexo Digital Mundial" Sports Portal - World Cup 2026
 // 12 Groups, 48 Teams
 
 export type GroupLetter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L';

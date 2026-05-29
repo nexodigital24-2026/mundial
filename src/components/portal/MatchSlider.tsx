@@ -118,7 +118,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               {/* Top tags */}
               <div className="flex items-center gap-2 mb-3 flex-wrap">
                 <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-xs">
-                  📻 100.9 FM
+                  🌐 Nexo Digital
                 </Badge>
                 <Badge className="bg-white/20 text-white border-white/30 text-xs">
                   ⚽ Mundial 2026 — 12 Grupos
@@ -144,7 +144,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
 
               {/* Main title */}
               <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold mb-1 tracking-tight">
-                Nuevo Día <span className="text-nd-orange">Mundial</span>
+                Nexo Digital <span className="text-nd-orange">Mundial</span>
               </h2>
 
               {/* Slide title & subtitle */}
@@ -234,10 +234,10 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
             {/* Right: Brand text */}
             <div className="hidden sm:flex flex-col items-center gap-2">
               <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-3 flex flex-col items-center">
-                <span className="text-white font-extrabold text-xl tracking-tight">Nuevo Día</span>
+                <span className="text-white font-extrabold text-xl tracking-tight">Nexo Digital</span>
                 <span className="text-nd-orange font-extrabold text-xl tracking-tight">Mundial</span>
               </div>
-              <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
+              <span className="text-[10px] text-white/60 font-semibold tracking-wider">NEXO DIGITAL</span>
             </div>
           </div>
 

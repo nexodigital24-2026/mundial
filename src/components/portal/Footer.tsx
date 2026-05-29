@@ -13,12 +13,12 @@ export default function Footer() {
             <div>
               <div className="flex items-center gap-3 mb-3">
                 <div className="flex items-center gap-1">
-                  <span className="text-white font-extrabold text-xl tracking-tight">Nuevo Día</span>
+                  <span className="text-white font-extrabold text-xl tracking-tight">Nexo Digital</span>
                   <span className="text-nd-orange font-extrabold text-xl tracking-tight">Mundial</span>
                 </div>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <Radio className="w-3 h-3 text-nd-orange" />
-                  <span className="text-[10px] text-nd-orange font-semibold tracking-wider">100.9 FM — EL DIARIO</span>
+                  <span className="text-[10px] text-nd-orange font-semibold tracking-wider">NEXO DIGITAL</span>
                 </div>
               </div>
               <p className="text-white/70 text-sm">
@@ -43,9 +43,9 @@ export default function Footer() {
             <div>
               <h3 className="text-nd-orange font-bold mb-3 text-sm tracking-wider uppercase">Contacto</h3>
               <ul className="space-y-2 text-sm text-white/70">
-                <li>info@nuevodiawmundial.com</li>
-                <li>@nuevodiawmundial</li>
-                <li>© 2026 Radio Nuevo Día</li>
+                <li>info@nexodigitalmundial.com</li>
+                <li>@nexodigitalmundial</li>
+                <li>© 2026 Nexo Digital</li>
               </ul>
               <div className="mt-4 pt-3 border-t border-white/20">
                 <p className="text-[11px] text-white/50">Patrocinadores oficiales: Adidas, Coca-Cola, Visa, Hyundai, Qatar Airways, McDonald&apos;s, Wanda, Hisense</p>
@@ -54,7 +54,7 @@ export default function Footer() {
           </div>
 
           <div className="mt-8 pt-4 border-t border-white/20 text-center text-xs text-white/50">
-            Todos los derechos reservados © 2026 Radio Nuevo Día — El Diario. Datos de demostración con fines ilustrativos.
+            Todos los derechos reservados © 2026 Nexo Digital. Datos de demostración con fines ilustrativos.
           </div>
         </div>
       </div>

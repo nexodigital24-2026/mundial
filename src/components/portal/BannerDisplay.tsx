@@ -136,7 +136,7 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
           className="text-[9px] opacity-50 font-medium mt-auto"
           style={{ color: hasImage ? 'white' : getContrastColor(banner.bgColor) }}
         >
-          Publicado por Nuevo Día
+          Publicado por Nexo Digital
         </p>
       </div>
 

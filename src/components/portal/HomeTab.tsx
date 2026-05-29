@@ -43,7 +43,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Match Slider - Nuevo Día branding */}
+      {/* Match Slider - Nexo Digital branding */}
       <MatchSlider slides={sliderSlides} onNavigate={onNavigate} />
 
       {/* Live Matches with Real-time indicator */}

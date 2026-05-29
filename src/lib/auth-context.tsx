@@ -21,9 +21,9 @@ interface AuthContextType {
 }
 
 const DEFAULT_USERS: (AuthUser & { password: string })[] = [
-  { id: 'u1', email: 'admin@nuevodiaworld.com', name: 'Administrador', role: 'admin', avatar: undefined, password: 'admin123' },
-  { id: 'u2', email: 'editor@nuevodiaworld.com', name: 'Editor Deportivo', role: 'editor', avatar: undefined, password: 'editor123' },
-  { id: 'u3', email: 'comercial@nuevodiaworld.com', name: 'Comercial', role: 'comercial', avatar: undefined, password: 'comercial123' },
+  { id: 'u1', email: 'admin@nexodigitalmundial.com', name: 'Administrador', role: 'admin', avatar: undefined, password: 'admin123' },
+  { id: 'u2', email: 'editor@nexodigitalmundial.com', name: 'Editor Deportivo', role: 'editor', avatar: undefined, password: 'editor123' },
+  { id: 'u3', email: 'comercial@nexodigitalmundial.com', name: 'Comercial', role: 'comercial', avatar: undefined, password: 'comercial123' },
 ];
 
 const AUTH_STORAGE_KEY = 'ndm-auth-user';

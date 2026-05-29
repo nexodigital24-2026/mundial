@@ -128,8 +128,8 @@ export default function LoginTab() {
           <div className="w-16 h-16 rounded-full bg-nd-orange/30 flex items-center justify-center mx-auto mb-3">
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-xl font-extrabold text-white">Nuevo Día <span className="text-nd-orange">Mundial</span></h3>
-          <p className="text-sm text-white/70">Radio Nuevo Día — 100.9 FM — El Diario</p>
+          <h3 className="text-xl font-extrabold text-white">Nexo Digital <span className="text-nd-orange">Mundial</span></h3>
+          <p className="text-sm text-white/70">Nexo Digital — Portal del Mundial 2026</p>
         </div>
 
         <CardContent className="p-6">
@@ -139,7 +139,7 @@ export default function LoginTab() {
               <Input
                 id="email"
                 type="email"
-                placeholder="usuario@nuevodiaworld.com"
+                placeholder="usuario@nexodigitalmundial.com"
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setError(''); }}
                 required
@@ -173,7 +173,7 @@ export default function LoginTab() {
             <p className="text-xs text-muted-foreground text-center mb-3">Acceso rápido (demo)</p>
             <div className="space-y-2">
               <button
-                onClick={() => handleQuickLogin('admin@nuevodiaworld.com', 'admin123')}
+                onClick={() => handleQuickLogin('admin@nexodigitalmundial.com', 'admin123')}
                 className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-nd-orange-light hover:bg-nd-orange/20 transition-colors text-left"
               >
                 <div className="w-8 h-8 rounded-full bg-nd-orange flex items-center justify-center flex-shrink-0">
@@ -181,11 +181,11 @@ export default function LoginTab() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground">Administrador</p>
-                  <p className="text-[11px] text-muted-foreground">admin@nuevodiaworld.com</p>
+                  <p className="text-[11px] text-muted-foreground">admin@nexodigitalmundial.com</p>
                 </div>
               </button>
               <button
-                onClick={() => handleQuickLogin('editor@nuevodiaworld.com', 'editor123')}
+                onClick={() => handleQuickLogin('editor@nexodigitalmundial.com', 'editor123')}
                 className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-nd-green-light hover:bg-nd-green/10 transition-colors text-left"
               >
                 <div className="w-8 h-8 rounded-full bg-nd-green flex items-center justify-center flex-shrink-0">
@@ -193,11 +193,11 @@ export default function LoginTab() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground">Editor Deportivo</p>
-                  <p className="text-[11px] text-muted-foreground">editor@nuevodiaworld.com</p>
+                  <p className="text-[11px] text-muted-foreground">editor@nexodigitalmundial.com</p>
                 </div>
               </button>
               <button
-                onClick={() => handleQuickLogin('comercial@nuevodiaworld.com', 'comercial123')}
+                onClick={() => handleQuickLogin('comercial@nexodigitalmundial.com', 'comercial123')}
                 className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-nd-orange-light hover:bg-nd-orange/10 transition-colors text-left"
               >
                 <div className="w-8 h-8 rounded-full bg-nd-orange-dark flex items-center justify-center flex-shrink-0">
@@ -205,7 +205,7 @@ export default function LoginTab() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground">Comercial</p>
-                  <p className="text-[11px] text-muted-foreground">comercial@nuevodiaworld.com</p>
+                  <p className="text-[11px] text-muted-foreground">comercial@nexodigitalmundial.com</p>
                 </div>
               </button>
             </div>

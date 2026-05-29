@@ -591,7 +591,7 @@ export default function ComercialTab() {
                                 </p>
                               </div>
                               <p className="text-[8px] opacity-40" style={{ color: (banner.imageDataUrl || banner.imageUrl) ? 'white' : getContrastColor(banner.bgColor) }}>
-                                Publicado por Nuevo Día
+                                Publicado por Nexo Digital
                               </p>
                             </div>
                           </div>
