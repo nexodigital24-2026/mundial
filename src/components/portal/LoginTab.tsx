@@ -42,9 +42,9 @@ export default function LoginTab() {
   };
 
   const getRoleBadgeColor = () => {
-    if (isAdmin) return 'bg-red-100 text-red-700 hover:bg-red-100';
-    if (isEditor) return 'bg-blue-100 text-blue-700 hover:bg-blue-100';
-    if (isComercial) return 'bg-green-100 text-green-700 hover:bg-green-100';
+    if (isAdmin) return 'bg-nd-yellow/30 text-nd-green-dark hover:bg-nd-yellow/30';
+    if (isEditor) return 'bg-nd-green-light text-nd-green-dark hover:bg-nd-green-light';
+    if (isComercial) return 'bg-nd-yellow-light text-nd-yellow-dark hover:bg-nd-yellow-light';
     return 'bg-gray-100 text-gray-700 hover:bg-gray-100';
   };
 
@@ -64,10 +64,10 @@ export default function LoginTab() {
           Mi Cuenta
         </h2>
 
-        <Card className="overflow-hidden border-2 border-primary/20">
-          <div className="bg-gradient-to-r from-primary/10 to-celeste-light p-6 text-center">
+        <Card className="overflow-hidden border-2 border-nd-green/30">
+          <div className="bg-gradient-to-r from-nd-green-light to-nd-yellow-light p-6 text-center">
             <Avatar className="w-20 h-20 mx-auto mb-3">
-              <AvatarFallback className="bg-primary text-white text-2xl font-bold">
+              <AvatarFallback className="bg-nd-green text-white text-2xl font-bold">
                 {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
               </AvatarFallback>
             </Avatar>
@@ -123,13 +123,13 @@ export default function LoginTab() {
         Iniciar Sesión
       </h2>
 
-      <Card className="overflow-hidden border-2 border-primary/20">
-        <div className="bg-gradient-to-r from-primary to-celeste-dark p-6 text-center">
-          <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3">
+      <Card className="overflow-hidden border-2 border-nd-green/30">
+        <div className="bg-gradient-to-r from-nd-green to-nd-green-dark p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-nd-yellow/30 flex items-center justify-center mx-auto mb-3">
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-white">Nuevo Día Mundial</h3>
-          <p className="text-sm text-white/80">Portal del Mundial 2026</p>
+          <h3 className="text-xl font-extrabold text-white">Nuevo Día <span className="text-nd-yellow">Mundial</span></h3>
+          <p className="text-sm text-white/70">Radio Nuevo Día — 100.9 FM — El Diario</p>
         </div>
 
         <CardContent className="p-6">
@@ -164,7 +164,7 @@ export default function LoginTab() {
               </div>
             )}
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full bg-nd-green hover:bg-nd-green-dark font-semibold" disabled={loading}>
               {loading ? 'Ingresando...' : 'Ingresar'}
             </Button>
           </form>
@@ -174,10 +174,10 @@ export default function LoginTab() {
             <div className="space-y-2">
               <button
                 onClick={() => handleQuickLogin('admin@nuevodiaworld.com', 'admin123')}
-                className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-red-50 hover:bg-red-100 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-nd-yellow-light hover:bg-nd-yellow/20 transition-colors text-left"
               >
-                <div className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
-                  <Shield className="w-4 h-4 text-white" />
+                <div className="w-8 h-8 rounded-full bg-nd-yellow flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-4 h-4 text-nd-black" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-foreground">Administrador</p>
@@ -186,9 +186,9 @@ export default function LoginTab() {
               </button>
               <button
                 onClick={() => handleQuickLogin('editor@nuevodiaworld.com', 'editor123')}
-                className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-nd-green-light hover:bg-nd-green/10 transition-colors text-left"
               >
-                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-nd-green flex items-center justify-center flex-shrink-0">
                   <PenTool className="w-4 h-4 text-white" />
                 </div>
                 <div>
@@ -198,9 +198,9 @@ export default function LoginTab() {
               </button>
               <button
                 onClick={() => handleQuickLogin('comercial@nuevodiaworld.com', 'comercial123')}
-                className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-green-50 hover:bg-green-100 transition-colors text-left"
+                className="w-full flex items-center gap-3 p-2.5 rounded-lg bg-nd-yellow-light hover:bg-nd-orange/10 transition-colors text-left"
               >
-                <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-nd-orange flex items-center justify-center flex-shrink-0">
                   <Briefcase className="w-4 h-4 text-white" />
                 </div>
                 <div>

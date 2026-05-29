@@ -41,9 +41,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --color-celeste: #00AEEF;
-  --color-celeste-dark: #0096cc;
-  --color-celeste-light: #e0f5ff;
+  /* Nuevo Día brand colors from logo */
+  --color-nd-green: #00B050;
+  --color-nd-green-dark: #009040;
+  --color-nd-green-light: #e6f7ed;
+  --color-nd-yellow: #FFC000;
+  --color-nd-yellow-dark: #e6a800;
+  --color-nd-yellow-light: #fff8e0;
+  --color-nd-orange: #FFA500;
+  --color-nd-black: #1a1a1a;
   --color-gold: #FFD700;
   --color-silver: #C0C0C0;
   --color-bronze: #CD7F32;
@@ -52,70 +58,70 @@
 :root {
   --radius: 0.625rem;
   --background: #ffffff;
-  --foreground: #1a1a2e;
+  --foreground: #1a1a1a;
   --card: #ffffff;
-  --card-foreground: #1a1a2e;
+  --card-foreground: #1a1a1a;
   --popover: #ffffff;
-  --popover-foreground: #1a1a2e;
-  --primary: #00AEEF;
+  --popover-foreground: #1a1a1a;
+  --primary: #00B050;
   --primary-foreground: #ffffff;
-  --secondary: #f0f4f8;
-  --secondary-foreground: #1a1a2e;
-  --muted: #f0f4f8;
-  --muted-foreground: #64748b;
-  --accent: #e0f5ff;
-  --accent-foreground: #1a1a2e;
+  --secondary: #fff8e0;
+  --secondary-foreground: #1a1a1a;
+  --muted: #f0f7f2;
+  --muted-foreground: #5a6b5e;
+  --accent: #FFC000;
+  --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #00AEEF;
-  --chart-1: #00AEEF;
-  --chart-2: #10b981;
-  --chart-3: #f59e0b;
-  --chart-4: #8b5cf6;
+  --border: #d4e8d9;
+  --input: #d4e8d9;
+  --ring: #00B050;
+  --chart-1: #00B050;
+  --chart-2: #FFC000;
+  --chart-3: #FFA500;
+  --chart-4: #009040;
   --chart-5: #ef4444;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1a1a2e;
-  --sidebar-primary: #00AEEF;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #00B050;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #e0f5ff;
-  --sidebar-accent-foreground: #1a1a2e;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #00AEEF;
+  --sidebar-accent: #fff8e0;
+  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-border: #d4e8d9;
+  --sidebar-ring: #00B050;
 }
 
 .dark {
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --card: #1e293b;
-  --card-foreground: #f8fafc;
-  --popover: #1e293b;
-  --popover-foreground: #f8fafc;
-  --primary: #00AEEF;
+  --background: #0a1f10;
+  --foreground: #f0f7f2;
+  --card: #132a18;
+  --card-foreground: #f0f7f2;
+  --popover: #132a18;
+  --popover-foreground: #f0f7f2;
+  --primary: #00B050;
   --primary-foreground: #ffffff;
-  --secondary: #1e293b;
-  --secondary-foreground: #f8fafc;
-  --muted: #1e293b;
-  --muted-foreground: #94a3b8;
-  --accent: #1e3a5f;
-  --accent-foreground: #f8fafc;
+  --secondary: #1a3320;
+  --secondary-foreground: #f0f7f2;
+  --muted: #1a3320;
+  --muted-foreground: #8fa896;
+  --accent: #FFC000;
+  --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
-  --border: #334155;
-  --input: #334155;
-  --ring: #00AEEF;
-  --chart-1: #00AEEF;
-  --chart-2: #10b981;
-  --chart-3: #f59e0b;
-  --chart-4: #8b5cf6;
+  --border: #2a4a30;
+  --input: #2a4a30;
+  --ring: #00B050;
+  --chart-1: #00B050;
+  --chart-2: #FFC000;
+  --chart-3: #FFA500;
+  --chart-4: #009040;
   --chart-5: #ef4444;
-  --sidebar: #1e293b;
-  --sidebar-foreground: #f8fafc;
-  --sidebar-primary: #00AEEF;
+  --sidebar: #132a18;
+  --sidebar-foreground: #f0f7f2;
+  --sidebar-primary: #00B050;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1e3a5f;
-  --sidebar-accent-foreground: #f8fafc;
-  --sidebar-border: #334155;
-  --sidebar-ring: #00AEEF;
+  --sidebar-accent: #1a3320;
+  --sidebar-accent-foreground: #f0f7f2;
+  --sidebar-border: #2a4a30;
+  --sidebar-ring: #00B050;
 }
 
 @layer base {
@@ -135,11 +141,11 @@
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #a0c8a8;
   border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #7ab085;
 }
 
 /* Pulsing live animation */

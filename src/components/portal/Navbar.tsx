@@ -46,9 +46,9 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
   };
 
   const getRoleBadgeColor = () => {
-    if (isAdmin) return 'bg-red-500/30 text-white hover:bg-red-500/30';
-    if (isEditor) return 'bg-blue-500/30 text-white hover:bg-blue-500/30';
-    if (isComercial) return 'bg-green-500/30 text-white hover:bg-green-500/30';
+    if (isAdmin) return 'bg-nd-yellow/40 text-nd-black hover:bg-nd-yellow/40';
+    if (isEditor) return 'bg-white/30 text-white hover:bg-white/30';
+    if (isComercial) return 'bg-nd-yellow/40 text-nd-black hover:bg-nd-yellow/40';
     return '';
   };
 
@@ -60,125 +60,134 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-primary text-primary-foreground shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Top bar with logo */}
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-            <Image src="/logo.png" alt="Nuevo Día Mundial" width={36} height={36} className="rounded-full" />
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-                Nuevo Día Mundial
-              </h1>
-              <p className="text-xs text-white/70 hidden sm:block">Portal del Mundial 2026</p>
-            </div>
+    <nav className="sticky top-0 z-50 shadow-lg">
+      {/* Green top strip with FM frequency */}
+      <div className="bg-nd-green text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-9">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold tracking-wider opacity-90">📻 100.9 FM</span>
           </div>
-
-          {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-1">
-            {publicTabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabClick(tab.id)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                  activeTab === tab.id
-                    ? 'bg-white/20 text-white shadow-inner'
-                    : 'text-white/80 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-
-            {/* Separator */}
-            <div className="w-px h-6 bg-white/20 mx-1" />
-
-            {adminTabs.map((tab) => {
-              const accessible = hasAccess(tab.role);
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => handleTabClick(tab.id)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
-                    activeTab === tab.id
-                      ? 'bg-white/20 text-white shadow-inner'
-                      : accessible
-                      ? 'text-white/80 hover:bg-white/10 hover:text-white'
-                      : 'text-white/40 cursor-not-allowed'
-                  }`}
-                  title={accessible ? tab.label : `Requiere rol ${tab.role}`}
-                >
-                  <tab.icon className="w-3.5 h-3.5" />
-                  <span className="hidden xl:inline">{tab.label}</span>
-                  {!accessible && <Lock className="w-3 h-3" />}
-                </button>
-              );
-            })}
-
-            {/* Login/User */}
+          <span className="text-[10px] font-medium tracking-widest uppercase opacity-70 hidden sm:block">Radio Nuevo Día — El Diario</span>
+          <div className="flex items-center gap-3">
             {isAuthenticated && user ? (
-              <div className="flex items-center gap-2 ml-2">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => handleTabClick('login')}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-white/10 transition-colors"
+                  className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                 >
-                  <Avatar className="w-6 h-6">
-                    <AvatarFallback className="text-[10px] bg-white/20 text-white font-semibold">
+                  <Avatar className="w-5 h-5">
+                    <AvatarFallback className="text-[8px] bg-white/20 text-white font-semibold">
                       {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-xs text-white font-medium hidden xl:inline">{user.name}</span>
-                  <Badge className={`text-[9px] py-0 ${getRoleBadgeColor()}`}>
+                  <span className="text-[11px] font-medium">{user.name}</span>
+                  <Badge className={`text-[8px] py-0 ${getRoleBadgeColor()}`}>
                     {getRoleLabel()}
                   </Badge>
                 </button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-white/70 hover:text-white hover:bg-white/10 w-8 h-8"
+                <button
                   onClick={logout}
+                  className="text-white/70 hover:text-white transition-colors"
                   title="Cerrar Sesión"
                 >
-                  <LogOut className="w-4 h-4" />
-                </Button>
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
               </div>
             ) : (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-white/80 hover:text-white hover:bg-white/10 ml-2"
+              <button
                 onClick={() => handleTabClick('login')}
+                className="flex items-center gap-1 text-[11px] font-medium hover:opacity-80 transition-opacity"
               >
-                <LogIn className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Ingresar</span>
-              </Button>
+                <LogIn className="w-3 h-3" />
+                Ingresar
+              </button>
             )}
           </div>
+        </div>
+      </div>
 
-          {/* Mobile menu button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden text-white hover:bg-white/10"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </Button>
+      {/* Main nav bar - gradient from green to darker green */}
+      <div className="bg-gradient-to-r from-nd-green via-nd-green-dark to-nd-green">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14">
+            {/* Logo + Brand */}
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('inicio')}>
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={40} height={40} className="rounded-md" />
+              <div>
+                <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-white">
+                  Nuevo Día <span className="text-nd-yellow">Mundial</span>
+                </h1>
+                <p className="text-[10px] text-white/60 hidden sm:block font-medium tracking-wide">PORTAL DEL MUNDIAL 2026</p>
+              </div>
+            </div>
+
+            {/* Desktop nav */}
+            <div className="hidden lg:flex items-center gap-0.5">
+              {publicTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                    activeTab === tab.id
+                      ? 'bg-nd-yellow text-nd-black shadow-md'
+                      : 'text-white/90 hover:bg-white/15 hover:text-white'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+
+              {/* Separator */}
+              <div className="w-px h-5 bg-white/20 mx-1" />
+
+              {adminTabs.map((tab) => {
+                const accessible = hasAccess(tab.role);
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => handleTabClick(tab.id)}
+                    className={`px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 flex items-center gap-1 ${
+                      activeTab === tab.id
+                        ? 'bg-nd-yellow text-nd-black shadow-md'
+                        : accessible
+                        ? 'text-white/80 hover:bg-white/15 hover:text-white'
+                        : 'text-white/35 cursor-not-allowed'
+                    }`}
+                    title={accessible ? tab.label : `Requiere rol ${tab.role}`}
+                  >
+                    <tab.icon className="w-3 h-3" />
+                    <span className="hidden xl:inline">{tab.label}</span>
+                    {!accessible && <Lock className="w-2.5 h-2.5" />}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Mobile menu button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden text-white hover:bg-white/10"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </Button>
+          </div>
         </div>
       </div>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-primary-dark border-t border-white/10 animate-fade-in">
+        <div className="lg:hidden bg-nd-green-dark border-t border-white/10 animate-fade-in">
           <div className="px-4 py-2 space-y-1">
             {publicTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`w-full text-left px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-white/20 text-white'
-                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                    ? 'bg-nd-yellow text-nd-black'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -193,12 +202,12 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`w-full text-left px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
+                  className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                     activeTab === tab.id
-                      ? 'bg-white/20 text-white'
+                      ? 'bg-nd-yellow text-nd-black'
                       : accessible
                       ? 'text-white/80 hover:bg-white/10 hover:text-white'
-                      : 'text-white/40 cursor-not-allowed'
+                      : 'text-white/35 cursor-not-allowed'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -214,12 +223,12 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
               <div className="px-4 py-3">
                 <div className="flex items-center gap-3 mb-3">
                   <Avatar className="w-8 h-8">
-                    <AvatarFallback className="text-xs bg-white/20 text-white font-semibold">
+                    <AvatarFallback className="text-xs bg-nd-yellow text-nd-black font-bold">
                       {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-medium text-white">{user.name}</p>
+                    <p className="text-sm font-bold text-white">{user.name}</p>
                     <Badge className={`text-[9px] py-0 ${getRoleBadgeColor()}`}>
                       {getRoleLabel()}
                     </Badge>
@@ -227,9 +236,8 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 </div>
                 <div className="flex gap-2">
                   <Button
-                    variant="ghost"
                     size="sm"
-                    className="text-white/80 hover:text-white hover:bg-white/10 flex-1"
+                    className="flex-1 bg-nd-yellow text-nd-black hover:bg-nd-yellow-dark font-semibold"
                     onClick={() => handleTabClick('login')}
                   >
                     Mi Cuenta
@@ -248,7 +256,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
             ) : (
               <button
                 onClick={() => handleTabClick('login')}
-                className="w-full text-left px-4 py-3 rounded-md text-sm font-medium text-white/80 hover:bg-white/10 hover:text-white flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white flex items-center gap-2"
               >
                 <LogIn className="w-4 h-4" />
                 Iniciar Sesión

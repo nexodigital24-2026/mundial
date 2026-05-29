@@ -7,6 +7,7 @@ import BannerDisplay from './BannerDisplay';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 import {
   Trophy,
   CircleDot,
@@ -16,6 +17,7 @@ import {
   Star,
   ArrowRight,
   Newspaper,
+  Radio,
 } from 'lucide-react';
 
 interface HomeTabProps {
@@ -27,44 +29,58 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const upcomingMatches = matches.filter((m) => m.status === 'upcoming').slice(0, 3);
 
   const quickLinks = [
-    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-green-500' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-blue-500' },
-    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-yellow-500' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-purple-500' },
+    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark' },
+    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-yellow text-nd-black' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange' },
     { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-500' },
-    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-teal-500' },
+    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green' },
   ];
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Hero Banner */}
-      <section className="relative bg-gradient-to-br from-primary via-celeste-dark to-primary rounded-2xl overflow-hidden text-white">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djItSDI0di0yaDEyem0wLTRWMjhIMjR2Mmgxem0tMi0xMFYxOEgyNnYyaDh6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
-        <div className="relative px-6 sm:px-10 py-10 sm:py-16">
-          <div className="max-w-3xl">
-            <Badge className="bg-white/20 text-white border-white/30 mb-4 text-sm">
-              ⚽ Mundial 2026 — 12 Grupos
-            </Badge>
-            <h2 className="text-3xl sm:text-5xl font-extrabold mb-3 tracking-tight">
-              Nuevo Día Mundial
-            </h2>
-            <p className="text-lg sm:text-xl text-white/80 mb-6 max-w-xl">
-              Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. 48 selecciones, 12 grupos.
-            </p>
-            <div className="flex flex-wrap gap-3">
-              <Button
-                onClick={() => onNavigate('grupos')}
-                className="bg-white text-primary hover:bg-white/90 font-semibold"
-              >
-                Ver Grupos <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => onNavigate('resultados')}
-                className="border-white/30 text-white hover:bg-white/10"
-              >
-                Resultados
-              </Button>
+      {/* Hero Banner - Nuevo Día branding */}
+      <section className="relative bg-gradient-to-br from-nd-green via-nd-green-dark to-nd-green rounded-2xl overflow-hidden text-white">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-yellow blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-nd-yellow blur-3xl" />
+        </div>
+        <div className="relative px-6 sm:px-10 py-8 sm:py-14">
+          <div className="flex flex-col sm:flex-row items-start gap-6">
+            <div className="flex-1 max-w-3xl">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge className="bg-nd-yellow text-nd-black border-0 font-bold text-xs">
+                  📻 100.9 FM
+                </Badge>
+                <Badge className="bg-white/20 text-white border-white/30 text-xs">
+                  ⚽ Mundial 2026 — 12 Grupos
+                </Badge>
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-extrabold mb-2 tracking-tight">
+                Nuevo Día <span className="text-nd-yellow">Mundial</span>
+              </h2>
+              <p className="text-base sm:text-lg text-white/80 mb-6 max-w-xl">
+                Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. 48 selecciones, 12 grupos.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  onClick={() => onNavigate('grupos')}
+                  className="bg-nd-yellow text-nd-black hover:bg-nd-yellow-dark font-bold"
+                >
+                  Ver Grupos <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => onNavigate('resultados')}
+                  className="border-white/30 text-white hover:bg-white/10"
+                >
+                  Resultados
+                </Button>
+              </div>
+            </div>
+            <div className="hidden sm:flex flex-col items-center gap-2">
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={120} height={120} className="rounded-xl shadow-lg opacity-90" />
+              <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
             </div>
           </div>
         </div>
@@ -94,7 +110,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
       {/* Upcoming Matches */}
       <section>
         <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-          <CircleDot className="w-5 h-5 text-primary" />
+          <CircleDot className="w-5 h-5 text-nd-green" />
           Próximos Partidos
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -107,20 +123,20 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
       {/* News */}
       <section>
         <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-          <Newspaper className="w-5 h-5 text-primary" />
+          <Newspaper className="w-5 h-5 text-nd-green" />
           Noticias Destacadas
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {news.map((item) => (
-            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer">
-              <div className="h-32 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20">
+              <div className="h-32 bg-gradient-to-br from-nd-green/20 to-nd-yellow/10 flex items-center justify-center">
                 <span className="text-4xl group-hover:scale-110 transition-transform">⚽</span>
               </div>
               <CardHeader className="pb-2">
-                <Badge variant="secondary" className="w-fit text-xs">
+                <Badge variant="secondary" className="w-fit text-xs bg-nd-yellow-light text-nd-green-dark">
                   {item.category}
                 </Badge>
-                <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-green transition-colors">
                   {item.title}
                 </CardTitle>
               </CardHeader>
@@ -144,7 +160,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
             <button
               key={link.id}
               onClick={() => onNavigate(link.id)}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-nd-green/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
             >
               <div className={`w-12 h-12 rounded-full ${link.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                 <link.icon className="w-6 h-6 text-white" />
