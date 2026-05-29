@@ -90,7 +90,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
               </div>
             </div>
             <div className="hidden sm:flex flex-col items-center gap-2">
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={200} height={63} className="rounded-xl shadow-lg opacity-90 object-contain bg-white px-3 py-2" />
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={200} height={63} className="rounded-xl shadow-lg opacity-90 object-contain" />
               <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
             </div>
           </div>

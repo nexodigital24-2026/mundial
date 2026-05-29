@@ -16,6 +16,7 @@ import AdminTab from '@/components/portal/AdminTab';
 import EditorTab from '@/components/portal/EditorTab';
 import ComercialTab from '@/components/portal/ComercialTab';
 import LoginTab from '@/components/portal/LoginTab';
+import BannerDisplay from '@/components/portal/BannerDisplay';
 import { Wifi, WifiOff } from 'lucide-react';
 
 const tabComponents: Record<string, React.ComponentType<{ onNavigate?: (tab: string) => void }>> = {
@@ -48,7 +49,7 @@ function ConnectionIndicator({ connected }: { connected: boolean }) {
   if (!showTooltip) return null;
 
   return (
-    <div className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 px-3 py-2 rounded-full shadow-lg text-xs font-semibold transition-all duration-500 ${
+    <div className={`fixed bottom-20 right-4 z-40 flex items-center gap-2 px-3 py-2 rounded-full shadow-lg text-xs font-semibold transition-all duration-500 ${
       connected
         ? 'bg-nd-green text-white'
         : 'bg-red-500 text-white animate-pulse'
@@ -84,6 +85,9 @@ function AppContent() {
     <div className="min-h-screen flex flex-col bg-background">
       <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
 
+      {/* Banner below navbar */}
+      <BannerDisplay position="navbar-below" />
+
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
         <ActiveComponent onNavigate={handleTabChange} />
       </main>
@@ -93,7 +97,15 @@ function AppContent() {
       {/* Real-time connection indicator */}
       <ConnectionIndicator connected={connected} />
 
-      {/* Goal notification toasts are handled by LiveMatch/MatchCard components */}
+      {/* Sticky bottom banner */}
+      <BannerDisplay position="sticky-bottom" />
+
+      {/* Floating side banners */}
+      <BannerDisplay position="floating-left" />
+      <BannerDisplay position="floating-right" />
+
+      {/* Interstitial overlay */}
+      <BannerDisplay position="interstitial" />
     </div>
   );
 }

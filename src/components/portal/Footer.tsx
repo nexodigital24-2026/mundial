@@ -21,7 +21,7 @@ export default function Footer() {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={140} height={44} className="object-contain bg-white rounded-md px-2 py-1" />
+                <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={140} height={44} className="object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <Radio className="w-3 h-3 text-nd-orange" />
                   <span className="text-[10px] text-nd-orange font-semibold tracking-wider">100.9 FM — EL DIARIO</span>

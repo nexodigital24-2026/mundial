@@ -92,7 +92,7 @@ export interface Banner {
   title: string;
   imageUrl: string;
   linkUrl: string;
-  position: 'hero' | 'sidebar' | 'footer' | 'content-top' | 'content-bottom';
+  position: BannerPosition;
   active: boolean;
   priority: number;
   startDate: string;
@@ -100,7 +100,27 @@ export interface Banner {
   impressions: number;
   clicks: number;
   createdBy: string;
+  // Nuevos campos — medidas y tiempo
+  width: number;        // ancho en px
+  height: number;       // alto en px
+  displayDuration: number; // segundos que se muestra (rotación)
+  targetType: '_blank' | '_self'; // cómo abre el enlace
+  bgColor: string;      // color de fondo de la pastilla
+  borderRadius: 'none' | 'sm' | 'md' | 'lg' | 'full';
 }
+
+export type BannerPosition =
+  | 'hero'           // banner principal grande
+  | 'sidebar'        // barra lateral
+  | 'footer'         // pie de página
+  | 'content-top'    // arriba del contenido
+  | 'content-bottom' // abajo del contenido
+  | 'navbar-below'   // debajo de la barra de navegación
+  | 'between-matches' // entre partidos en vivo
+  | 'sticky-bottom'  // barra sticky abajo
+  | 'floating-left'  // flotante lateral izquierdo
+  | 'floating-right' // flotante lateral derecho
+  | 'interstitial';  // pantalla completa entre secciones
 
 // ==================== TEAMS (48) ====================
 export const teams: Team[] = [
@@ -932,7 +952,7 @@ export const votingMatches: VotingMatch[] = [
   },
 ];
 
-// ==================== BANNERS (8+) ====================
+// ==================== BANNERS (12+) ====================
 export const banners: Banner[] = [
   {
     id: 'b1',
@@ -947,6 +967,12 @@ export const banners: Banner[] = [
     impressions: 45230,
     clicks: 1230,
     createdBy: 'admin',
+    width: 728,
+    height: 90,
+    displayDuration: 10,
+    targetType: '_blank',
+    bgColor: '#E8F5E9',
+    borderRadius: 'lg',
   },
   {
     id: 'b2',
@@ -961,6 +987,12 @@ export const banners: Banner[] = [
     impressions: 32100,
     clicks: 890,
     createdBy: 'comercial',
+    width: 300,
+    height: 250,
+    displayDuration: 15,
+    targetType: '_blank',
+    bgColor: '#FFF3E0',
+    borderRadius: 'md',
   },
   {
     id: 'b3',
@@ -975,6 +1007,12 @@ export const banners: Banner[] = [
     impressions: 28700,
     clicks: 654,
     createdBy: 'comercial',
+    width: 728,
+    height: 90,
+    displayDuration: 10,
+    targetType: '_blank',
+    bgColor: '#FFF3E0',
+    borderRadius: 'lg',
   },
   {
     id: 'b4',
@@ -989,6 +1027,12 @@ export const banners: Banner[] = [
     impressions: 19800,
     clicks: 432,
     createdBy: 'admin',
+    width: 728,
+    height: 90,
+    displayDuration: 8,
+    targetType: '_blank',
+    bgColor: '#F5F5F5',
+    borderRadius: 'md',
   },
   {
     id: 'b5',
@@ -1003,6 +1047,12 @@ export const banners: Banner[] = [
     impressions: 52400,
     clicks: 1870,
     createdBy: 'comercial',
+    width: 728,
+    height: 90,
+    displayDuration: 10,
+    targetType: '_blank',
+    bgColor: '#E8F5E9',
+    borderRadius: 'lg',
   },
   {
     id: 'b6',
@@ -1017,6 +1067,12 @@ export const banners: Banner[] = [
     impressions: 22100,
     clicks: 543,
     createdBy: 'comercial',
+    width: 728,
+    height: 90,
+    displayDuration: 8,
+    targetType: '_blank',
+    bgColor: '#F5F5F5',
+    borderRadius: 'lg',
   },
   {
     id: 'b7',
@@ -1031,6 +1087,12 @@ export const banners: Banner[] = [
     impressions: 15600,
     clicks: 321,
     createdBy: 'admin',
+    width: 300,
+    height: 250,
+    displayDuration: 15,
+    targetType: '_blank',
+    bgColor: '#FFF3E0',
+    borderRadius: 'md',
   },
   {
     id: 'b8',
@@ -1045,6 +1107,12 @@ export const banners: Banner[] = [
     impressions: 18300,
     clicks: 478,
     createdBy: 'comercial',
+    width: 728,
+    height: 90,
+    displayDuration: 10,
+    targetType: '_blank',
+    bgColor: '#FFF3E0',
+    borderRadius: 'lg',
   },
   {
     id: 'b9',
@@ -1059,6 +1127,72 @@ export const banners: Banner[] = [
     impressions: 8200,
     clicks: 156,
     createdBy: 'comercial',
+    width: 728,
+    height: 90,
+    displayDuration: 8,
+    targetType: '_self',
+    bgColor: '#F5F5F5',
+    borderRadius: 'lg',
+  },
+  {
+    id: 'b10',
+    title: 'Hisense - Smart Viewing',
+    imageUrl: '/banners/hisense.jpg',
+    linkUrl: 'https://hisense.com',
+    position: 'sticky-bottom',
+    active: true,
+    priority: 1,
+    startDate: '2026-06-01',
+    endDate: '2026-07-31',
+    impressions: 89000,
+    clicks: 3200,
+    createdBy: 'admin',
+    width: 970,
+    height: 50,
+    displayDuration: 5,
+    targetType: '_blank',
+    bgColor: '#026602',
+    borderRadius: 'full',
+  },
+  {
+    id: 'b11',
+    title: 'Wanda - Sponsors of Dreams',
+    imageUrl: '/banners/wanda.jpg',
+    linkUrl: 'https://wanda.com',
+    position: 'floating-right',
+    active: true,
+    priority: 1,
+    startDate: '2026-06-10',
+    endDate: '2026-07-20',
+    impressions: 41200,
+    clicks: 1100,
+    createdBy: 'comercial',
+    width: 160,
+    height: 600,
+    displayDuration: 20,
+    targetType: '_blank',
+    bgColor: '#FF6800',
+    borderRadius: 'md',
+  },
+  {
+    id: 'b12',
+    title: 'Coca-Cola Half-time Show',
+    imageUrl: '/banners/cocacola-halftime.jpg',
+    linkUrl: 'https://coca-cola.com',
+    position: 'navbar-below',
+    active: true,
+    priority: 1,
+    startDate: '2026-06-15',
+    endDate: '2026-07-15',
+    impressions: 67800,
+    clicks: 2340,
+    createdBy: 'admin',
+    width: 970,
+    height: 66,
+    displayDuration: 7,
+    targetType: '_blank',
+    bgColor: '#CC0000',
+    borderRadius: 'none',
   },
 ];
 
