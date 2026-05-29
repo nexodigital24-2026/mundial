@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getTeamById } from '@/lib/mock-data';
+import { getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import {
   Accordion,
@@ -52,7 +52,21 @@ export default function ResultsTab() {
                     <div className="flex items-center justify-between w-full gap-3">
                       <div className="flex items-center gap-2 flex-1 justify-end">
                         <span className="font-semibold text-sm text-foreground">{home?.name}</span>
-                        <span className="text-lg">{home?.flag}</span>
+                        {(() => {
+                          const flagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
+                          const code = home ? getTeamCode(home.id).toUpperCase() : '';
+                          const color = home ? getTeamColor(home.id) : '#666';
+                          return (
+                            <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
+                              {flagUrl ? (
+                                <img src={flagUrl} alt={home?.name} className="w-4 h-3 object-cover rounded-sm" />
+                              ) : (
+                                <span className="text-sm">{home?.flag}</span>
+                              )}
+                              <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div className="flex items-center gap-2 px-3">
                         <span className="text-lg font-bold text-red-600">{match.homeScore}</span>
@@ -60,7 +74,21 @@ export default function ResultsTab() {
                         <span className="text-lg font-bold text-red-600">{match.awayScore}</span>
                       </div>
                       <div className="flex items-center gap-2 flex-1">
-                        <span className="text-lg">{away?.flag}</span>
+                        {(() => {
+                          const flagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
+                          const code = away ? getTeamCode(away.id).toUpperCase() : '';
+                          const color = away ? getTeamColor(away.id) : '#666';
+                          return (
+                            <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
+                              {flagUrl ? (
+                                <img src={flagUrl} alt={away?.name} className="w-4 h-3 object-cover rounded-sm" />
+                              ) : (
+                                <span className="text-sm">{away?.flag}</span>
+                              )}
+                              <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                            </div>
+                          );
+                        })()}
                         <span className="font-semibold text-sm text-foreground">{away?.name}</span>
                       </div>
                       <Badge className="bg-red-100 text-red-700 text-xs ml-2 font-mono">
@@ -94,7 +122,21 @@ export default function ResultsTab() {
                 <div className="flex items-center justify-between w-full gap-3">
                   <div className="flex items-center gap-2 flex-1 justify-end">
                     <span className="font-semibold text-sm text-foreground">{home?.name}</span>
-                    <span className="text-xl">{home?.flag}</span>
+                    {(() => {
+                      const flagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
+                      const code = home ? getTeamCode(home.id).toUpperCase() : '';
+                      const color = home ? getTeamColor(home.id) : '#666';
+                      return (
+                        <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
+                          {flagUrl ? (
+                            <img src={flagUrl} alt={home?.name} className="w-4 h-3 object-cover rounded-sm" />
+                          ) : (
+                            <span className="text-sm">{home?.flag}</span>
+                          )}
+                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                        </div>
+                      );
+                    })()}
                   </div>
                   <div className="flex items-center gap-2 px-3">
                     <span className="text-xl font-bold text-primary">{match.homeScore}</span>
@@ -102,7 +144,21 @@ export default function ResultsTab() {
                     <span className="text-xl font-bold text-primary">{match.awayScore}</span>
                   </div>
                   <div className="flex items-center gap-2 flex-1">
-                    <span className="text-xl">{away?.flag}</span>
+                    {(() => {
+                      const flagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
+                      const code = away ? getTeamCode(away.id).toUpperCase() : '';
+                      const color = away ? getTeamColor(away.id) : '#666';
+                      return (
+                        <div className="flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: color }}>
+                          {flagUrl ? (
+                            <img src={flagUrl} alt={away?.name} className="w-4 h-3 object-cover rounded-sm" />
+                          ) : (
+                            <span className="text-sm">{away?.flag}</span>
+                          )}
+                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                        </div>
+                      );
+                    })()}
                     <span className="font-semibold text-sm text-foreground">{away?.name}</span>
                   </div>
                 </div>

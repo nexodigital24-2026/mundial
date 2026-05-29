@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Match, getTeamById } from '@/lib/mock-data';
+import { Match, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, MapPin, Timer, Wifi } from 'lucide-react';
@@ -85,7 +85,24 @@ export default function MatchCard({ match: initialMatch }: MatchCardProps) {
           {/* Home team */}
           <div className={`flex-1 flex items-center gap-2 justify-end transition-transform duration-300 ${goalFlash ? 'scale-[1.02]' : ''}`}>
             <span className="font-semibold text-sm text-foreground text-right">{home?.name}</span>
-            <span className="text-xl">{home?.flag}</span>
+            {(() => {
+              const flagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
+              const code = home ? getTeamCode(home.id).toUpperCase() : '';
+              const color = home ? getTeamColor(home.id) : '#666';
+              return (
+                <div
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5"
+                  style={{ backgroundColor: color }}
+                >
+                  {flagUrl ? (
+                    <img src={flagUrl} alt={home?.name} className="w-4 h-3 object-cover rounded-sm" />
+                  ) : (
+                    <span className="text-sm">{home?.flag}</span>
+                  )}
+                  <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                </div>
+              );
+            })()}
           </div>
 
           {/* Score / Time */}
@@ -113,7 +130,24 @@ export default function MatchCard({ match: initialMatch }: MatchCardProps) {
 
           {/* Away team */}
           <div className={`flex-1 flex items-center gap-2 transition-transform duration-300 ${goalFlash ? 'scale-[1.02]' : ''}`}>
-            <span className="text-xl">{away?.flag}</span>
+            {(() => {
+              const flagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
+              const code = away ? getTeamCode(away.id).toUpperCase() : '';
+              const color = away ? getTeamColor(away.id) : '#666';
+              return (
+                <div
+                  className="flex items-center gap-1 rounded-md px-1.5 py-0.5"
+                  style={{ backgroundColor: color }}
+                >
+                  {flagUrl ? (
+                    <img src={flagUrl} alt={away?.name} className="w-4 h-3 object-cover rounded-sm" />
+                  ) : (
+                    <span className="text-sm">{away?.flag}</span>
+                  )}
+                  <span className="text-[8px] font-extrabold tracking-wider text-white/80">{code}</span>
+                </div>
+              );
+            })()}
             <span className="font-semibold text-sm text-foreground">{away?.name}</span>
           </div>
         </div>

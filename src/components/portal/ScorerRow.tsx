@@ -1,6 +1,6 @@
 'use client';
 
-import { Scorer, getTeamById } from '@/lib/mock-data';
+import { Scorer, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Trophy } from 'lucide-react';
 
@@ -44,7 +44,21 @@ export default function ScorerRow({ scorer, rank }: ScorerRowProps) {
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-foreground text-sm truncate">{scorer.name}</p>
         <p className="text-xs text-muted-foreground flex items-center gap-1">
-          <span>{team?.flag}</span>
+          {(() => {
+            const flagUrl = team ? getTeamFlagUrl(team.id, 40) : '';
+            const code = team ? getTeamCode(team.id).toUpperCase() : '';
+            const color = team ? getTeamColor(team.id) : '#666';
+            return (
+              <span className="inline-flex items-center gap-1 rounded px-1 py-0.5" style={{ backgroundColor: color }}>
+                {flagUrl ? (
+                  <img src={flagUrl} alt={team?.name} className="w-3.5 h-2.5 object-cover rounded-sm" />
+                ) : (
+                  <span className="text-xs">{team?.flag}</span>
+                )}
+                <span className="text-[7px] font-extrabold tracking-wider text-white/80">{code}</span>
+              </span>
+            );
+          })()}
           <span>{team?.name}</span>
           <span className="text-muted-foreground/50">•</span>
           <span>{scorer.position}</span>

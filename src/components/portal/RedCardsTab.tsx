@@ -1,6 +1,6 @@
 'use client';
 
-import { redCards, getTeamById } from '@/lib/mock-data';
+import { redCards, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -69,7 +69,21 @@ export default function RedCardsTab() {
                     <div>
                       <p className="font-semibold text-foreground">{card.playerName}</p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1">
-                        <span>{team?.flag}</span>
+                        {(() => {
+                          const flagUrl = team ? getTeamFlagUrl(team.id, 40) : '';
+                          const code = team ? getTeamCode(team.id).toUpperCase() : '';
+                          const color = team ? getTeamColor(team.id) : '#666';
+                          return (
+                            <span className="inline-flex items-center gap-1 rounded px-1 py-0.5" style={{ backgroundColor: color }}>
+                              {flagUrl ? (
+                                <img src={flagUrl} alt={team?.name} className="w-3.5 h-2.5 object-cover rounded-sm" />
+                              ) : (
+                                <span className="text-xs">{team?.flag}</span>
+                              )}
+                              <span className="text-[7px] font-extrabold tracking-wider text-white/80">{code}</span>
+                            </span>
+                          );
+                        })()}
                         <span>{team?.name}</span>
                       </p>
                     </div>
@@ -77,7 +91,7 @@ export default function RedCardsTab() {
 
                   {/* Match */}
                   <div className="text-sm text-muted-foreground">
-                    {homeTeam?.flag} {homeTeam?.name} vs {awayTeam?.flag} {awayTeam?.name}
+                    {homeTeam?.name} vs {awayTeam?.name}
                   </div>
 
                   {/* Minute */}

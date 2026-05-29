@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { votingMatches, getTeamById, type VotingMatch } from '@/lib/mock-data';
+import { votingMatches, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor, type VotingMatch } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -90,10 +90,30 @@ export default function VotingTab() {
               <CardHeader className="bg-primary/5 pb-3">
                 <CardTitle className="text-base flex items-center justify-between flex-wrap gap-2">
                   <span className="flex items-center gap-2 flex-wrap">
-                    <span>{home?.flag}</span>
+                    {(() => {
+                      const hFlagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
+                      const hCode = home ? getTeamCode(home.id).toUpperCase() : '';
+                      const hColor = home ? getTeamColor(home.id) : '#666';
+                      return (
+                        <span className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: hColor }}>
+                          {hFlagUrl ? <img src={hFlagUrl} alt={home?.name} className="w-4 h-3 object-cover rounded-sm" /> : <span>{home?.flag}</span>}
+                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{hCode}</span>
+                        </span>
+                      );
+                    })()}
                     <span>{home?.name}</span>
                     <span className="text-muted-foreground">vs</span>
-                    <span>{away?.flag}</span>
+                    {(() => {
+                      const aFlagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
+                      const aCode = away ? getTeamCode(away.id).toUpperCase() : '';
+                      const aColor = away ? getTeamColor(away.id) : '#666';
+                      return (
+                        <span className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: aColor }}>
+                          {aFlagUrl ? <img src={aFlagUrl} alt={away?.name} className="w-4 h-3 object-cover rounded-sm" /> : <span>{away?.flag}</span>}
+                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{aCode}</span>
+                        </span>
+                      );
+                    })()}
                     <span>{away?.name}</span>
                   </span>
                   {hasVoted && (
@@ -150,8 +170,19 @@ export default function VotingTab() {
                               <span className="font-semibold text-sm text-foreground">
                                 {candidate.name}
                               </span>
-                              <span className="text-xs text-muted-foreground">
-                                {candidateTeam?.flag} {candidateTeam?.name}
+                              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                {(() => {
+                                  const cFlagUrl = candidateTeam ? getTeamFlagUrl(candidateTeam.id, 40) : '';
+                                  const cCode = candidateTeam ? getTeamCode(candidateTeam.id).toUpperCase() : '';
+                                  const cColor = candidateTeam ? getTeamColor(candidateTeam.id) : '#666';
+                                  return (
+                                    <span className="inline-flex items-center gap-1 rounded px-1 py-0.5" style={{ backgroundColor: cColor }}>
+                                      {cFlagUrl ? <img src={cFlagUrl} alt={candidateTeam?.name} className="w-3.5 h-2.5 object-cover rounded-sm" /> : <span>{candidateTeam?.flag}</span>}
+                                      <span className="text-[7px] font-extrabold tracking-wider text-white/80">{cCode}</span>
+                                    </span>
+                                  );
+                                })()}
+                                <span>{candidateTeam?.name}</span>
                               </span>
                               {isLeading && hasVoted && (
                                 <Badge className="bg-yellow-100 text-yellow-700 text-[10px] py-0">

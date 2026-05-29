@@ -6,7 +6,9 @@ export type GroupLetter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 
 export interface Team {
   id: string;
   name: string;
-  flag: string;
+  flag: string;       // emoji flag
+  code: string;       // ISO 2-letter country code (e.g. 'mx')
+  color: string;      // distinctive team color for pastillas
   group: GroupLetter;
 }
 
@@ -126,65 +128,65 @@ export type BannerPosition =
 // ==================== TEAMS (48) ====================
 export const teams: Team[] = [
   // Group A
-  { id: 'mex', name: 'México', flag: '🇲🇽', group: 'A' },
-  { id: 'rsa', name: 'Sudáfrica', flag: '🇿🇦', group: 'A' },
-  { id: 'kor', name: 'Corea del Sur', flag: '🇰🇷', group: 'A' },
-  { id: 'cze', name: 'Chequia', flag: '🇨🇿', group: 'A' },
+  { id: 'mex', name: 'México', flag: '🇲🇽', code: 'mx', color: '#006847', group: 'A' },
+  { id: 'rsa', name: 'Sudáfrica', flag: '🇿🇦', code: 'za', color: '#007749', group: 'A' },
+  { id: 'kor', name: 'Corea del Sur', flag: '🇰🇷', code: 'kr', color: '#003478', group: 'A' },
+  { id: 'cze', name: 'Chequia', flag: '🇨🇿', code: 'cz', color: '#11457E', group: 'A' },
   // Group B
-  { id: 'can', name: 'Canadá', flag: '🇨🇦', group: 'B' },
-  { id: 'bih', name: 'Bosnia y Herzegovina', flag: '🇧🇦', group: 'B' },
-  { id: 'qat', name: 'Catar', flag: '🇶🇦', group: 'B' },
-  { id: 'sui', name: 'Suiza', flag: '🇨🇭', group: 'B' },
+  { id: 'can', name: 'Canadá', flag: '🇨🇦', code: 'ca', color: '#FF0000', group: 'B' },
+  { id: 'bih', name: 'Bosnia y Herzegovina', flag: '🇧🇦', code: 'ba', color: '#002395', group: 'B' },
+  { id: 'qat', name: 'Catar', flag: '🇶🇦', code: 'qa', color: '#8D1B3D', group: 'B' },
+  { id: 'sui', name: 'Suiza', flag: '🇨🇭', code: 'ch', color: '#D52B1E', group: 'B' },
   // Group C
-  { id: 'bra', name: 'Brasil', flag: '🇧🇷', group: 'C' },
-  { id: 'mar', name: 'Marruecos', flag: '🇲🇦', group: 'C' },
-  { id: 'hai', name: 'Haití', flag: '🇭🇹', group: 'C' },
-  { id: 'sco', name: 'Escocia', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', group: 'C' },
+  { id: 'bra', name: 'Brasil', flag: '🇧🇷', code: 'br', color: '#009739', group: 'C' },
+  { id: 'mar', name: 'Marruecos', flag: '🇲🇦', code: 'ma', color: '#C1272D', group: 'C' },
+  { id: 'hai', name: 'Haití', flag: '🇭🇹', code: 'ht', color: '#00209F', group: 'C' },
+  { id: 'sco', name: 'Escocia', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', code: 'gb-sct', color: '#003087', group: 'C' },
   // Group D
-  { id: 'usa', name: 'Estados Unidos', flag: '🇺🇸', group: 'D' },
-  { id: 'par', name: 'Paraguay', flag: '🇵🇾', group: 'D' },
-  { id: 'aus', name: 'Australia', flag: '🇦🇺', group: 'D' },
-  { id: 'tur', name: 'Turquía', flag: '🇹🇷', group: 'D' },
+  { id: 'usa', name: 'Estados Unidos', flag: '🇺🇸', code: 'us', color: '#3C3B6E', group: 'D' },
+  { id: 'par', name: 'Paraguay', flag: '🇵🇾', code: 'py', color: '#0038A8', group: 'D' },
+  { id: 'aus', name: 'Australia', flag: '🇦🇺', code: 'au', color: '#00008B', group: 'D' },
+  { id: 'tur', name: 'Turquía', flag: '🇹🇷', code: 'tr', color: '#E30A17', group: 'D' },
   // Group E
-  { id: 'ger', name: 'Alemania', flag: '🇩🇪', group: 'E' },
-  { id: 'cuw', name: 'Curazao', flag: '🇨🇼', group: 'E' },
-  { id: 'civ', name: 'Costa de Marfil', flag: '🇨🇮', group: 'E' },
-  { id: 'ecu', name: 'Ecuador', flag: '🇪🇨', group: 'E' },
+  { id: 'ger', name: 'Alemania', flag: '🇩🇪', code: 'de', color: '#000000', group: 'E' },
+  { id: 'cuw', name: 'Curazao', flag: '🇨🇼', code: 'cw', color: '#002B7F', group: 'E' },
+  { id: 'civ', name: 'Costa de Marfil', flag: '🇨🇮', code: 'ci', color: '#F77F00', group: 'E' },
+  { id: 'ecu', name: 'Ecuador', flag: '🇪🇨', code: 'ec', color: '#FFD100', group: 'E' },
   // Group F
-  { id: 'ned', name: 'Países Bajos', flag: '🇳🇱', group: 'F' },
-  { id: 'jpn', name: 'Japón', flag: '🇯🇵', group: 'F' },
-  { id: 'swe', name: 'Suecia', flag: '🇸🇪', group: 'F' },
-  { id: 'tun', name: 'Túnez', flag: '🇹🇳', group: 'F' },
+  { id: 'ned', name: 'Países Bajos', flag: '🇳🇱', code: 'nl', color: '#FF6600', group: 'F' },
+  { id: 'jpn', name: 'Japón', flag: '🇯🇵', code: 'jp', color: '#BC002D', group: 'F' },
+  { id: 'swe', name: 'Suecia', flag: '🇸🇪', code: 'se', color: '#005293', group: 'F' },
+  { id: 'tun', name: 'Túnez', flag: '🇹🇳', code: 'tn', color: '#E70013', group: 'F' },
   // Group G
-  { id: 'bel', name: 'Bélgica', flag: '🇧🇪', group: 'G' },
-  { id: 'egy', name: 'Egipto', flag: '🇪🇬', group: 'G' },
-  { id: 'iri', name: 'Irán', flag: '🇮🇷', group: 'G' },
-  { id: 'nzl', name: 'Nueva Zelanda', flag: '🇳🇿', group: 'G' },
+  { id: 'bel', name: 'Bélgica', flag: '🇧🇪', code: 'be', color: '#2D2926', group: 'G' },
+  { id: 'egy', name: 'Egipto', flag: '🇪🇬', code: 'eg', color: '#C8102E', group: 'G' },
+  { id: 'iri', name: 'Irán', flag: '🇮🇷', code: 'ir', color: '#239F40', group: 'G' },
+  { id: 'nzl', name: 'Nueva Zelanda', flag: '🇳🇿', code: 'nz', color: '#00247D', group: 'G' },
   // Group H
-  { id: 'esp', name: 'España', flag: '🇪🇸', group: 'H' },
-  { id: 'cpv', name: 'Cabo Verde', flag: '🇨🇻', group: 'H' },
-  { id: 'ksa', name: 'Arabia Saudita', flag: '🇸🇦', group: 'H' },
-  { id: 'uru', name: 'Uruguay', flag: '🇺🇾', group: 'H' },
+  { id: 'esp', name: 'España', flag: '🇪🇸', code: 'es', color: '#AA151B', group: 'H' },
+  { id: 'cpv', name: 'Cabo Verde', flag: '🇨🇻', code: 'cv', color: '#003893', group: 'H' },
+  { id: 'ksa', name: 'Arabia Saudita', flag: '🇸🇦', code: 'sa', color: '#006C35', group: 'H' },
+  { id: 'uru', name: 'Uruguay', flag: '🇺🇾', code: 'uy', color: '#5DADE2', group: 'H' },
   // Group I
-  { id: 'fra', name: 'Francia', flag: '🇫🇷', group: 'I' },
-  { id: 'sen', name: 'Senegal', flag: '🇸🇳', group: 'I' },
-  { id: 'irq', name: 'Irak', flag: '🇮🇶', group: 'I' },
-  { id: 'nor', name: 'Noruega', flag: '🇳🇴', group: 'I' },
+  { id: 'fra', name: 'Francia', flag: '🇫🇷', code: 'fr', color: '#002395', group: 'I' },
+  { id: 'sen', name: 'Senegal', flag: '🇸🇳', code: 'sn', color: '#00853F', group: 'I' },
+  { id: 'irq', name: 'Irak', flag: '🇮🇶', code: 'iq', color: '#CE1126', group: 'I' },
+  { id: 'nor', name: 'Noruega', flag: '🇳🇴', code: 'no', color: '#BA0C2F', group: 'I' },
   // Group J
-  { id: 'arg', name: 'Argentina', flag: '🇦🇷', group: 'J' },
-  { id: 'alg', name: 'Argelia', flag: '🇩🇿', group: 'J' },
-  { id: 'aut', name: 'Austria', flag: '🇦🇹', group: 'J' },
-  { id: 'jor', name: 'Jordania', flag: '🇯🇴', group: 'J' },
+  { id: 'arg', name: 'Argentina', flag: '🇦🇷', code: 'ar', color: '#74ACDF', group: 'J' },
+  { id: 'alg', name: 'Argelia', flag: '🇩🇿', code: 'dz', color: '#006233', group: 'J' },
+  { id: 'aut', name: 'Austria', flag: '🇦🇹', code: 'at', color: '#ED2939', group: 'J' },
+  { id: 'jor', name: 'Jordania', flag: '🇯🇴', code: 'jo', color: '#007A3D', group: 'J' },
   // Group K
-  { id: 'por', name: 'Portugal', flag: '🇵🇹', group: 'K' },
-  { id: 'cod', name: 'Congo DR', flag: '🇨🇩', group: 'K' },
-  { id: 'uzb', name: 'Uzbekistán', flag: '🇺🇿', group: 'K' },
-  { id: 'col', name: 'Colombia', flag: '🇨🇴', group: 'K' },
+  { id: 'por', name: 'Portugal', flag: '🇵🇹', code: 'pt', color: '#006600', group: 'K' },
+  { id: 'cod', name: 'Congo DR', flag: '🇨🇩', code: 'cd', color: '#007FFF', group: 'K' },
+  { id: 'uzb', name: 'Uzbekistán', flag: '🇺🇿', code: 'uz', color: '#1EB53A', group: 'K' },
+  { id: 'col', name: 'Colombia', flag: '🇨🇴', code: 'co', color: '#FCD116', group: 'K' },
   // Group L
-  { id: 'eng', name: 'Inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', group: 'L' },
-  { id: 'cro', name: 'Croacia', flag: '🇭🇷', group: 'L' },
-  { id: 'gha', name: 'Ghana', flag: '🇬🇭', group: 'L' },
-  { id: 'pan', name: 'Panamá', flag: '🇵🇦', group: 'L' },
+  { id: 'eng', name: 'Inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', code: 'gb-eng', color: '#FFFFFF', group: 'L' },
+  { id: 'cro', name: 'Croacia', flag: '🇭🇷', code: 'hr', color: '#171796', group: 'L' },
+  { id: 'gha', name: 'Ghana', flag: '🇬🇭', code: 'gh', color: '#CE1126', group: 'L' },
+  { id: 'pan', name: 'Panamá', flag: '🇵🇦', code: 'pa', color: '#005293', group: 'L' },
 ];
 
 // ==================== STANDINGS (12 groups) ====================
@@ -1310,6 +1312,21 @@ export function getTeamName(id: string): string {
 
 export function getTeamFlag(id: string): string {
   return teams.find(t => t.id === id)?.flag ?? '⚽';
+}
+
+export function getTeamCode(id: string): string {
+  return teams.find(t => t.id === id)?.code ?? '';
+}
+
+export function getTeamColor(id: string): string {
+  return teams.find(t => t.id === id)?.color ?? '#666666';
+}
+
+export function getTeamFlagUrl(id: string, width: number = 80): string {
+  const code = teams.find(t => t.id === id)?.code;
+  if (!code) return '';
+  // flagcdn.com provides free flag images by country code
+  return `https://flagcdn.com/w${width}/${code}.png`;
 }
 
 export function getTeamsByGroup(group: GroupLetter): Team[] {

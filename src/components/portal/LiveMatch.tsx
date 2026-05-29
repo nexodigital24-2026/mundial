@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Match, getTeamById } from '@/lib/mock-data';
+import { Match, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Badge } from '@/components/ui/badge';
 import { Timer, Wifi, Radio } from 'lucide-react';
@@ -111,7 +111,26 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
         <div className="flex items-center justify-between gap-4">
           {/* Home team */}
           <div className={`flex-1 text-center transition-all duration-300 ${goalFlash === 'home' ? 'scale-105' : ''}`}>
-            <span className="text-3xl sm:text-4xl">{home?.flag}</span>
+            {(() => {
+              const flagUrl = home ? getTeamFlagUrl(home.id, 160) : '';
+              const code = home ? getTeamCode(home.id).toUpperCase() : '';
+              const color = home ? getTeamColor(home.id) : '#666';
+              return (
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1"
+                    style={{ backgroundColor: color }}
+                  >
+                    {flagUrl ? (
+                      <img src={flagUrl} alt={home?.name} className="w-6 h-4 object-cover rounded-sm" />
+                    ) : (
+                      <span className="text-2xl">{home?.flag}</span>
+                    )}
+                    <span className="text-[10px] font-extrabold tracking-wider text-white/80">{code}</span>
+                  </div>
+                </div>
+              );
+            })()}
             <p className="font-semibold text-sm sm:text-base mt-1 text-foreground">{home?.name}</p>
           </div>
 
@@ -132,7 +151,26 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
 
           {/* Away team */}
           <div className={`flex-1 text-center transition-all duration-300 ${goalFlash === 'away' ? 'scale-105' : ''}`}>
-            <span className="text-3xl sm:text-4xl">{away?.flag}</span>
+            {(() => {
+              const flagUrl = away ? getTeamFlagUrl(away.id, 160) : '';
+              const code = away ? getTeamCode(away.id).toUpperCase() : '';
+              const color = away ? getTeamColor(away.id) : '#666';
+              return (
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1"
+                    style={{ backgroundColor: color }}
+                  >
+                    {flagUrl ? (
+                      <img src={flagUrl} alt={away?.name} className="w-6 h-4 object-cover rounded-sm" />
+                    ) : (
+                      <span className="text-2xl">{away?.flag}</span>
+                    )}
+                    <span className="text-[10px] font-extrabold tracking-wider text-white/80">{code}</span>
+                  </div>
+                </div>
+              );
+            })()}
             <p className="font-semibold text-sm sm:text-base mt-1 text-foreground">{away?.name}</p>
           </div>
         </div>

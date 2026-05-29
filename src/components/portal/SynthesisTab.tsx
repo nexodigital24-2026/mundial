@@ -1,6 +1,6 @@
 'use client';
 
-import { matchSyntheses, getTeamById } from '@/lib/mock-data';
+import { matchSyntheses, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -35,12 +35,32 @@ export default function SynthesisTab() {
               <div className="bg-primary/5 px-4 py-3 border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{home?.flag}</span>
+                    {(() => {
+                      const hFlagUrl = home ? getTeamFlagUrl(home.id, 80) : '';
+                      const hCode = home ? getTeamCode(home.id).toUpperCase() : '';
+                      const hColor = home ? getTeamColor(home.id) : '#666';
+                      return (
+                        <span className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: hColor }}>
+                          {hFlagUrl ? <img src={hFlagUrl} alt={home?.name} className="w-4 h-3 object-cover rounded-sm" /> : <span>{home?.flag}</span>}
+                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{hCode}</span>
+                        </span>
+                      );
+                    })()}
                     <span className="font-semibold text-sm">{home?.name}</span>
                     <span className="font-bold text-lg text-primary mx-2">
                       {match.homeScore} - {match.awayScore}
                     </span>
-                    <span className="text-lg">{away?.flag}</span>
+                    {(() => {
+                      const aFlagUrl = away ? getTeamFlagUrl(away.id, 80) : '';
+                      const aCode = away ? getTeamCode(away.id).toUpperCase() : '';
+                      const aColor = away ? getTeamColor(away.id) : '#666';
+                      return (
+                        <span className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: aColor }}>
+                          {aFlagUrl ? <img src={aFlagUrl} alt={away?.name} className="w-4 h-3 object-cover rounded-sm" /> : <span>{away?.flag}</span>}
+                          <span className="text-[8px] font-extrabold tracking-wider text-white/80">{aCode}</span>
+                        </span>
+                      );
+                    })()}
                     <span className="font-semibold text-sm">{away?.name}</span>
                   </div>
                   <Badge variant="secondary" className="text-xs">Finalizado</Badge>

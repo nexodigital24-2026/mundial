@@ -1,6 +1,6 @@
 'use client';
 
-import { Standing, getTeamById } from '@/lib/mock-data';
+import { Standing, getTeamById, getTeamFlagUrl, getTeamCode, getTeamColor } from '@/lib/mock-data';
 import {
   Table,
   TableBody,
@@ -9,6 +9,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+
+// Helper to determine if a color is light or dark for text contrast
+function isLightColor(hex: string): boolean {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substr(0, 2), 16);
+  const g = parseInt(c.substr(2, 2), 16);
+  const b = parseInt(c.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155;
+}
 
 interface StandingsTableProps {
   standings: Standing[];
@@ -40,6 +50,10 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
           {standings.map((s) => {
             const team = getTeamById(s.teamId);
             const isQualified = s.pos <= 2;
+            const teamColor = team?.color ?? '#666666';
+            const textColor = isLightColor(teamColor) ? '#1a1a1a' : '#FFFFFF';
+            const flagUrl = team ? getTeamFlagUrl(team.id, 80) : '';
+            const code = team ? getTeamCode(team.id).toUpperCase() : '';
             return (
               <TableRow
                 key={s.teamId}
@@ -52,7 +66,28 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
                 <TableCell className="text-center font-semibold">{s.pos}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <span className="text-lg">{team?.flag}</span>
+                    {/* Colored pastilla badge */}
+                    <div
+                      className="flex items-center gap-1.5 rounded-lg px-2 py-1"
+                      style={{ backgroundColor: teamColor }}
+                    >
+                      {flagUrl ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={flagUrl}
+                          alt={team?.name}
+                          className="w-5 h-3.5 object-cover rounded-sm"
+                        />
+                      ) : (
+                        <span className="text-sm">{team?.flag}</span>
+                      )}
+                      <span
+                        className="text-[9px] font-extrabold tracking-wider opacity-70"
+                        style={{ color: textColor }}
+                      >
+                        {code}
+                      </span>
+                    </div>
                     <span className="font-medium">{team?.name}</span>
                     {isQualified && (
                       <span className="text-[10px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-semibold">

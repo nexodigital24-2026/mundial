@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { scorers, getTeamById, getTeamName, getTeamFlag, getStandingsByGroup, getTeamsByGroup, allGroups, type GroupLetter } from '@/lib/mock-data';
+import { scorers, getTeamById, getTeamName, getTeamFlag, getTeamFlagUrl, getTeamColor, getTeamCode, getStandingsByGroup, getTeamsByGroup, allGroups, type GroupLetter } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import StandingsTable from './StandingsTable';
 import MatchCard from './MatchCard';
@@ -10,6 +10,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trophy, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+
+// Helper to determine if a color is light or dark for text contrast
+function isLightColor(hex: string): boolean {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.substr(0, 2), 16);
+  const g = parseInt(c.substr(2, 2), 16);
+  const b = parseInt(c.substr(4, 2), 16);
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+  return brightness > 155;
+}
 
 export default function GroupsTab() {
   const [activeGroup, setActiveGroup] = useState<string>('A');
@@ -78,17 +88,79 @@ export default function GroupsTab() {
           </TabsList>
 
           <TabsContent value={activeGroup} className="mt-6 space-y-6">
-            {/* Teams preview */}
+            {/* Teams preview — colored pastillas with flag images */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {groupTeams.map((team) => (
-                <div key={team.id} className="flex items-center gap-2 p-3 rounded-lg bg-card border border-border hover:shadow-sm transition-all">
-                  <span className="text-2xl">{team.flag}</span>
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">{team.name}</p>
-                    <p className="text-[11px] text-muted-foreground">Grupo {team.group}</p>
+              {groupTeams.map((team) => {
+                const textColor = isLightColor(team.color) ? '#1a1a1a' : '#FFFFFF';
+                const code = team.code.toUpperCase();
+                const flagUrl = getTeamFlagUrl(team.id, 160);
+                return (
+                  <div
+                    key={team.id}
+                    className="relative rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
+                    style={{ backgroundColor: team.color }}
+                  >
+                    {/* Flag image as background with overlay */}
+                    {flagUrl && (
+                      <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={flagUrl}
+                          alt={team.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    {/* Gradient overlay for readability */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: `linear-gradient(135deg, ${team.color}ee 0%, ${team.color}cc 50%, ${team.color}99 100%)`,
+                      }}
+                    />
+
+                    <div className="relative p-3 sm:p-4 flex items-center gap-3">
+                      {/* Flag image */}
+                      <div className="flex-shrink-0 w-10 h-7 sm:w-12 sm:h-8 rounded-sm overflow-hidden shadow-md border border-white/20">
+                        {flagUrl ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={flagUrl}
+                            alt={team.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-white/20 text-lg">
+                            {team.flag}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span
+                            className="text-[10px] sm:text-xs font-extrabold tracking-wider opacity-80"
+                            style={{ color: textColor }}
+                          >
+                            {code}
+                          </span>
+                        </div>
+                        <p
+                          className="text-xs sm:text-sm font-bold truncate"
+                          style={{ color: textColor }}
+                        >
+                          {team.name}
+                        </p>
+                        <p
+                          className="text-[9px] sm:text-[10px] font-medium opacity-60"
+                          style={{ color: textColor }}
+                        >
+                          Grupo {team.group}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Standings */}
