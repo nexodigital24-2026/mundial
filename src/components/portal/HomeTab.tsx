@@ -33,12 +33,12 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
 
   const quickLinks = [
-    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark' },
-    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange text-nd-black' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark' },
-    { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-500' },
-    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green' },
+    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark', hoverColor: 'hover:bg-[#1a5c1e]' },
+    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-[#d46a00]' },
+    { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700' },
+    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark' },
   ];
 
   return (
@@ -149,12 +149,12 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
             <button
               key={link.id}
               onClick={() => onNavigate(link.id)}
-              className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-nd-green/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-card border-2 border-nd-green/20 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group`}
             >
-              <div className={`w-12 h-12 rounded-full ${link.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+              <div className={`w-12 h-12 rounded-full ${link.color} ${link.hoverColor} flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-md`}>
                 <link.icon className="w-6 h-6 text-white" />
               </div>
-              <span className="text-sm font-medium text-foreground">{link.label}</span>
+              <span className="text-sm font-bold text-foreground">{link.label}</span>
             </button>
           ))}
         </div>

@@ -94,7 +94,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
             ) : (
               <button
                 onClick={() => handleTabClick('login')}
-                className="flex items-center gap-1 text-[11px] font-medium hover:opacity-80 transition-opacity"
+                className="flex items-center gap-1.5 text-[11px] font-bold bg-nd-orange text-nd-black px-2.5 py-1 rounded-md hover:bg-nd-orange-dark transition-colors"
               >
                 <LogIn className="w-3 h-3" />
                 Ingresar
@@ -120,10 +120,10 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
+                  className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all duration-200 border ${
                     activeTab === tab.id
-                      ? 'bg-nd-orange text-nd-black shadow-md'
-                      : 'text-white/90 hover:bg-white/15 hover:text-white'
+                      ? 'bg-nd-orange text-nd-black border-nd-orange shadow-md'
+                      : 'text-white/90 border-white/10 hover:bg-white/15 hover:text-white hover:border-white/25'
                   }`}
                 >
                   {tab.label}
@@ -139,12 +139,12 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                   <button
                     key={tab.id}
                     onClick={() => handleTabClick(tab.id)}
-                    className={`px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 flex items-center gap-1 ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1 border ${
                       activeTab === tab.id
-                        ? 'bg-nd-orange text-nd-black shadow-md'
+                        ? 'bg-nd-orange text-nd-black border-nd-orange shadow-md'
                         : accessible
-                        ? 'text-white/80 hover:bg-white/15 hover:text-white'
-                        : 'text-white/35 cursor-not-allowed'
+                        ? 'text-white/80 border-white/10 hover:bg-white/15 hover:text-white hover:border-white/25'
+                        : 'text-white/35 cursor-not-allowed border-transparent'
                     }`}
                     title={accessible ? tab.label : `Requiere rol ${tab.role}`}
                   >
@@ -177,10 +177,10 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 ${
+                className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-bold transition-all duration-200 border ${
                   activeTab === tab.id
-                    ? 'bg-nd-orange text-nd-black'
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    ? 'bg-nd-orange text-nd-black border-nd-orange'
+                    : 'text-white/90 border-transparent hover:bg-white/10 hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -195,12 +195,12 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
+                  className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-bold transition-all duration-200 flex items-center gap-2 border ${
                     activeTab === tab.id
-                      ? 'bg-nd-orange text-nd-black'
+                      ? 'bg-nd-orange text-nd-black border-nd-orange'
                       : accessible
-                      ? 'text-white/80 hover:bg-white/10 hover:text-white'
-                      : 'text-white/35 cursor-not-allowed'
+                      ? 'text-white/80 border-transparent hover:bg-white/10 hover:text-white'
+                      : 'text-white/35 cursor-not-allowed border-transparent'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />

@@ -164,7 +164,7 @@ export default function LoginTab() {
               </div>
             )}
 
-            <Button type="submit" className="w-full bg-nd-green hover:bg-nd-green-dark font-semibold" disabled={loading}>
+            <Button type="submit" className="w-full bg-nd-green hover:bg-nd-green-dark font-bold text-white shadow-md" disabled={loading}>
               {loading ? 'Ingresando...' : 'Ingresar'}
             </Button>
           </form>

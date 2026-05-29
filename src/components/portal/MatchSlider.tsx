@@ -20,6 +20,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [cycleCount, setCycleCount] = useState(0);
+  const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const MAX_CYCLES = 4; // 4 full passes then stop auto-rotation
 
@@ -73,7 +74,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
 
   // Resolve image: prefer uploaded imageDataUrl, then imageUrl, then fallback to bgColor
   const slideImage = currentSlide.imageDataUrl || currentSlide.imageUrl || '';
-  const hasImage = slideImage.length > 0;
+  const hasImage = slideImage.length > 0 && !imgErrors[currentSlide.id];
 
   return (
     <section className="relative rounded-2xl overflow-hidden text-white shadow-xl">
@@ -86,6 +87,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               src={slideImage}
               alt={currentSlide.title}
               className="w-full h-full object-cover"
+              onError={() => setImgErrors(prev => ({ ...prev, [currentSlide.id]: true }))}
             />
             {/* Overlay gradient to ensure text readability */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />

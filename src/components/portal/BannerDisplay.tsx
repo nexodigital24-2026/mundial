@@ -42,11 +42,12 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
   const radius = borderRadiusMap[banner.borderRadius];
   const [countdown, setCountdown] = useState(banner.displayDuration);
   const [isHovered, setIsHovered] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const bannerIdRef = useRef(banner.id);
 
   // Resolve image: prefer imageDataUrl, then imageUrl
   const bannerImage = banner.imageDataUrl || (banner.imageUrl && banner.imageUrl.length > 0 ? banner.imageUrl : '');
-  const hasImage = bannerImage.length > 0;
+  const hasImage = bannerImage.length > 0 && !imgError;
 
   // Countdown timer for display duration
   useEffect(() => {
@@ -86,6 +87,7 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
             src={bannerImage}
             alt={banner.title}
             className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
           />
           {/* Overlay for text readability when image exists */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
