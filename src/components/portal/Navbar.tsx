@@ -112,13 +112,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
           <div className="flex items-center justify-between h-14">
             {/* Logo + Brand */}
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={40} height={40} className="object-contain" />
-              <div>
-                <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-white">
-                  Nuevo Día <span className="text-nd-orange">Mundial</span>
-                </h1>
-                <p className="text-[10px] text-white/60 hidden sm:block font-medium tracking-wide">PORTAL DEL MUNDIAL 2026</p>
-              </div>
+              <Image src="/main-logo.svg" alt="Radio Nuevo Día" width={140} height={44} className="object-contain bg-white rounded-md px-2 py-1" />
             </div>
 
             {/* Desktop nav */}

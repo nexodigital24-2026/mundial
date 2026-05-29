@@ -41,18 +41,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Nuevo Día brand colors from logo — verde, naranja, gris clarito, negro */
-  --color-nd-green: #2E7D32;
-  --color-nd-green-dark: #1B5E20;
+  /* Nuevo Día brand colors — exact match from main-logo.svg */
+  --color-nd-green: #026602;
+  --color-nd-green-dark: #014d01;
   --color-nd-green-light: #E8F5E9;
-  --color-nd-orange: #F57C00;
-  --color-nd-orange-dark: #E65100;
+  --color-nd-orange: #FF6800;
+  --color-nd-orange-dark: #CC5300;
   --color-nd-orange-light: #FFF3E0;
+  --color-nd-orange-accent: #FF931E;
   --color-nd-gray: #F5F5F5;
   --color-nd-gray-dark: #E0E0E0;
-  --color-nd-black: #1a1a1a;
-  --color-nd-yellow: #F57C00;
-  --color-nd-yellow-dark: #E65100;
+  --color-nd-black: #231F20;
+  --color-nd-yellow: #FF6800;
+  --color-nd-yellow-dark: #CC5300;
   --color-nd-yellow-light: #FFF3E0;
   --color-gold: #FFD700;
   --color-silver: #C0C0C0;
@@ -62,36 +63,36 @@
 :root {
   --radius: 0.625rem;
   --background: #F5F5F5;
-  --foreground: #1a1a1a;
+  --foreground: #231F20;
   --card: #ffffff;
-  --card-foreground: #1a1a1a;
+  --card-foreground: #231F20;
   --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-  --primary: #2E7D32;
+  --popover-foreground: #231F20;
+  --primary: #026602;
   --primary-foreground: #ffffff;
   --secondary: #FFF3E0;
-  --secondary-foreground: #1a1a1a;
+  --secondary-foreground: #231F20;
   --muted: #EEEEEE;
   --muted-foreground: #616161;
-  --accent: #F57C00;
-  --accent-foreground: #1a1a1a;
+  --accent: #FF6800;
+  --accent-foreground: #231F20;
   --destructive: #ef4444;
   --border: #E0E0E0;
   --input: #E0E0E0;
-  --ring: #2E7D32;
-  --chart-1: #2E7D32;
-  --chart-2: #F57C00;
-  --chart-3: #E65100;
-  --chart-4: #1B5E20;
+  --ring: #026602;
+  --chart-1: #026602;
+  --chart-2: #FF6800;
+  --chart-3: #FF931E;
+  --chart-4: #014d01;
   --chart-5: #ef4444;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #2E7D32;
+  --sidebar-foreground: #231F20;
+  --sidebar-primary: #026602;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #FFF3E0;
-  --sidebar-accent-foreground: #1a1a1a;
+  --sidebar-accent-foreground: #231F20;
   --sidebar-border: #E0E0E0;
-  --sidebar-ring: #2E7D32;
+  --sidebar-ring: #026602;
 }
 
 .dark {
@@ -101,31 +102,31 @@
   --card-foreground: #F5F5F5;
   --popover: #2d2d2d;
   --popover-foreground: #F5F5F5;
-  --primary: #4CAF50;
+  --primary: #04a304;
   --primary-foreground: #ffffff;
   --secondary: #3E2723;
   --secondary-foreground: #F5F5F5;
   --muted: #333333;
   --muted-foreground: #BDBDBD;
-  --accent: #FF9800;
-  --accent-foreground: #1a1a1a;
+  --accent: #FF931E;
+  --accent-foreground: #231F20;
   --destructive: #ef4444;
   --border: #424242;
   --input: #424242;
-  --ring: #4CAF50;
-  --chart-1: #4CAF50;
-  --chart-2: #FF9800;
-  --chart-3: #E65100;
-  --chart-4: #2E7D32;
+  --ring: #04a304;
+  --chart-1: #04a304;
+  --chart-2: #FF931E;
+  --chart-3: #FF6800;
+  --chart-4: #026602;
   --chart-5: #ef4444;
   --sidebar: #2d2d2d;
   --sidebar-foreground: #F5F5F5;
-  --sidebar-primary: #4CAF50;
+  --sidebar-primary: #04a304;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #3E2723;
   --sidebar-accent-foreground: #F5F5F5;
   --sidebar-border: #424242;
-  --sidebar-ring: #4CAF50;
+  --sidebar-ring: #04a304;
 }
 
 @layer base {
