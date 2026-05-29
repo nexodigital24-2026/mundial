@@ -21,12 +21,12 @@ export default function Footer() {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={44} height={44} className="rounded-lg" />
+                <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={44} height={44} className="object-contain" />
                 <div>
-                  <span className="text-lg font-extrabold text-white">Nuevo Día <span className="text-nd-yellow">Mundial</span></span>
+                  <span className="text-lg font-extrabold text-white">Nuevo Día <span className="text-nd-orange">Mundial</span></span>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <Radio className="w-3 h-3 text-nd-yellow" />
-                    <span className="text-[10px] text-nd-yellow font-semibold tracking-wider">100.9 FM — EL DIARIO</span>
+                    <Radio className="w-3 h-3 text-nd-orange" />
+                    <span className="text-[10px] text-nd-orange font-semibold tracking-wider">100.9 FM — EL DIARIO</span>
                   </div>
                 </div>
               </div>
@@ -37,20 +37,20 @@ export default function Footer() {
 
             {/* Quick links */}
             <div>
-              <h3 className="text-nd-yellow font-bold mb-3 text-sm tracking-wider uppercase">Secciones</h3>
+              <h3 className="text-nd-orange font-bold mb-3 text-sm tracking-wider uppercase">Secciones</h3>
               <ul className="space-y-2 text-sm text-white/70">
-                <li className="hover:text-nd-yellow transition-colors cursor-pointer">Grupos y Posiciones</li>
-                <li className="hover:text-nd-yellow transition-colors cursor-pointer">Resultados</li>
-                <li className="hover:text-nd-yellow transition-colors cursor-pointer">Goleadores</li>
-                <li className="hover:text-nd-yellow transition-colors cursor-pointer">Expulsados</li>
-                <li className="hover:text-nd-yellow transition-colors cursor-pointer">Síntesis</li>
-                <li className="hover:text-nd-yellow transition-colors cursor-pointer">Votación Figura</li>
+                <li className="hover:text-nd-orange transition-colors cursor-pointer">Grupos y Posiciones</li>
+                <li className="hover:text-nd-orange transition-colors cursor-pointer">Resultados</li>
+                <li className="hover:text-nd-orange transition-colors cursor-pointer">Goleadores</li>
+                <li className="hover:text-nd-orange transition-colors cursor-pointer">Expulsados</li>
+                <li className="hover:text-nd-orange transition-colors cursor-pointer">Síntesis</li>
+                <li className="hover:text-nd-orange transition-colors cursor-pointer">Votación Figura</li>
               </ul>
             </div>
 
             {/* Contact */}
             <div>
-              <h3 className="text-nd-yellow font-bold mb-3 text-sm tracking-wider uppercase">Contacto</h3>
+              <h3 className="text-nd-orange font-bold mb-3 text-sm tracking-wider uppercase">Contacto</h3>
               <ul className="space-y-2 text-sm text-white/70">
                 <li>info@nuevodiawmundial.com</li>
                 <li>@nuevodiawmundial</li>

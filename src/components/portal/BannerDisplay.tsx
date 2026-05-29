@@ -19,11 +19,11 @@ const positionLabels: Record<Banner['position'], string> = {
 };
 
 const positionColors: Record<Banner['position'], string> = {
-  hero: 'from-celeste/20 to-primary/10 border-celeste/30',
-  sidebar: 'from-gray-50 to-gray-100 border-gray-200',
-  footer: 'from-gray-50 to-gray-100 border-gray-200',
-  'content-top': 'from-celeste-light to-white border-celeste/20',
-  'content-bottom': 'from-celeste-light to-white border-celeste/20',
+  hero: 'from-nd-green/20 to-primary/10 border-nd-green/30',
+  sidebar: 'from-nd-gray to-white border-nd-gray-dark',
+  footer: 'from-nd-gray to-white border-nd-gray-dark',
+  'content-top': 'from-nd-orange-light to-white border-nd-orange/20',
+  'content-bottom': 'from-nd-orange-light to-white border-nd-orange/20',
 };
 
 export default function BannerDisplay({ position, bannersOverride }: BannerDisplayProps) {
@@ -43,7 +43,7 @@ export default function BannerDisplay({ position, bannersOverride }: BannerDispl
         rel="noopener noreferrer"
         className="block group"
       >
-        <Card className="overflow-hidden border-2 border-celeste/30 hover:border-celeste/60 transition-all duration-300 hover:shadow-lg">
+        <Card className="overflow-hidden border-2 border-nd-green/30 hover:border-nd-green/60 transition-all duration-300 hover:shadow-lg">
           <CardContent className="p-0">
             <div className={`bg-gradient-to-r ${positionColors.hero} relative overflow-hidden`}>
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMEFFRUYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTIwIDBMMCAyMGwyMCAyMCAyMC0yMHoiLz48L2c+PC9nPjwvc3ZnPg==')] opacity-40" />

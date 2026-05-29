@@ -46,9 +46,9 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
   };
 
   const getRoleBadgeColor = () => {
-    if (isAdmin) return 'bg-nd-yellow/40 text-nd-black hover:bg-nd-yellow/40';
+    if (isAdmin) return 'bg-nd-orange/40 text-nd-black hover:bg-nd-orange/40';
     if (isEditor) return 'bg-white/30 text-white hover:bg-white/30';
-    if (isComercial) return 'bg-nd-yellow/40 text-nd-black hover:bg-nd-yellow/40';
+    if (isComercial) return 'bg-nd-orange/40 text-nd-black hover:bg-nd-orange/40';
     return '';
   };
 
@@ -112,10 +112,10 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
           <div className="flex items-center justify-between h-14">
             {/* Logo + Brand */}
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={40} height={40} className="rounded-md" />
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={40} height={40} className="object-contain" />
               <div>
                 <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-white">
-                  Nuevo Día <span className="text-nd-yellow">Mundial</span>
+                  Nuevo Día <span className="text-nd-orange">Mundial</span>
                 </h1>
                 <p className="text-[10px] text-white/60 hidden sm:block font-medium tracking-wide">PORTAL DEL MUNDIAL 2026</p>
               </div>
@@ -129,7 +129,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                   onClick={() => handleTabClick(tab.id)}
                   className={`px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 ${
                     activeTab === tab.id
-                      ? 'bg-nd-yellow text-nd-black shadow-md'
+                      ? 'bg-nd-orange text-nd-black shadow-md'
                       : 'text-white/90 hover:bg-white/15 hover:text-white'
                   }`}
                 >
@@ -148,7 +148,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                     onClick={() => handleTabClick(tab.id)}
                     className={`px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 flex items-center gap-1 ${
                       activeTab === tab.id
-                        ? 'bg-nd-yellow text-nd-black shadow-md'
+                        ? 'bg-nd-orange text-nd-black shadow-md'
                         : accessible
                         ? 'text-white/80 hover:bg-white/15 hover:text-white'
                         : 'text-white/35 cursor-not-allowed'
@@ -186,7 +186,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 onClick={() => handleTabClick(tab.id)}
                 className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-nd-yellow text-nd-black'
+                    ? 'bg-nd-orange text-nd-black'
                     : 'text-white/90 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -204,7 +204,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                   onClick={() => handleTabClick(tab.id)}
                   className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold transition-all duration-200 flex items-center gap-2 ${
                     activeTab === tab.id
-                      ? 'bg-nd-yellow text-nd-black'
+                      ? 'bg-nd-orange text-nd-black'
                       : accessible
                       ? 'text-white/80 hover:bg-white/10 hover:text-white'
                       : 'text-white/35 cursor-not-allowed'
@@ -223,7 +223,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
               <div className="px-4 py-3">
                 <div className="flex items-center gap-3 mb-3">
                   <Avatar className="w-8 h-8">
-                    <AvatarFallback className="text-xs bg-nd-yellow text-nd-black font-bold">
+                    <AvatarFallback className="text-xs bg-nd-orange text-nd-black font-bold">
                       {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
@@ -237,7 +237,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    className="flex-1 bg-nd-yellow text-nd-black hover:bg-nd-yellow-dark font-semibold"
+                    className="flex-1 bg-nd-orange text-nd-black hover:bg-nd-orange-dark font-semibold"
                     onClick={() => handleTabClick('login')}
                   >
                     Mi Cuenta

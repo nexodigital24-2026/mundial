@@ -249,7 +249,7 @@ export default function ComercialTab() {
                     </div>
                   ) : (
                     posBanners.map(b => (
-                      <div key={b.id} className="p-3 rounded-lg border bg-gradient-to-r from-celeste-light to-white flex items-center gap-2">
+                      <div key={b.id} className="p-3 rounded-lg border bg-gradient-to-r from-nd-orange-light to-white flex items-center gap-2">
                         <Megaphone className="w-4 h-4 text-primary flex-shrink-0" />
                         <span className="text-sm font-medium truncate">{b.title}</span>
                         <Badge variant="secondary" className="text-[9px] ml-auto flex-shrink-0">#{b.priority}</Badge>

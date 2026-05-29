@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   keywords: ["Mundial", "Fútbol", "Nuevo Día Mundial", "Radio Nuevo Día", "100.9 FM", "Resultados", "Goleadores"],
   icons: {
     icon: "/logo-nuevo-dia.png",
+    shortcut: "/logo-nuevo-dia.png",
+    apple: "/logo-nuevo-dia.png",
   },
 };
 

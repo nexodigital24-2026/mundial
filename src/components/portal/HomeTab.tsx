@@ -31,8 +31,8 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const quickLinks = [
     { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green' },
     { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark' },
-    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-yellow text-nd-black' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange' },
+    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange text-nd-black' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark' },
     { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-500' },
     { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green' },
   ];
@@ -42,14 +42,14 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
       {/* Hero Banner - Nuevo Día branding */}
       <section className="relative bg-gradient-to-br from-nd-green via-nd-green-dark to-nd-green rounded-2xl overflow-hidden text-white">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-yellow blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-nd-yellow blur-3xl" />
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-orange blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-nd-orange blur-3xl" />
         </div>
         <div className="relative px-6 sm:px-10 py-8 sm:py-14">
           <div className="flex flex-col sm:flex-row items-start gap-6">
             <div className="flex-1 max-w-3xl">
               <div className="flex items-center gap-2 mb-3">
-                <Badge className="bg-nd-yellow text-nd-black border-0 font-bold text-xs">
+                <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-xs">
                   📻 100.9 FM
                 </Badge>
                 <Badge className="bg-white/20 text-white border-white/30 text-xs">
@@ -57,7 +57,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                 </Badge>
               </div>
               <h2 className="text-3xl sm:text-5xl font-extrabold mb-2 tracking-tight">
-                Nuevo Día <span className="text-nd-yellow">Mundial</span>
+                Nuevo Día <span className="text-nd-orange">Mundial</span>
               </h2>
               <p className="text-base sm:text-lg text-white/80 mb-6 max-w-xl">
                 Sigue en vivo todos los partidos, resultados y estadísticas del torneo más importante del mundo. 48 selecciones, 12 grupos.
@@ -65,7 +65,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
               <div className="flex flex-wrap gap-3">
                 <Button
                   onClick={() => onNavigate('grupos')}
-                  className="bg-nd-yellow text-nd-black hover:bg-nd-yellow-dark font-bold"
+                  className="bg-nd-orange text-nd-black hover:bg-nd-orange-dark font-bold"
                 >
                   Ver Grupos <ArrowRight className="w-4 h-4 ml-1" />
                 </Button>
@@ -79,7 +79,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
               </div>
             </div>
             <div className="hidden sm:flex flex-col items-center gap-2">
-              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={120} height={120} className="rounded-xl shadow-lg opacity-90" />
+              <Image src="/logo-nuevo-dia.png" alt="Radio Nuevo Día" width={120} height={120} className="rounded-xl shadow-lg opacity-90 object-contain" />
               <span className="text-[10px] text-white/60 font-semibold tracking-wider">EL DIARIO</span>
             </div>
           </div>
@@ -129,11 +129,11 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {news.map((item) => (
             <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20">
-              <div className="h-32 bg-gradient-to-br from-nd-green/20 to-nd-yellow/10 flex items-center justify-center">
+              <div className="h-32 bg-gradient-to-br from-nd-green/20 to-nd-orange/10 flex items-center justify-center">
                 <span className="text-4xl group-hover:scale-110 transition-transform">⚽</span>
               </div>
               <CardHeader className="pb-2">
-                <Badge variant="secondary" className="w-fit text-xs bg-nd-yellow-light text-nd-green-dark">
+                <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
                   {item.category}
                 </Badge>
                 <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-green transition-colors">

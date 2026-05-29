@@ -19,7 +19,7 @@ export default function MatchCard({ match }: MatchCardProps) {
     <div className="bg-card rounded-xl border border-border shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 overflow-hidden">
       {/* Status bar */}
       <div className={`px-3 py-1.5 text-xs font-medium ${
-        isCompleted ? 'bg-green-50 text-green-700' : 'bg-celeste-light text-celeste-dark'
+        isCompleted ? 'bg-green-50 text-green-700' : 'bg-nd-orange-light text-nd-orange-dark'
       }`}>
         {isCompleted ? 'Finalizado' : 'Próximo'}
       </div>

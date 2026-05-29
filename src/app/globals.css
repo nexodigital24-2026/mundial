@@ -41,15 +41,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Nuevo Día brand colors from logo */
-  --color-nd-green: #00B050;
-  --color-nd-green-dark: #009040;
-  --color-nd-green-light: #e6f7ed;
-  --color-nd-yellow: #FFC000;
-  --color-nd-yellow-dark: #e6a800;
-  --color-nd-yellow-light: #fff8e0;
-  --color-nd-orange: #FFA500;
+  /* Nuevo Día brand colors from logo — verde, naranja, gris clarito, negro */
+  --color-nd-green: #2E7D32;
+  --color-nd-green-dark: #1B5E20;
+  --color-nd-green-light: #E8F5E9;
+  --color-nd-orange: #F57C00;
+  --color-nd-orange-dark: #E65100;
+  --color-nd-orange-light: #FFF3E0;
+  --color-nd-gray: #F5F5F5;
+  --color-nd-gray-dark: #E0E0E0;
   --color-nd-black: #1a1a1a;
+  --color-nd-yellow: #F57C00;
+  --color-nd-yellow-dark: #E65100;
+  --color-nd-yellow-light: #FFF3E0;
   --color-gold: #FFD700;
   --color-silver: #C0C0C0;
   --color-bronze: #CD7F32;
@@ -57,71 +61,71 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #ffffff;
+  --background: #F5F5F5;
   --foreground: #1a1a1a;
   --card: #ffffff;
   --card-foreground: #1a1a1a;
   --popover: #ffffff;
   --popover-foreground: #1a1a1a;
-  --primary: #00B050;
+  --primary: #2E7D32;
   --primary-foreground: #ffffff;
-  --secondary: #fff8e0;
+  --secondary: #FFF3E0;
   --secondary-foreground: #1a1a1a;
-  --muted: #f0f7f2;
-  --muted-foreground: #5a6b5e;
-  --accent: #FFC000;
+  --muted: #EEEEEE;
+  --muted-foreground: #616161;
+  --accent: #F57C00;
   --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
-  --border: #d4e8d9;
-  --input: #d4e8d9;
-  --ring: #00B050;
-  --chart-1: #00B050;
-  --chart-2: #FFC000;
-  --chart-3: #FFA500;
-  --chart-4: #009040;
+  --border: #E0E0E0;
+  --input: #E0E0E0;
+  --ring: #2E7D32;
+  --chart-1: #2E7D32;
+  --chart-2: #F57C00;
+  --chart-3: #E65100;
+  --chart-4: #1B5E20;
   --chart-5: #ef4444;
   --sidebar: #ffffff;
   --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #00B050;
+  --sidebar-primary: #2E7D32;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #fff8e0;
+  --sidebar-accent: #FFF3E0;
   --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #d4e8d9;
-  --sidebar-ring: #00B050;
+  --sidebar-border: #E0E0E0;
+  --sidebar-ring: #2E7D32;
 }
 
 .dark {
-  --background: #0a1f10;
-  --foreground: #f0f7f2;
-  --card: #132a18;
-  --card-foreground: #f0f7f2;
-  --popover: #132a18;
-  --popover-foreground: #f0f7f2;
-  --primary: #00B050;
+  --background: #1a1a1a;
+  --foreground: #F5F5F5;
+  --card: #2d2d2d;
+  --card-foreground: #F5F5F5;
+  --popover: #2d2d2d;
+  --popover-foreground: #F5F5F5;
+  --primary: #4CAF50;
   --primary-foreground: #ffffff;
-  --secondary: #1a3320;
-  --secondary-foreground: #f0f7f2;
-  --muted: #1a3320;
-  --muted-foreground: #8fa896;
-  --accent: #FFC000;
+  --secondary: #3E2723;
+  --secondary-foreground: #F5F5F5;
+  --muted: #333333;
+  --muted-foreground: #BDBDBD;
+  --accent: #FF9800;
   --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
-  --border: #2a4a30;
-  --input: #2a4a30;
-  --ring: #00B050;
-  --chart-1: #00B050;
-  --chart-2: #FFC000;
-  --chart-3: #FFA500;
-  --chart-4: #009040;
+  --border: #424242;
+  --input: #424242;
+  --ring: #4CAF50;
+  --chart-1: #4CAF50;
+  --chart-2: #FF9800;
+  --chart-3: #E65100;
+  --chart-4: #2E7D32;
   --chart-5: #ef4444;
-  --sidebar: #132a18;
-  --sidebar-foreground: #f0f7f2;
-  --sidebar-primary: #00B050;
+  --sidebar: #2d2d2d;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-primary: #4CAF50;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #1a3320;
-  --sidebar-accent-foreground: #f0f7f2;
-  --sidebar-border: #2a4a30;
-  --sidebar-ring: #00B050;
+  --sidebar-accent: #3E2723;
+  --sidebar-accent-foreground: #F5F5F5;
+  --sidebar-border: #424242;
+  --sidebar-ring: #4CAF50;
 }
 
 @layer base {
@@ -141,11 +145,11 @@
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #a0c8a8;
+  background: #BDBDBD;
   border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #7ab085;
+  background: #9E9E9E;
 }
 
 /* Pulsing live animation */
