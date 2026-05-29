@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ImageUploader from './ImageUploader';
 import {
   Briefcase, Megaphone, Plus, Edit, Trash2, Save, X,
   Eye, MousePointer, BarChart3, ImageIcon, Layout,
@@ -75,6 +76,7 @@ function getContrastColor(hex: string): string {
 interface BannerForm {
   title: string;
   imageUrl: string;
+  imageDataUrl: string;
   linkUrl: string;
   position: BannerPosition;
   priority: number;
@@ -91,6 +93,7 @@ interface BannerForm {
 const defaultForm: BannerForm = {
   title: '',
   imageUrl: '',
+  imageDataUrl: '',
   linkUrl: '',
   position: 'sidebar',
   priority: 1,
@@ -112,6 +115,7 @@ export default function ComercialTab() {
   const [form, setForm] = useState<BannerForm>({ ...defaultForm });
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('table');
+  const [formImageDataUrl, setFormImageDataUrl] = useState('');
 
   const sortedBanners = useMemo(() =>
     [...banners].sort((a, b) => a.priority - b.priority),
@@ -135,6 +139,7 @@ export default function ComercialTab() {
   const openCreate = () => {
     setEditingBanner(null);
     setForm({ ...defaultForm });
+    setFormImageDataUrl('');
     setDialogOpen(true);
   };
 
@@ -143,6 +148,7 @@ export default function ComercialTab() {
     setForm({
       title: banner.title,
       imageUrl: banner.imageUrl,
+      imageDataUrl: banner.imageDataUrl,
       linkUrl: banner.linkUrl,
       position: banner.position,
       priority: banner.priority,
@@ -155,6 +161,7 @@ export default function ComercialTab() {
       bgColor: banner.bgColor,
       borderRadius: banner.borderRadius,
     });
+    setFormImageDataUrl(banner.imageDataUrl);
     setDialogOpen(true);
   };
 
@@ -175,7 +182,7 @@ export default function ComercialTab() {
     if (editingBanner) {
       setBanners(prev => prev.map(b =>
         b.id === editingBanner.id
-          ? { ...b, ...form }
+          ? { ...b, ...form, imageDataUrl: formImageDataUrl }
           : b
       ));
     } else {
@@ -183,6 +190,7 @@ export default function ComercialTab() {
         id: `b${Date.now()}`,
         title: form.title,
         imageUrl: form.imageUrl,
+        imageDataUrl: formImageDataUrl,
         linkUrl: form.linkUrl,
         position: form.position,
         active: true,
@@ -316,9 +324,16 @@ export default function ComercialTab() {
                       <TableRow key={banner.id} className={banner.active ? '' : 'opacity-50'}>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: banner.bgColor }}>
-                              <ImageIcon className="w-4 h-4" style={{ color: getContrastColor(banner.bgColor) }} />
-                            </div>
+                            {(banner.imageDataUrl || banner.imageUrl) ? (
+                              <div className="w-8 h-8 rounded overflow-hidden flex-shrink-0">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={banner.imageDataUrl || banner.imageUrl} alt="" className="w-full h-full object-cover" />
+                              </div>
+                            ) : (
+                              <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ backgroundColor: banner.bgColor }}>
+                                <ImageIcon className="w-4 h-4" style={{ color: getContrastColor(banner.bgColor) }} />
+                              </div>
+                            )}
                             <div className="min-w-0">
                               <p className="text-sm font-medium truncate max-w-[160px]">{banner.title}</p>
                               <p className="text-[10px] text-muted-foreground">{banner.createdBy}</p>
@@ -554,6 +569,14 @@ export default function ComercialTab() {
                               maxWidth: '100%',
                             }}
                           >
+                            {/* Background image if available */}
+                            {(banner.imageDataUrl || banner.imageUrl) && (
+                              <div className="absolute inset-0">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={banner.imageDataUrl || banner.imageUrl} alt="" className="w-full h-full object-cover" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                              </div>
+                            )}
                             {/* Shimmer effect */}
                             <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500" style={{
                               background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.15) 55%, transparent 60%)',
@@ -563,11 +586,11 @@ export default function ComercialTab() {
                                 <div className="w-5 h-5 rounded-full bg-black/10 flex items-center justify-center flex-shrink-0">
                                   <Megaphone className="w-2.5 h-2.5" style={{ color: getContrastColor(banner.bgColor) }} />
                                 </div>
-                                <p className="text-xs font-semibold truncate" style={{ color: getContrastColor(banner.bgColor) }}>
+                                <p className="text-xs font-semibold truncate" style={{ color: (banner.imageDataUrl || banner.imageUrl) ? 'white' : getContrastColor(banner.bgColor) }}>
                                   {banner.title}
                                 </p>
                               </div>
-                              <p className="text-[8px] opacity-40" style={{ color: getContrastColor(banner.bgColor) }}>
+                              <p className="text-[8px] opacity-40" style={{ color: (banner.imageDataUrl || banner.imageUrl) ? 'white' : getContrastColor(banner.bgColor) }}>
                                 Publicado por Nuevo Día
                               </p>
                             </div>
@@ -667,23 +690,22 @@ export default function ComercialTab() {
                   onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>URL de Imagen</Label>
-                  <Input
-                    placeholder="/banners/mi-banner.jpg"
-                    value={form.imageUrl}
-                    onChange={(e) => setForm(prev => ({ ...prev, imageUrl: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>URL de Enlace</Label>
-                  <Input
-                    placeholder="https://ejemplo.com"
-                    value={form.linkUrl}
-                    onChange={(e) => setForm(prev => ({ ...prev, linkUrl: e.target.value }))}
-                  />
-                </div>
+              {/* Image upload */}
+              <ImageUploader
+                imageUrl={form.imageUrl}
+                imageDataUrl={formImageDataUrl}
+                onImageUrlChange={(url) => setForm(prev => ({ ...prev, imageUrl: url }))}
+                onImageDataUrlChange={(dataUrl) => setFormImageDataUrl(dataUrl)}
+                label="Imagen del Banner"
+                folder="banners"
+              />
+              <div className="space-y-2">
+                <Label>URL de Enlace</Label>
+                <Input
+                  placeholder="https://ejemplo.com"
+                  value={form.linkUrl}
+                  onChange={(e) => setForm(prev => ({ ...prev, linkUrl: e.target.value }))}
+                />
               </div>
             </div>
 

@@ -130,3 +130,56 @@ Stage Summary:
 - BannerPastilla enhanced with shimmer, countdown timer, and responsive sizing
 - Pastillas management tab in ComercialTab with visual grid and inline controls
 - All text in Spanish, responsive design maintained
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Add image upload support to Slider slides and Banners, make slides fully editable CMS with image upload
+
+Work Log:
+- Added `imageDataUrl` field to SliderSlide interface in mock-data.ts
+- Added `imageDataUrl` field to Banner interface in mock-data.ts
+- Added `imageDataUrl: ''` to all 4 slider slides and all 12 banner entries in mock-data.ts
+- Created /home/z/my-project/src/app/api/upload/route.ts — API endpoint for file uploads
+  - Accepts FormData with file and folder parameter
+  - Saves to public/uploads/{folder}/ with unique filename
+  - Returns public URL, name, size, type
+- Created /home/z/my-project/src/components/portal/ImageUploader.tsx — Reusable image upload component
+  - Dual mode: "Subir Archivo" (file upload) or "URL" (manual URL input)
+  - Immediate preview via FileReader base64 conversion
+  - Server upload via /api/upload for persistence
+  - Clear button to remove image
+  - Visual preview with aspect-ratio container
+- Updated /home/z/my-project/src/components/portal/MatchSlider.tsx
+  - Shows uploaded image as full background when available
+  - Falls back to bgColor gradient when no image
+  - Gradient overlay on images for text readability
+- Updated /home/z/my-project/src/components/portal/BannerDisplay.tsx
+  - BannerPastilla shows uploaded image as background when available
+  - Gradient overlay for text readability over images
+  - Text color auto-adjusts to white when image present
+- Updated /home/z/my-project/src/components/portal/EditorTab.tsx
+  - Full rewrite: Slider tab is now the first/default tab
+  - ImageUploader integrated for each slide edit form
+  - New Slide dialog with image upload support
+  - Delete slide button added
+  - More categories: "Especial", "Noticia" added
+  - Score override fields for team-linked slides
+  - Improved live preview with image background support
+- Updated /home/z/my-project/src/components/portal/ComercialTab.tsx
+  - Added ImageUploader component import
+  - Added imageDataUrl to BannerForm interface
+  - Added formImageDataUrl state for separate image data tracking
+  - Banner dialog: replaced URL-only image input with ImageUploader
+  - Banner table: shows thumbnail when image available
+  - Pastilla preview: shows uploaded image with overlay
+  - Text color adjusts to white over images
+- Build compiled successfully with no errors
+
+Stage Summary:
+- Full image upload support for both Slider slides and Banner ads
+- ImageUploader reusable component with upload + URL modes
+- /api/upload endpoint for server-side file persistence
+- MatchSlider and BannerDisplay render uploaded images as backgrounds
+- CMS editors in EditorTab and ComercialTab support image uploads
+- All pastillas show image thumbnails in table and preview grid

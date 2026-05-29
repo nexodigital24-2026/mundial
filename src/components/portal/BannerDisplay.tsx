@@ -44,6 +44,10 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
   const [isHovered, setIsHovered] = useState(false);
   const bannerIdRef = useRef(banner.id);
 
+  // Resolve image: prefer imageDataUrl, then imageUrl
+  const bannerImage = banner.imageDataUrl || (banner.imageUrl && banner.imageUrl.length > 0 ? banner.imageUrl : '');
+  const hasImage = bannerImage.length > 0;
+
   // Countdown timer for display duration
   useEffect(() => {
     bannerIdRef.current = banner.id;
@@ -74,6 +78,20 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Background image if available */}
+      {hasImage && (
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={bannerImage}
+            alt={banner.title}
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay for text readability when image exists */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        </div>
+      )}
+
       {/* Shimmer/shine effect on hover */}
       <div
         className="absolute inset-0 pointer-events-none transition-opacity duration-500"
@@ -92,7 +110,7 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
               <Megaphone className="w-4 h-4 text-current opacity-70" />
             </div>
             <div className="min-w-0">
-              <p className="font-semibold text-sm truncate group-hover:underline" style={{ color: getContrastColor(banner.bgColor) }}>
+              <p className="font-semibold text-sm truncate group-hover:underline" style={{ color: hasImage ? 'white' : getContrastColor(banner.bgColor) }}>
                 {banner.title}
               </p>
               <Badge variant="secondary" className="text-[9px] mt-0.5">{positionLabels[banner.position]}</Badge>
@@ -104,19 +122,19 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
               className="text-[9px] border-0 flex items-center gap-1"
               style={{
                 backgroundColor: 'rgba(0,0,0,0.2)',
-                color: getContrastColor(banner.bgColor),
+                color: hasImage ? 'white' : getContrastColor(banner.bgColor),
               }}
             >
               <Timer className="w-2.5 h-2.5" />
               {countdown}s
             </Badge>
-            <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" style={{ color: getContrastColor(banner.bgColor) }} />
+            <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" style={{ color: hasImage ? 'white' : getContrastColor(banner.bgColor) }} />
           </div>
         </div>
         {/* Published by text */}
         <p
           className="text-[9px] opacity-50 font-medium mt-auto"
-          style={{ color: getContrastColor(banner.bgColor) }}
+          style={{ color: hasImage ? 'white' : getContrastColor(banner.bgColor) }}
         >
           Publicado por Nuevo Día
         </p>
@@ -134,6 +152,7 @@ function BannerPastilla({ banner, style, className = '' }: { banner: Banner; sty
 }
 
 function getContrastColor(hex: string): string {
+  if (!hex || hex.length < 7) return '#1a1a1a';
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);

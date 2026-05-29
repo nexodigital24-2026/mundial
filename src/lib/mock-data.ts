@@ -107,6 +107,7 @@ export interface Banner {
   targetType: '_blank' | '_self'; // cómo abre el enlace
   bgColor: string;      // color de fondo de la pastilla
   borderRadius: 'none' | 'sm' | 'md' | 'lg' | 'full';
+  imageDataUrl: string; // Base64 data URL for uploaded images (client-side)
 }
 
 export type BannerPosition =
@@ -973,6 +974,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#E8F5E9',
     borderRadius: 'lg',
+    imageDataUrl: '',
   },
   {
     id: 'b2',
@@ -993,6 +995,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#FFF3E0',
     borderRadius: 'md',
+    imageDataUrl: '',
   },
   {
     id: 'b3',
@@ -1013,6 +1016,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#FFF3E0',
     borderRadius: 'lg',
+    imageDataUrl: '',
   },
   {
     id: 'b4',
@@ -1033,6 +1037,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#F5F5F5',
     borderRadius: 'md',
+    imageDataUrl: '',
   },
   {
     id: 'b5',
@@ -1053,6 +1058,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#E8F5E9',
     borderRadius: 'lg',
+    imageDataUrl: '',
   },
   {
     id: 'b6',
@@ -1073,6 +1079,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#F5F5F5',
     borderRadius: 'lg',
+    imageDataUrl: '',
   },
   {
     id: 'b7',
@@ -1093,6 +1100,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#FFF3E0',
     borderRadius: 'md',
+    imageDataUrl: '',
   },
   {
     id: 'b8',
@@ -1113,6 +1121,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#FFF3E0',
     borderRadius: 'lg',
+    imageDataUrl: '',
   },
   {
     id: 'b9',
@@ -1133,6 +1142,7 @@ export const banners: Banner[] = [
     targetType: '_self',
     bgColor: '#F5F5F5',
     borderRadius: 'lg',
+    imageDataUrl: '',
   },
   {
     id: 'b10',
@@ -1153,6 +1163,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#026602',
     borderRadius: 'full',
+    imageDataUrl: '',
   },
   {
     id: 'b11',
@@ -1173,6 +1184,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#FF6800',
     borderRadius: 'md',
+    imageDataUrl: '',
   },
   {
     id: 'b12',
@@ -1193,6 +1205,7 @@ export const banners: Banner[] = [
     targetType: '_blank',
     bgColor: '#CC0000',
     borderRadius: 'none',
+    imageDataUrl: '',
   },
 ];
 
@@ -1208,6 +1221,7 @@ export interface SliderSlide {
   awayScore: number | null;
   category: string;       // e.g., "En Vivo", "Resultado", "Próximo Partido"
   imageUrl: string;       // Background image URL (can be empty)
+  imageDataUrl: string;   // Base64 data URL for uploaded images (client-side)
   bgColor: string;        // Fallback background color
   active: boolean;
   order: number;          // Display order (1-4)
@@ -1226,6 +1240,7 @@ export const sliderSlides: SliderSlide[] = [
     awayScore: 0,
     category: 'Resultado',
     imageUrl: '',
+    imageDataUrl: '',
     bgColor: '#1B5E20',
     active: true,
     order: 1,
@@ -1242,6 +1257,7 @@ export const sliderSlides: SliderSlide[] = [
     awayScore: 1,
     category: 'En Vivo',
     imageUrl: '',
+    imageDataUrl: '',
     bgColor: '#0D47A1',
     active: true,
     order: 2,
@@ -1258,6 +1274,7 @@ export const sliderSlides: SliderSlide[] = [
     awayScore: 2,
     category: 'En Vivo',
     imageUrl: '',
+    imageDataUrl: '',
     bgColor: '#BF360C',
     active: true,
     order: 3,
@@ -1274,6 +1291,7 @@ export const sliderSlides: SliderSlide[] = [
     awayScore: null,
     category: 'Próximo',
     imageUrl: '',
+    imageDataUrl: '',
     bgColor: '#4A148C',
     active: true,
     order: 4,

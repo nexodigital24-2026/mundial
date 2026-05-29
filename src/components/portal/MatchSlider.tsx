@@ -8,7 +8,6 @@ import Image from 'next/image';
 import {
   ChevronLeft,
   ChevronRight,
-  RadioTower,
   ArrowRight,
   Flag,
 } from 'lucide-react';
@@ -73,15 +72,34 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
   const isLive = currentSlide.category === 'En Vivo';
   const isUpcoming = currentSlide.category === 'Próximo';
 
+  // Resolve image: prefer uploaded imageDataUrl, then imageUrl, then fallback to bgColor
+  const slideImage = currentSlide.imageDataUrl || currentSlide.imageUrl || '';
+  const hasImage = slideImage.length > 0;
+
   return (
     <section className="relative rounded-2xl overflow-hidden text-white shadow-xl">
-      {/* Background with gradient */}
-      <div
-        className="transition-all duration-500 ease-in-out"
-        style={{
-          background: `linear-gradient(135deg, ${currentSlide.bgColor} 0%, ${currentSlide.bgColor}dd 40%, ${currentSlide.bgColor}99 100%)`,
-        }}
-      >
+      <div className="transition-all duration-500 ease-in-out relative">
+        {/* Background image or gradient */}
+        {hasImage ? (
+          <div className="absolute inset-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={slideImage}
+              alt={currentSlide.title}
+              className="w-full h-full object-cover"
+            />
+            {/* Overlay gradient to ensure text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+          </div>
+        ) : (
+          <div
+            style={{
+              background: `linear-gradient(135deg, ${currentSlide.bgColor} 0%, ${currentSlide.bgColor}dd 40%, ${currentSlide.bgColor}99 100%)`,
+            }}
+            className="absolute inset-0"
+          />
+        )}
+
         {/* Decorative elements */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-orange blur-3xl" />
