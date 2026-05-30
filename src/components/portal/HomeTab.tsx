@@ -215,7 +215,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
   const quickLinks = [
     { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-[#014d01]', hoverColor: 'hover:bg-[#003d01]', ring: 'ring-[#014d01]/40', shadow: 'shadow-[#014d01]/20' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-[#0077CC]', hoverColor: 'hover:bg-[#005fa3]', ring: 'ring-[#0077CC]/40', shadow: 'shadow-[#0077CC]/20' },
     { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange/40', shadow: 'shadow-nd-orange/20' },
     { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-[#CC5300]', hoverColor: 'hover:bg-[#a84200]', ring: 'ring-[#CC5300]/40', shadow: 'shadow-[#CC5300]/20' },
     { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700', ring: 'ring-red-600/40', shadow: 'shadow-red-600/20' },
@@ -227,7 +227,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
     messi: 'arg', yamal: 'esp', haaland: 'nor', mexico: 'mex', spain: 'esp', ronaldo: 'por', usa: 'usa',
   };
 
-  // Map news category to gradient colors
+  // Map news category to gradient colors — updated to blue tones
   const newsGradientMap: Record<string, string> = {
     'En Vivo': 'from-red-500/30 to-nd-orange/20',
     'Especial': 'from-nd-orange/30 to-yellow-400/20',

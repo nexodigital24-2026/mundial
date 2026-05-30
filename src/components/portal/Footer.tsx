@@ -5,7 +5,7 @@ import { Radio } from 'lucide-react';
 export default function Footer() {
   return (
     <footer className="mt-auto">
-      {/* Main footer - green background with orange accents */}
+      {/* Main footer - blue background with orange accents */}
       <div className="bg-gradient-to-b from-nd-green-dark to-nd-green text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

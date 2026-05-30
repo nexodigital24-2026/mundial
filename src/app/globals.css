@@ -42,10 +42,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   /* Nexo Digital brand colors */
-  --color-nd-green: #026602;
-  --color-nd-green-dark: #014d01;
-  --color-nd-green-light: #E8F5E9;
-  --color-nd-orange: #FF6800;
+  --color-nd-green: #0099FF;
+  --color-nd-green-dark: #0077CC;
+  --color-nd-green-light: #E6F7FF;
+  --color-nd-orange: #FF6600;
   --color-nd-orange-dark: #CC5300;
   --color-nd-orange-light: #FFF3E0;
   --color-nd-orange-accent: #FF931E;
@@ -68,31 +68,31 @@
   --card-foreground: #231F20;
   --popover: #ffffff;
   --popover-foreground: #231F20;
-  --primary: #026602;
+  --primary: #0099FF;
   --primary-foreground: #ffffff;
   --secondary: #FFF3E0;
   --secondary-foreground: #231F20;
   --muted: #EEEEEE;
   --muted-foreground: #616161;
-  --accent: #FF6800;
+  --accent: #FF6600;
   --accent-foreground: #231F20;
   --destructive: #ef4444;
   --border: #E0E0E0;
   --input: #E0E0E0;
-  --ring: #026602;
-  --chart-1: #026602;
-  --chart-2: #FF6800;
+  --ring: #0099FF;
+  --chart-1: #0099FF;
+  --chart-2: #FF6600;
   --chart-3: #FF931E;
-  --chart-4: #014d01;
+  --chart-4: #0077CC;
   --chart-5: #ef4444;
   --sidebar: #ffffff;
   --sidebar-foreground: #231F20;
-  --sidebar-primary: #026602;
+  --sidebar-primary: #0099FF;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #FFF3E0;
   --sidebar-accent-foreground: #231F20;
   --sidebar-border: #E0E0E0;
-  --sidebar-ring: #026602;
+  --sidebar-ring: #0099FF;
 }
 
 .dark {
@@ -102,7 +102,7 @@
   --card-foreground: #F5F5F5;
   --popover: #2d2d2d;
   --popover-foreground: #F5F5F5;
-  --primary: #04a304;
+  --primary: #33AAFF;
   --primary-foreground: #ffffff;
   --secondary: #3E2723;
   --secondary-foreground: #F5F5F5;
@@ -113,20 +113,20 @@
   --destructive: #ef4444;
   --border: #424242;
   --input: #424242;
-  --ring: #04a304;
-  --chart-1: #04a304;
+  --ring: #33AAFF;
+  --chart-1: #33AAFF;
   --chart-2: #FF931E;
-  --chart-3: #FF6800;
-  --chart-4: #026602;
+  --chart-3: #FF6600;
+  --chart-4: #0099FF;
   --chart-5: #ef4444;
   --sidebar: #2d2d2d;
   --sidebar-foreground: #F5F5F5;
-  --sidebar-primary: #04a304;
+  --sidebar-primary: #33AAFF;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #3E2723;
   --sidebar-accent-foreground: #F5F5F5;
   --sidebar-border: #424242;
-  --sidebar-ring: #04a304;
+  --sidebar-ring: #33AAFF;
 }
 
 @layer base {
@@ -183,4 +183,25 @@
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out;
+}
+
+/* Confetti fall animation */
+@keyframes confetti-fall {
+  0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.animate-confetti {
+  animation: confetti-fall 3s ease-in infinite;
+}
+
+/* Gradient shift animation */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  animation: gradient-shift 6s ease infinite;
+  background-size: 200% 200%;
 }

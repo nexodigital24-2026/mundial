@@ -261,7 +261,7 @@ function SlidePreview({ slide, compact = false }: { slide: Partial<SliderSlide>;
       ) : (
         <div
           className="w-full h-full"
-          style={{ background: `linear-gradient(135deg, ${slide.bgColor || '#1B5E20'} 0%, ${slide.bgColor || '#1B5E20'}cc 100%)` }}
+          style={{ background: `linear-gradient(135deg, ${slide.bgColor || '#003366'} 0%, ${slide.bgColor || '#003366'}cc 100%)` }}
         />
       )}
       <div className={`absolute inset-0 ${compact ? 'p-2' : 'p-4'} flex flex-col justify-end text-white`}>
@@ -338,7 +338,7 @@ export default function SliderEditor() {
     title: '',
     subtitle: '',
     category: 'Resultado',
-    bgColor: '#1B5E20',
+    bgColor: '#003366',
     linkTo: 'resultados',
     matchId: 'none' as string,
     imageUrl: '',
@@ -445,7 +445,7 @@ export default function SliderEditor() {
       title: '',
       subtitle: '',
       category: 'Resultado',
-      bgColor: '#1B5E20',
+      bgColor: '#003366',
       linkTo: 'resultados',
       matchId: 'none',
       imageUrl: '',
@@ -459,7 +459,7 @@ export default function SliderEditor() {
   // Quick create from template
   const createFromTemplate = (template: 'resultado' | 'envivo' | 'proximo' | 'especial') => {
     const templates: Record<string, Partial<typeof newForm>> = {
-      resultado: { category: 'Resultado', bgColor: '#1B5E20', linkTo: 'resultados' },
+      resultado: { category: 'Resultado', bgColor: '#003366', linkTo: 'resultados' },
       envivo: { category: 'En Vivo', bgColor: '#B71C1C', linkTo: 'en-vivo' },
       proximo: { category: 'Próximo', bgColor: '#E65100', linkTo: 'resultados' },
       especial: { category: 'Especial', bgColor: '#4A148C', linkTo: 'inicio' },
@@ -868,12 +868,12 @@ export default function SliderEditor() {
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
-                          value={form.bgColor ?? '#1B5E20'}
+                          value={form.bgColor ?? '#003366'}
                           onChange={(e) => setForm(prev => ({ ...prev, bgColor: e.target.value }))}
                           className="w-9 h-9 rounded border cursor-pointer"
                         />
                         <Input
-                          value={form.bgColor ?? '#1B5E20'}
+                          value={form.bgColor ?? '#003366'}
                           onChange={(e) => setForm(prev => ({ ...prev, bgColor: e.target.value }))}
                           className="flex-1 text-sm"
                         />
@@ -896,12 +896,12 @@ export default function SliderEditor() {
                       <div className="flex items-center gap-2">
                         <input
                           type="color"
-                          value={form.bgColor ?? '#1B5E20'}
+                          value={form.bgColor ?? '#003366'}
                           onChange={(e) => setForm(prev => ({ ...prev, bgColor: e.target.value }))}
                           className="w-9 h-9 rounded border cursor-pointer"
                         />
                         <Input
-                          value={form.bgColor ?? '#1B5E20'}
+                          value={form.bgColor ?? '#003366'}
                           onChange={(e) => setForm(prev => ({ ...prev, bgColor: e.target.value }))}
                           className="flex-1 text-sm"
                         />

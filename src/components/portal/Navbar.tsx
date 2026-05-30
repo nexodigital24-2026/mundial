@@ -59,7 +59,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
 
   return (
     <nav className="sticky top-0 z-50 shadow-lg">
-      {/* Green top strip with FM frequency */}
+      {/* Blue top strip with branding */}
       <div className="bg-nd-green text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-9">
           <div className="flex items-center gap-2">
@@ -104,8 +104,8 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
         </div>
       </div>
 
-      {/* Main nav bar - gradient from green to darker green */}
-      <div className="bg-gradient-to-r from-nd-green via-nd-green-dark to-nd-green">
+      {/* Main nav bar - blue gradient */}
+      <div className="bg-gradient-to-r from-nd-green via-nd-green-dark to-nd-green animate-gradient">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
             {/* Brand */}

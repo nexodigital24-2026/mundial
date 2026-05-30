@@ -63,7 +63,7 @@ export default function MatchCard({ match: initialMatch }: MatchCardProps) {
       {/* Status bar */}
       <div className={`px-3 py-1.5 text-xs font-medium flex items-center justify-between ${
         isLive ? 'bg-red-50 text-red-700' :
-        isCompleted ? 'bg-green-50 text-green-700' :
+        isCompleted ? 'bg-blue-50 text-blue-700' :
         'bg-nd-orange-light text-nd-orange-dark'
       }`}>
         <span className="flex items-center gap-1.5">

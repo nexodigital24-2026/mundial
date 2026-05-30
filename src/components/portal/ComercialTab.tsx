@@ -35,15 +35,15 @@ const positionLabels: Record<BannerPosition, string> = {
 };
 
 const positionPresets: Record<BannerPosition, { width: number; height: number; bgColor: string; borderRadius: Banner['borderRadius']; displayDuration: number }> = {
-  hero: { width: 728, height: 90, bgColor: '#E8F5E9', borderRadius: 'lg', displayDuration: 10 },
+  hero: { width: 728, height: 90, bgColor: '#E6F7FF', borderRadius: 'lg', displayDuration: 10 },
   sidebar: { width: 300, height: 250, bgColor: '#FFF3E0', borderRadius: 'md', displayDuration: 15 },
   footer: { width: 728, height: 90, bgColor: '#F5F5F5', borderRadius: 'md', displayDuration: 8 },
   'content-top': { width: 728, height: 90, bgColor: '#FFF3E0', borderRadius: 'lg', displayDuration: 10 },
   'content-bottom': { width: 728, height: 90, bgColor: '#F5F5F5', borderRadius: 'lg', displayDuration: 8 },
   'navbar-below': { width: 970, height: 66, bgColor: '#CC0000', borderRadius: 'none', displayDuration: 7 },
   'between-matches': { width: 728, height: 90, bgColor: '#E3F2FD', borderRadius: 'md', displayDuration: 10 },
-  'sticky-bottom': { width: 970, height: 50, bgColor: '#026602', borderRadius: 'full', displayDuration: 5 },
-  'floating-left': { width: 160, height: 600, bgColor: '#E8F5E9', borderRadius: 'md', displayDuration: 20 },
+  'sticky-bottom': { width: 970, height: 50, bgColor: '#0099FF', borderRadius: 'full', displayDuration: 5 },
+  'floating-left': { width: 160, height: 600, bgColor: '#E6F7FF', borderRadius: 'md', displayDuration: 20 },
   'floating-right': { width: 160, height: 600, bgColor: '#FF6800', borderRadius: 'md', displayDuration: 20 },
   interstitial: { width: 800, height: 600, bgColor: '#1a1a2e', borderRadius: 'lg', displayDuration: 15 },
 };
@@ -847,7 +847,7 @@ export default function ComercialTab() {
                     <Input
                       value={form.bgColor}
                       onChange={(e) => setForm(prev => ({ ...prev, bgColor: e.target.value }))}
-                      placeholder="#E8F5E9"
+                      placeholder="#E6F7FF"
                       className="flex-1"
                     />
                   </div>

@@ -63,7 +63,7 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
 
   return (
     <div className={`bg-white rounded-xl border-2 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden relative ${
-      isMatchLive ? 'border-red-500/40' : 'border-green-500/40'
+      isMatchLive ? 'border-red-500/40' : 'border-blue-500/40'
     }`}>
       {/* Goal flash overlay */}
       {goalFlash && (

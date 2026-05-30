@@ -103,11 +103,21 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
           />
         )}
 
-        {/* Decorative elements */}
+        {/* Decorative elements — blue + orange like the flyer */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-orange blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-white blur-3xl" />
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-nd-orange blur-2xl" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-nd-green blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-nd-green blur-2xl" />
+          <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-[#FFD700] blur-xl opacity-50" />
+        </div>
+
+        {/* Confetti-like decorative dots */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          <div className="absolute top-8 left-8 w-2 h-2 rounded-full bg-[#FFD700]" />
+          <div className="absolute top-16 right-12 w-1.5 h-1.5 rounded-full bg-white" />
+          <div className="absolute bottom-20 left-1/4 w-2.5 h-2.5 rounded-sm bg-[#0099FF] rotate-45" />
+          <div className="absolute bottom-12 right-1/3 w-1 h-1 rounded-full bg-[#FF6600]" />
+          <div className="absolute top-1/3 right-20 w-2 h-2 rounded-full bg-white" />
         </div>
 
         {/* Pattern overlay */}
