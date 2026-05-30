@@ -65,17 +65,31 @@ export interface Match {
   synthesis?: string;
 }
 
+export interface GalleryImage {
+  id: string;
+  url: string;           // Server URL (WebP)
+  dataUrl: string;       // Base64 data URL for client preview
+  caption: string;       // Photo caption
+  order: number;         // Display order in gallery
+}
+
 export interface NewsItem {
   id: string;
   title: string;
   summary: string;
+  content: string;         // Full article body text (rich content)
   category: string;
   date: string;
   imageKeyword: string;
-  imageUrl: string;       // Custom image URL (uploaded or external)
-  imageDataUrl: string;   // Base64 data URL for uploaded images (client-side preview)
-  order: number;          // Display order
-  active: boolean;        // Whether to show this news item
+  imageUrl: string;        // Main/cover image URL
+  imageDataUrl: string;    // Main/cover image base64
+  gallery: GalleryImage[]; // Photo gallery - multiple images
+  author: string;          // Article author
+  source: string;          // News source
+  tags: string[];          // Tags for categorization
+  featured: boolean;       // Featured/highlighted news
+  order: number;
+  active: boolean;
 }
 
 export interface MatchSynthesis {
@@ -768,11 +782,17 @@ export const news: NewsItem[] = [
     id: 'n1',
     title: 'Messi lidera la goleada de Argentina ante Argelia',
     summary: 'Con un doblete del astro argentino, la selección albiceleste aplastó 4-0 a los norteafricanos en Dallas.',
+    content: 'Lionel Messi volvió a demostrar por qué es considerado uno de los mejores jugadores de todos los tiempos en la goleada de Argentina 4-0 ante Argelia en el Cotton Bowl de Dallas. El capitán albiceleste abrió el marcador a los 12 minutos con un zurdazo imparable desde fuera del área y amplió su cuenta personal en el minuto 55 tras una jugada colectiva que dejó a la defensa norteafricana sin opciones.\n\nEl equipo dirigido por Lionel Scaloni mostró una superioridad total durante los 90 minutos, con un 65% de posesión y más de 20 tiros a puerta. Enzo Fernández cerró la goleada en el tiempo de descuento con un remate de volea que dejó sin opciones al portero argelino. La afición argentina, que llenó las gradas del estadio, coreó el nombre del "10" durante todo el encuentro.\n\nCon esta victoria, Argentina se confirma como una de las selecciones candidatas al título mundial y梅西 sigue sumando récords en lo que podría ser su último Mundial. El próximo rival de la albiceleste será Austria en los octavos de final.',
     category: 'En Vivo',
     date: '2026-06-16',
     imageKeyword: 'messi',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'Carlos Méndez',
+    source: 'ESPN',
+    tags: ['Messi', 'Argentina', 'Goles'],
+    featured: true,
     order: 1,
     active: true,
   },
@@ -780,11 +800,17 @@ export const news: NewsItem[] = [
     id: 'n2',
     title: 'Yamal: la gran promesa que deslumbra al mundo',
     summary: 'El joven español suma 4 goles en el torneo y es candidato a la Bota de Oro. Su rendimiento es histórico para su edad.',
+    content: 'Lamine Yamal se ha convertido en la gran revelación del Mundial 2026. Con apenas 18 años, el extremo del FC Barcelona ha anotado 4 goles en la fase de grupos y es uno de los máximos candidatos a conseguir la Bota de Oro del torneo. Su velocidad, regate y visión de juego lo convierten en un jugador impredecible para cualquier defensa.\n\nEn el partido ante Arabia Saudita, Yamal brilló con un golazo tras dejar sentados a dos defensas rivales y asistió a Pedri en el tercer tanto de la noche. Los analistas ya lo comparan con los mejores extremos de la historia del fútbol español y su mercado se ha disparado por los cielos.\n\nLa selección española, liderada por la nueva generación de Pedri, Gavi y Yamal, se perfanca como una de las grandes favoritas al título. El joven del Barça ha declarado que sueña con levantar el trofeo en el MetLife Stadium de Nueva Jersey.',
     category: 'Especial',
     date: '2026-06-15',
     imageKeyword: 'yamal',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'María García',
+    source: 'TyC Sports',
+    tags: ['Yamal', 'España', 'Promesa'],
+    featured: true,
     order: 2,
     active: true,
   },
@@ -792,11 +818,17 @@ export const news: NewsItem[] = [
     id: 'n3',
     title: 'Haaland doblega a Francia con un doblete histórico',
     summary: 'Noruega le da la vuelta al partido contra Francia con dos goles de Haaland en un partido que se juega actualmente.',
+    content: 'Erling Haaland volvió a ser el héroe de Noruega en un partido épico contra Francia en el SoFi Stadium de Los Ángeles. El delantero del Manchester City anotó dos goles en la segunda mitad para darle la vuelta a un marcador que favorecía a los galos tras el tanto inicial de Mbappé.\n\nEl primer gol de Haaland llegó en el minuto 63 tras un centro medido de Ødegaard que el ariete noruego remató con una volea espectacular. El segundo, en el minuto 78, fue de cabeza tras un córner botado por el mismo Ødegaard. La defensa francesa no pudo contener la potencia y la colocación del delantero nórdico.\n\nEsta victoria coloca a Noruega en una posición privilegiada para clasificarse a la siguiente ronda, mientras que Francia tendrá que jugar su último partido de grupo como si fuera una final. Haaland ya suma 3 goles en el torneo y se acerca a la cima de la tabla de goleadores.',
     category: 'En Vivo',
     date: '2026-06-20',
     imageKeyword: 'haaland',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'Javier Rodríguez',
+    source: 'Depor',
+    tags: ['Haaland', 'Noruega', 'Remontada'],
+    featured: false,
     order: 3,
     active: true,
   },
@@ -804,11 +836,17 @@ export const news: NewsItem[] = [
     id: 'n4',
     title: 'México y Brasil lideran sus grupos con autoridad',
     summary: 'Ambas selecciones muestran un nivel de juego superior y se perfilan como candidatas al título mundial.',
+    content: 'La fase de grupos del Mundial 2026 está dejando claros favoritos, y dos selecciones brillan por encima del resto: México y Brasil. Ambos equipos han ganado todos sus partidos de forma convincente y muestran un fútbol que ilusiona a sus aficiones.\n\nMéxico, impulsado por el gol de Santiago Giménez y la velocidad de Hirving Lozano, ha sido implacable en el Grupo A. La selección de Jaime Lozano juega con una intensidad vertical que desborda a sus rivales, y el Estadio Azteca se ha convertido en un fortín donde los anfitriones se sienten invencibles.\n\nBrasil, por su parte, exhibe una delantera de lujo con Vinicius Jr. y Rodrygo como principales protagonistas. La canarinha ha marcado 8 goles en tres partidos y apenas ha recibido uno. El técnico Dorival Júnior ha encontrado el equilibrio perfecto entre ataque y defensa, y los brasileños sueñan con el hexacampeonato.',
     category: 'Análisis',
     date: '2026-06-18',
     imageKeyword: 'mexico',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'Roberto Sánchez',
+    source: 'MEDYO',
+    tags: ['México', 'Brasil', 'Favoritos'],
+    featured: false,
     order: 4,
     active: true,
   },
@@ -816,11 +854,17 @@ export const news: NewsItem[] = [
     id: 'n5',
     title: 'España aplasta a Arabia Saudita con exhibición de toque',
     summary: 'La Roja demostró su dominio absoluto con un 72% de posesión y tres goles de lujo en Chicago.',
+    content: 'La selección española ofreció un recital de fútbol en el Soldier Field de Chicago al imponerse 3-0 a Arabia Saudita con una exhibición de toque y posesión que recordó a las mejores épocas del tiki-taka. Con un 72% de posesión, La Roja dominó de principio a fin y apenas dio opciones al equipo asiático.\n\nLamine Yamal abrió el marcador a los 11 minutos con un golazo individual, dejando sentados a dos defensas antes de batir al portero con un disparo cruzado. Pedri amplió la ventaja tras una jugada colectiva de más de 20 toques que desarmó por completo a la defensa saudí. El tercer gol llegó en la segunda mitad tras una asistencia magistral de Gavi.\n\nLa expulsión de Al-Dawsari en el minuto 60 por doble amarilla complicó aún más la situación de Arabia Saudita, que no logró ni un solo tiro a puerta durante todo el encuentro. España se confirma como una de las selecciones más dominantes del torneo.',
     category: 'Resultados',
     date: '2026-06-15',
     imageKeyword: 'spain',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'Ana López',
+    source: 'Marca',
+    tags: ['España', 'Posesión', 'Tiki-taka'],
+    featured: false,
     order: 5,
     active: true,
   },
@@ -828,11 +872,17 @@ export const news: NewsItem[] = [
     id: 'n6',
     title: 'Ronaldo sigue haciendo historia con Portugal',
     summary: 'CR7 anotó su doblete número 15 en mundiales y sigue ampliando su récord como máximo goleador en torneos FIFA.',
+    content: 'Cristiano Ronaldo no tiene límites. A sus 41 años, el delantero portugués sigue rompiendo récords en lo que es su sexto Mundial consecutivo. Contra Congo DR, CR7 anotó dos goles más que lo sitúan como el máximo goleador histórico de los torneos FIFA, un récord que parece inalcanzable para cualquier otro jugador.\n\nEl primer gol llegó en el minuto 18 tras un centro de Bernardo Silva que Ronaldo remató con una cazuela impecable de cabeza. El segundo, en el minuto 80, fue un penal que el propio CR7 transformó con la solidez que lo caracteriza. Entre medias, Bernardo Silva también anotó tras una gran jugada personal.\n\nPortugal se clasifica así para la siguiente ronda con un juego sólido y contundente. Ronaldo, que ya ha anunciado que este será su último Mundial, quiere retirarse con el trofeo más codiciado del fútbol mundial entre sus manos.',
     category: 'Especial',
     date: '2026-06-16',
     imageKeyword: 'ronaldo',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'Miguel Torres',
+    source: 'Record',
+    tags: ['Ronaldo', 'Portugal', 'Récord'],
+    featured: false,
     order: 6,
     active: true,
   },
@@ -840,11 +890,17 @@ export const news: NewsItem[] = [
     id: 'n7',
     title: 'Estados Unidos firma su pase a la siguiente ronda',
     summary: 'Con Pulisic como bandera, el equipo anfitrión venció a Paraguay y aseguró su clasificación al round of 32.',
+    content: 'Estados Unidos aseguró su clasificación a los dieciseisavos de final del Mundial 2026 con una victoria por 2-1 ante Paraguay en el MetLife Stadium de Nueva Jersey. Christian Pulisic fue la gran figura del encuentro con un gol y una asistencia que desataron la euforia de los más de 80,000 espectadores que llenaron las gradas.\n\nEl gol de Pulisic llegó en el minuto 35 tras una contra letal iniciada por McKennie, que habilitó al capitán norteamericano para definir con un zurdazo cruzado. En la segunda mitad, Gio Reyna amplió la ventaja tras recibir un pase milimétrico del propio Pulisic. Paraguay acortó distancias con un gol de Almirón en el minuto 78, pero no fue suficiente para remontar.\n\nLa selección estadounidense, una de las anfitrionas del torneo, muestra un nivel competitivo que ilusiona a toda la nación. El técnico Gregg Berhalter ha construido un equipo sólido que combina juventud y experiencia, y el sueño de llegar lejos en casa está más vivo que nunca.',
     category: 'Clasificación',
     date: '2026-06-17',
     imageKeyword: 'usa',
     imageUrl: '',
     imageDataUrl: '',
+    gallery: [],
+    author: 'Laura Martínez',
+    source: 'Fox Sports',
+    tags: ['EE.UU.', 'Pulisic', 'Anfitrión'],
+    featured: false,
     order: 7,
     active: true,
   },

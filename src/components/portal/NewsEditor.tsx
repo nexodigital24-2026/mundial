@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { usePortalData } from '@/lib/portal-data-context';
-import { type NewsItem, getTeamById, getTeamFlagUrl } from '@/lib/mock-data';
+import { type NewsItem, type GalleryImage, getTeamById, getTeamFlagUrl } from '@/lib/mock-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,13 +12,284 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Image as ImageIcon, Plus, Edit, Trash2, Save, X,
   ArrowUp, ArrowDown, Eye, Copy, Upload, Link,
   CheckCircle, Settings2, Move, ZoomIn, Newspaper,
+  Star, Tag, User, Globe, Camera, Images,
+  Bold, Italic, Underline, List, AlignLeft, AlignCenter, AlignRight,
+  ChevronLeft, ChevronRight, GripVertical, FileImage,
+  Sparkles, MessageSquare, Quote,
 } from 'lucide-react';
 
-// ===================== NEWS IMAGE UPLOADER =====================
+// ===================== GALLERY IMAGE UPLOADER =====================
+function GalleryUploader({
+  gallery,
+  onGalleryChange,
+}: {
+  gallery: GalleryImage[];
+  onGalleryChange: (gallery: GalleryImage[]) => void;
+}) {
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [editingCaptionId, setEditingCaptionId] = useState<string | null>(null);
+  const [captionText, setCaptionText] = useState('');
+
+  const handleFiles = useCallback(async (files: FileList | File[]) => {
+    const fileArray = Array.from(files).filter(f => f.type.startsWith('image/'));
+    if (fileArray.length === 0) return;
+
+    setUploading(true);
+    const newImages: GalleryImage[] = [];
+
+    for (const file of fileArray) {
+      // Read as dataURL for immediate preview
+      const dataUrl = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => resolve(ev.target?.result as string);
+        reader.readAsDataURL(file);
+      });
+
+      // Upload to server
+      let serverUrl = '';
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('folder', 'news-gallery');
+        const response = await fetch('/api/upload', { method: 'POST', body: formData });
+        if (response.ok) {
+          const data = await response.json();
+          serverUrl = data.url;
+        }
+      } catch (e) {
+        console.error('Gallery upload failed:', e);
+      }
+
+      newImages.push({
+        id: `gimg-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        url: serverUrl,
+        dataUrl,
+        caption: '',
+        order: gallery.length + newImages.length + 1,
+      });
+    }
+
+    onGalleryChange([...gallery, ...newImages]);
+    setUploading(false);
+  }, [gallery, onGalleryChange]);
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
+  };
+
+  const removeImage = (id: string) => {
+    const updated = gallery.filter(img => img.id !== id).map((img, i) => ({ ...img, order: i + 1 }));
+    onGalleryChange(updated);
+  };
+
+  const moveImage = (idx: number, direction: 'up' | 'down') => {
+    const targetIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (targetIdx < 0 || targetIdx >= gallery.length) return;
+    const newGallery = [...gallery];
+    const temp = newGallery[idx];
+    newGallery[idx] = newGallery[targetIdx];
+    newGallery[targetIdx] = temp;
+    const reordered = newGallery.map((img, i) => ({ ...img, order: i + 1 }));
+    onGalleryChange(reordered);
+  };
+
+  const startEditCaption = (img: GalleryImage) => {
+    setEditingCaptionId(img.id);
+    setCaptionText(img.caption);
+  };
+
+  const saveCaption = (id: string) => {
+    onGalleryChange(gallery.map(img => img.id === id ? { ...img, caption: captionText } : img));
+    setEditingCaptionId(null);
+    setCaptionText('');
+  };
+
+  const setAsCover = (img: GalleryImage) => {
+    // Move this image to position 1
+    const others = gallery.filter(i => i.id !== img.id);
+    const reordered = [img, ...others].map((i, idx) => ({ ...i, order: idx + 1 }));
+    onGalleryChange(reordered);
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Upload zone */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        onChange={(e) => { if (e.target.files) handleFiles(e.target.files); }}
+        className="hidden"
+      />
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
+        className={`
+          relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200
+          min-h-[100px] flex items-center justify-center
+          ${dragOver
+            ? 'border-nd-green bg-nd-green/10 scale-[1.01]'
+            : 'border-muted-foreground/30 hover:border-nd-green/50 hover:bg-nd-green/5'
+          }
+          ${uploading ? 'pointer-events-none opacity-60' : ''}
+        `}
+      >
+        {uploading ? (
+          <div className="flex flex-col items-center gap-2 p-4">
+            <div className="w-8 h-8 border-3 border-nd-green border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm text-muted-foreground font-medium">Subiendo y convirtiendo a WebP...</span>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 p-4 text-center">
+            <div className="w-10 h-10 rounded-full bg-nd-green/10 flex items-center justify-center">
+              <Camera className="w-5 h-5 text-nd-green" />
+            </div>
+            <span className="text-sm font-medium text-foreground">Arrastra fotos aqui o haz clic para seleccionar</span>
+            <span className="text-xs text-muted-foreground">Puedes subir multiples fotos a la vez (se convierten a WebP)</span>
+          </div>
+        )}
+      </div>
+
+      {/* Gallery grid */}
+      {gallery.length > 0 && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+              <Images className="w-3.5 h-3.5" />
+              Galeria ({gallery.length} {gallery.length === 1 ? 'foto' : 'fotos'})
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="text-xs h-6 text-red-500 hover:text-red-700"
+              onClick={() => onGalleryChange([])}
+            >
+              <Trash2 className="w-3 h-3 mr-1" /> Vaciar galeria
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            {gallery.sort((a, b) => a.order - b.order).map((img, idx) => (
+              <div
+                key={img.id}
+                className={`
+                  relative group rounded-lg overflow-hidden border-2 transition-all duration-200
+                  ${idx === 0 ? 'border-nd-green ring-1 ring-nd-green/30' : 'border-border hover:border-nd-green/40'}
+                `}
+              >
+                {/* Image */}
+                <div className="aspect-[4/3] relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={img.dataUrl || img.url}
+                    alt={img.caption || `Foto ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="flex gap-1">
+                      {idx !== 0 && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setAsCover(img); }}
+                          className="text-white bg-nd-green hover:bg-nd-green-dark p-1 rounded transition-colors"
+                          title="Usar como portada"
+                        >
+                          <Star className="w-3 h-3" />
+                        </button>
+                      )}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); moveImage(idx, 'up'); }}
+                        className="text-white bg-black/60 hover:bg-black/80 p-1 rounded transition-colors"
+                        title="Mover izquierda"
+                        disabled={idx === 0}
+                      >
+                        <ChevronLeft className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); moveImage(idx, 'down'); }}
+                        className="text-white bg-black/60 hover:bg-black/80 p-1 rounded transition-colors"
+                        title="Mover derecha"
+                        disabled={idx === gallery.length - 1}
+                      >
+                        <ChevronRight className="w-3 h-3" />
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); removeImage(img.id); }}
+                        className="text-white bg-red-600 hover:bg-red-700 p-1 rounded transition-colors"
+                        title="Eliminar"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                  {/* Cover badge */}
+                  {idx === 0 && (
+                    <div className="absolute top-1 left-1">
+                      <Badge className="bg-nd-green text-white border-0 text-[8px] px-1.5 py-0">
+                        <Star className="w-2.5 h-2.5 mr-0.5" /> Portada
+                      </Badge>
+                    </div>
+                  )}
+                  {/* Order badge */}
+                  <div className="absolute bottom-1 right-1">
+                    <Badge className="bg-black/60 text-white border-0 text-[9px] px-1.5 py-0">
+                      #{idx + 1}
+                    </Badge>
+                  </div>
+                </div>
+                {/* Caption */}
+                <div className="p-1.5 bg-card">
+                  {editingCaptionId === img.id ? (
+                    <div className="flex gap-1">
+                      <Input
+                        value={captionText}
+                        onChange={(e) => setCaptionText(e.target.value)}
+                        className="text-[10px] h-5"
+                        placeholder="Pie de foto..."
+                        onKeyDown={(e) => { if (e.key === 'Enter') saveCaption(img.id); }}
+                        autoFocus
+                      />
+                      <button
+                        onClick={() => saveCaption(img.id)}
+                        className="p-0.5 rounded bg-nd-green text-white"
+                      >
+                        <CheckCircle className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <p
+                      className="text-[10px] text-muted-foreground truncate cursor-pointer hover:text-foreground transition-colors"
+                      onClick={() => startEditCaption(img)}
+                      title={img.caption || 'Haz clic para agregar pie de foto'}
+                    >
+                      {img.caption || 'Haz clic para agregar pie de foto...'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===================== NEWS IMAGE UPLOADER (cover photo) =====================
 function NewsImageUploader({
   imageUrl,
   imageDataUrl,
@@ -103,7 +374,6 @@ function NewsImageUploader({
 
   return (
     <div className="space-y-2">
-      {/* Mode toggle */}
       <div className="flex gap-1">
         <Button
           type="button"
@@ -136,7 +406,6 @@ function NewsImageUploader({
             onChange={handleFileSelect}
             className="hidden"
           />
-          {/* Drop zone */}
           <div
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
@@ -193,7 +462,6 @@ function NewsImageUploader({
             )}
           </div>
 
-          {/* Compression info */}
           {compressionInfo && (
             <div className="flex items-center gap-1.5 text-xs text-green-600 bg-green-50 rounded-md px-2 py-1">
               <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
@@ -242,6 +510,96 @@ function NewsImageUploader({
   );
 }
 
+// ===================== TEXT FORMATTING TOOLBAR =====================
+function TextFormatToolbar({
+  onFormat,
+}: {
+  onFormat: (format: string) => void;
+}) {
+  const tools = [
+    { icon: Bold, label: 'Negrita', format: '**' },
+    { icon: Italic, label: 'Cursiva', format: '*' },
+    { icon: Underline, label: 'Subrayado', format: '__' },
+    { icon: Quote, label: 'Cita', format: '>' },
+    { icon: List, label: 'Lista', format: '- ' },
+    { icon: AlignLeft, label: 'Alinear izquierda', format: '' },
+    { icon: AlignCenter, label: 'Centrar', format: '' },
+    { icon: AlignRight, label: 'Alinear derecha', format: '' },
+  ];
+
+  return (
+    <div className="flex items-center gap-0.5 p-1 bg-muted/50 rounded-lg border">
+      {tools.map((tool, idx) => (
+        <button
+          key={idx}
+          type="button"
+          onClick={() => onFormat(tool.format)}
+          className="p-1.5 rounded hover:bg-nd-green/10 hover:text-nd-green transition-colors text-muted-foreground"
+          title={tool.label}
+        >
+          <tool.icon className="w-3.5 h-3.5" />
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ===================== TAG INPUT =====================
+function TagInput({
+  tags,
+  onTagsChange,
+}: {
+  tags: string[];
+  onTagsChange: (tags: string[]) => void;
+}) {
+  const [input, setInput] = useState('');
+
+  const addTag = () => {
+    const tag = input.trim();
+    if (tag && !tags.includes(tag)) {
+      onTagsChange([...tags, tag]);
+    }
+    setInput('');
+  };
+
+  const removeTag = (tag: string) => {
+    onTagsChange(tags.filter(t => t !== tag));
+  };
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-1.5">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Agregar etiqueta..."
+          className="text-sm h-8"
+          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(); } }}
+        />
+        <Button type="button" size="sm" variant="outline" className="h-8 px-3" onClick={addTag}>
+          <Plus className="w-3 h-3" />
+        </Button>
+      </div>
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {tags.map(tag => (
+            <Badge key={tag} variant="secondary" className="text-xs gap-1 pr-1">
+              <Tag className="w-2.5 h-2.5" />
+              {tag}
+              <button
+                onClick={() => removeTag(tag)}
+                className="ml-0.5 hover:text-red-500 transition-colors"
+              >
+                <X className="w-2.5 h-2.5" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ===================== NEWS PREVIEW CARD =====================
 function NewsPreview({ newsItem }: { newsItem: Partial<NewsItem> }) {
   const newsTeamMap: Record<string, string> = {
@@ -258,6 +616,7 @@ function NewsPreview({ newsItem }: { newsItem: Partial<NewsItem> }) {
   };
 
   const customImage = newsItem.imageDataUrl || newsItem.imageUrl || '';
+  const galleryImages = newsItem.gallery || [];
   const teamId = newsTeamMap[newsItem.imageKeyword || ''];
   const team = teamId ? getTeamById(teamId) : null;
   const flagUrl = teamId ? getTeamFlagUrl(teamId, 320) : null;
@@ -288,18 +647,70 @@ function NewsPreview({ newsItem }: { newsItem: Partial<NewsItem> }) {
         ) : (
           <span className="text-4xl">⚽</span>
         )}
+        {/* Featured badge */}
+        {newsItem.featured && (
+          <div className="absolute top-2 right-2">
+            <Badge className="bg-yellow-500 text-white border-0 text-[9px] px-1.5 py-0">
+              <Star className="w-2.5 h-2.5 mr-0.5" /> Destacada
+            </Badge>
+          </div>
+        )}
+        {/* Gallery indicator */}
+        {galleryImages.length > 0 && (
+          <div className="absolute bottom-2 right-2">
+            <Badge className="bg-black/60 text-white border-0 text-[9px] px-1.5 py-0">
+              <Images className="w-2.5 h-2.5 mr-0.5" /> {galleryImages.length}
+            </Badge>
+          </div>
+        )}
       </div>
       <div className="p-3 bg-card">
-        <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark mb-1.5">
-          {newsItem.category || 'Categoría'}
-        </Badge>
+        <div className="flex items-center gap-1.5 mb-1.5">
+          <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
+            {newsItem.category || 'Categoría'}
+          </Badge>
+          {newsItem.author && (
+            <span className="text-[9px] text-muted-foreground">Por {newsItem.author}</span>
+          )}
+        </div>
         <p className="text-sm font-bold leading-snug line-clamp-2 text-foreground">
           {newsItem.title || 'Título de la noticia'}
         </p>
         <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
           {newsItem.summary || 'Resumen de la noticia...'}
         </p>
-        <p className="text-[10px] text-muted-foreground mt-2">{newsItem.date || '2026-06-20'}</p>
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-[10px] text-muted-foreground">{newsItem.date || '2026-06-20'}</p>
+          {newsItem.source && (
+            <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+              <Globe className="w-2.5 h-2.5" /> {newsItem.source}
+            </span>
+          )}
+        </div>
+        {/* Tags preview */}
+        {newsItem.tags && newsItem.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1.5">
+            {newsItem.tags.slice(0, 3).map(tag => (
+              <Badge key={tag} variant="outline" className="text-[8px] px-1 py-0">
+                #{tag}
+              </Badge>
+            ))}
+          </div>
+        )}
+        {/* Gallery thumbnails */}
+        {galleryImages.length > 0 && (
+          <div className="flex gap-1 mt-2 overflow-hidden">
+            {galleryImages.slice(0, 4).map((img, i) => (
+              <div key={img.id} className="w-8 h-6 rounded overflow-hidden flex-shrink-0 border">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img.dataUrl || img.url} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
+            {galleryImages.length > 4 && (
+              <span className="text-[9px] text-muted-foreground self-center">+{galleryImages.length - 4}</span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -325,6 +736,22 @@ const KEYWORD_OPTIONS = [
   { value: 'custom', label: '🖼️ Imagen personalizada (sin bandera)' },
 ];
 
+const defaultNewForm = {
+  title: '',
+  summary: '',
+  content: '',
+  category: 'Resultados',
+  date: new Date().toISOString().split('T')[0],
+  imageKeyword: 'custom',
+  imageUrl: '',
+  imageDataUrl: '',
+  gallery: [] as GalleryImage[],
+  author: '',
+  source: '',
+  tags: [] as string[],
+  featured: false,
+};
+
 export default function NewsEditor() {
   const {
     news,
@@ -334,22 +761,27 @@ export default function NewsEditor() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<Partial<NewsItem>>({});
   const [newDialog, setNewDialog] = useState(false);
-  const [newForm, setNewForm] = useState({
-    title: '',
-    summary: '',
-    category: 'Resultados',
-    date: new Date().toISOString().split('T')[0],
-    imageKeyword: 'custom',
-    imageUrl: '',
-    imageDataUrl: '',
-  });
+  const [newForm, setNewForm] = useState({ ...defaultNewForm });
+  const [editorTab, setEditorTab] = useState<'basico' | 'contenido' | 'galeria' | 'avanzado'>('basico');
+  const [searchFilter, setSearchFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   const sorted = [...news].sort((a, b) => a.order - b.order);
+
+  // Filtered list
+  const filtered = sorted.filter(item => {
+    const matchesSearch = !searchFilter ||
+      item.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
+      item.summary.toLowerCase().includes(searchFilter.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   // Start editing
   const startEdit = (item: NewsItem) => {
     setEditingId(item.id);
     setForm({ ...item });
+    setEditorTab('basico');
   };
 
   // Cancel editing
@@ -381,6 +813,7 @@ export default function NewsEditor() {
       id: `n${Date.now()}`,
       title: `${item.title} (copia)`,
       order: news.length + 1,
+      gallery: [], // Don't copy gallery images (they're unique)
     };
     updateNews(prev => [...prev, newItem]);
   };
@@ -388,6 +821,11 @@ export default function NewsEditor() {
   // Toggle active
   const toggleActive = (id: string) => {
     updateNews(prev => prev.map(n => n.id === id ? { ...n, active: !n.active } : n));
+  };
+
+  // Toggle featured
+  const toggleFeatured = (id: string) => {
+    updateNews(prev => prev.map(n => n.id === id ? { ...n, featured: !n.featured } : n));
   };
 
   // Move news up/down
@@ -409,25 +847,36 @@ export default function NewsEditor() {
       id: `n${Date.now()}`,
       title: newForm.title,
       summary: newForm.summary,
+      content: newForm.content,
       category: newForm.category,
       date: newForm.date,
       imageKeyword: newForm.imageKeyword,
       imageUrl: newForm.imageUrl,
       imageDataUrl: newForm.imageDataUrl,
+      gallery: newForm.gallery,
+      author: newForm.author,
+      source: newForm.source,
+      tags: newForm.tags,
+      featured: newForm.featured,
       order: news.length + 1,
       active: true,
     };
     updateNews(prev => [...prev, newItem]);
     setNewDialog(false);
-    setNewForm({
-      title: '',
-      summary: '',
-      category: 'Resultados',
-      date: new Date().toISOString().split('T')[0],
-      imageKeyword: 'custom',
-      imageUrl: '',
-      imageDataUrl: '',
-    });
+    setNewForm({ ...defaultNewForm, date: new Date().toISOString().split('T')[0] });
+  };
+
+  // Handle text formatting for content area
+  const handleContentFormat = (format: string, isForm: boolean, field: 'content' | 'summary') => {
+    const setter = isForm ? setForm : setNewForm;
+    const currentValue = isForm ? (form[field] || '') : (newForm[field] || '');
+    // Simple formatting: wrap selection or append format marker
+    const newValue = currentValue + format;
+    if (isForm) {
+      setter(prev => ({ ...prev, [field]: newValue }));
+    } else {
+      setter(prev => ({ ...prev, [field]: newValue }));
+    }
   };
 
   // Helper for thumbnail
@@ -436,6 +885,11 @@ export default function NewsEditor() {
       messi: 'arg', yamal: 'esp', haaland: 'nor', mexico: 'mex', spain: 'esp', ronaldo: 'por', usa: 'usa',
     };
     if (item.imageDataUrl || item.imageUrl) return item.imageDataUrl || item.imageUrl;
+    // Check gallery
+    if (item.gallery && item.gallery.length > 0) {
+      const first = item.gallery.sort((a, b) => a.order - b.order)[0];
+      return first.dataUrl || first.url;
+    }
     const teamId = newsTeamMap[item.imageKeyword];
     return teamId ? getTeamFlagUrl(teamId, 80) : '';
   };
@@ -451,6 +905,11 @@ export default function NewsEditor() {
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
             {sorted.filter(n => n.active).length} activas de {sorted.length} noticias totales
+            {sorted.filter(n => n.featured).length > 0 && (
+              <span className="ml-2 text-yellow-600">
+                | {sorted.filter(n => n.featured).length} destacadas
+              </span>
+            )}
           </p>
         </div>
         <Button size="sm" className="bg-nd-green hover:bg-nd-green-dark" onClick={() => setNewDialog(true)}>
@@ -459,14 +918,38 @@ export default function NewsEditor() {
         </Button>
       </div>
 
+      {/* Filters */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <Input
+          placeholder="Buscar noticias..."
+          value={searchFilter}
+          onChange={(e) => setSearchFilter(e.target.value)}
+          className="max-w-[200px] h-8 text-sm"
+        />
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-[140px] h-8 text-sm">
+            <SelectValue placeholder="Categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas</SelectItem>
+            {CATEGORIES.map(cat => (
+              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Badge variant="outline" className="text-[10px]">
+          {filtered.length} resultado{filtered.length !== 1 ? 's' : ''}
+        </Badge>
+      </div>
+
       {/* Two-column layout: List + Editor */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* LEFT: News list (2 cols) */}
         <div className="lg:col-span-2 space-y-2">
           <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-1">
-            <Move className="w-3 h-3" /> Noticias ({sorted.length})
+            <Move className="w-3 h-3" /> Noticias ({filtered.length})
           </div>
-          {sorted.map((item, idx) => {
+          {filtered.map((item, idx) => {
             const isEditing = editingId === item.id;
             const thumbImage = getThumbnailImage(item);
             const newsTeamMap: Record<string, string> = {
@@ -512,9 +995,14 @@ export default function NewsEditor() {
 
                   {/* Thumbnail */}
                   {thumbImage ? (
-                    <div className="w-16 h-10 rounded overflow-hidden flex-shrink-0 shadow-sm">
+                    <div className="w-16 h-10 rounded overflow-hidden flex-shrink-0 shadow-sm relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={thumbImage} alt="" className="w-full h-full object-cover" />
+                      {item.gallery && item.gallery.length > 0 && (
+                        <div className="absolute bottom-0 right-0 bg-black/60 text-white text-[7px] px-0.5 rounded-tl">
+                          <Images className="w-2 h-2 inline" /> {item.gallery.length}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <div className="w-16 h-10 rounded bg-muted/40 flex items-center justify-center flex-shrink-0">
@@ -524,7 +1012,7 @@ export default function NewsEditor() {
 
                   {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-0.5">
+                    <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
                       <Badge className={`text-[9px] px-1.5 py-0 ${
                         item.category === 'En Vivo' ? 'bg-red-100 text-red-700' :
                         item.category === 'Especial' ? 'bg-orange-100 text-orange-700' :
@@ -537,14 +1025,27 @@ export default function NewsEditor() {
                       {!item.active && (
                         <Badge className="text-[9px] px-1.5 py-0 bg-gray-100 text-gray-500">Inactiva</Badge>
                       )}
+                      {item.featured && (
+                        <Badge className="text-[9px] px-1.5 py-0 bg-yellow-100 text-yellow-700">
+                          <Star className="w-2.5 h-2.5 mr-0.5" /> Destacada
+                        </Badge>
+                      )}
                       {(item.imageUrl || item.imageDataUrl) && (
                         <Badge className="text-[9px] px-1.5 py-0 bg-nd-green/10 text-nd-green">
                           <ImageIcon className="w-2.5 h-2.5 mr-0.5" /> Foto
                         </Badge>
                       )}
+                      {item.gallery && item.gallery.length > 0 && (
+                        <Badge className="text-[9px] px-1.5 py-0 bg-blue-50 text-blue-600">
+                          <Images className="w-2.5 h-2.5 mr-0.5" /> {item.gallery.length}
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-sm font-semibold truncate">{item.title}</p>
-                    <p className="text-[11px] text-muted-foreground truncate">{item.date} {team ? `- ${team.flag} ${team.name}` : ''}</p>
+                    <p className="text-[11px] text-muted-foreground truncate">
+                      {item.date} {team ? `- ${team.flag} ${team.name}` : ''}
+                      {item.author ? ` | Por ${item.author}` : ''}
+                    </p>
                   </div>
 
                   {/* Actions */}
@@ -555,6 +1056,13 @@ export default function NewsEditor() {
                       onClick={(e) => e.stopPropagation()}
                       className="scale-75"
                     />
+                    <button
+                      className="p-1 rounded hover:bg-yellow-50 text-muted-foreground hover:text-yellow-600"
+                      onClick={(e) => { e.stopPropagation(); toggleFeatured(item.id); }}
+                      title={item.featured ? 'Quitar destacada' : 'Marcar como destacada'}
+                    >
+                      <Star className={`w-3.5 h-3.5 ${item.featured ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                    </button>
                     <button
                       className="p-1 rounded hover:bg-nd-green/10 text-muted-foreground hover:text-nd-green"
                       onClick={(e) => { e.stopPropagation(); duplicateNews(item); }}
@@ -584,7 +1092,7 @@ export default function NewsEditor() {
             );
           })}
 
-          {sorted.length === 0 && (
+          {filtered.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
               <Newspaper className="w-10 h-10 mx-auto mb-2 opacity-30" />
               <p className="text-sm">No hay noticias. Agrega la primera.</p>
@@ -615,94 +1123,243 @@ export default function NewsEditor() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* Title and Summary */}
-                <div className="space-y-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Titulo *</Label>
-                    <Input
-                      value={form.title ?? ''}
-                      onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value }))}
-                      placeholder="Ej: Messi lidera la goleada de Argentina"
-                      className="text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Resumen</Label>
-                    <Textarea
-                      value={form.summary ?? ''}
-                      onChange={(e) => setForm(prev => ({ ...prev, summary: e.target.value }))}
-                      placeholder="Resumen de la noticia..."
-                      rows={3}
-                      className="text-sm"
-                    />
-                  </div>
-                </div>
+                {/* Editor Tabs */}
+                <Tabs value={editorTab} onValueChange={(v) => setEditorTab(v as typeof editorTab)}>
+                  <TabsList className="grid w-full grid-cols-4">
+                    <TabsTrigger value="basico" className="text-xs">📝 Basico</TabsTrigger>
+                    <TabsTrigger value="contenido" className="text-xs">📄 Contenido</TabsTrigger>
+                    <TabsTrigger value="galeria" className="text-xs">
+                      📸 Galeria {form.gallery && form.gallery.length > 0 ? `(${form.gallery.length})` : ''}
+                    </TabsTrigger>
+                    <TabsTrigger value="avanzado" className="text-xs">⚙️ Avanzado</TabsTrigger>
+                  </TabsList>
 
-                {/* Image Uploader */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold flex items-center gap-1">
-                    <ImageIcon className="w-3 h-3" />
-                    Foto de la Noticia
-                  </Label>
-                  <NewsImageUploader
-                    imageUrl={form.imageUrl ?? ''}
-                    imageDataUrl={form.imageDataUrl ?? ''}
-                    onImageUrlChange={(url) => setForm(prev => ({ ...prev, imageUrl: url }))}
-                    onImageDataUrlChange={(dataUrl) => setForm(prev => ({ ...prev, imageDataUrl: dataUrl }))}
-                  />
-                </div>
+                  {/* BASIC TAB */}
+                  <TabsContent value="basico" className="mt-4 space-y-4">
+                    {/* Title */}
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold">Titulo *</Label>
+                      <Input
+                        value={form.title ?? ''}
+                        onChange={(e) => setForm(prev => ({ ...prev, title: e.target.value }))}
+                        placeholder="Ej: Messi lidera la goleada de Argentina"
+                        className="text-sm"
+                      />
+                    </div>
 
-                {/* Category, Date, Keyword, Order */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Categoria</Label>
-                    <Select
-                      value={form.category ?? 'Resultados'}
-                      onValueChange={(v) => setForm(prev => ({ ...prev, category: v }))}
-                    >
-                      <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {CATEGORIES.map(cat => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Fecha</Label>
-                    <Input
-                      type="date"
-                      value={form.date ?? ''}
-                      onChange={(e) => setForm(prev => ({ ...prev, date: e.target.value }))}
-                      className="text-sm"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Bandera / Equipo</Label>
-                    <Select
-                      value={form.imageKeyword ?? 'custom'}
-                      onValueChange={(v) => setForm(prev => ({ ...prev, imageKeyword: v }))}
-                    >
-                      <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {KEYWORD_OPTIONS.map(opt => (
-                          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Orden</Label>
-                    <Input
-                      type="number" min="1" max="50"
-                      value={form.order ?? 1}
-                      onChange={(e) => setForm(prev => ({ ...prev, order: parseInt(e.target.value) || 1 }))}
-                      className="text-sm"
-                    />
-                  </div>
-                </div>
+                    {/* Summary with format toolbar */}
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold">Resumen</Label>
+                      <TextFormatToolbar onFormat={(fmt) => handleContentFormat(fmt, true, 'summary')} />
+                      <Textarea
+                        value={form.summary ?? ''}
+                        onChange={(e) => setForm(prev => ({ ...prev, summary: e.target.value }))}
+                        placeholder="Resumen de la noticia..."
+                        rows={3}
+                        className="text-sm"
+                      />
+                    </div>
 
-                {/* Live Preview */}
+                    {/* Cover Image */}
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold flex items-center gap-1">
+                        <ImageIcon className="w-3 h-3" />
+                        Foto de Portada
+                      </Label>
+                      <NewsImageUploader
+                        imageUrl={form.imageUrl ?? ''}
+                        imageDataUrl={form.imageDataUrl ?? ''}
+                        onImageUrlChange={(url) => setForm(prev => ({ ...prev, imageUrl: url }))}
+                        onImageDataUrlChange={(dataUrl) => setForm(prev => ({ ...prev, imageDataUrl: dataUrl }))}
+                      />
+                    </div>
+
+                    {/* Category, Date, Keyword, Featured */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold">Categoria</Label>
+                        <Select
+                          value={form.category ?? 'Resultados'}
+                          onValueChange={(v) => setForm(prev => ({ ...prev, category: v }))}
+                        >
+                          <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            {CATEGORIES.map(cat => (
+                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold">Fecha</Label>
+                        <Input
+                          type="date"
+                          value={form.date ?? ''}
+                          onChange={(e) => setForm(prev => ({ ...prev, date: e.target.value }))}
+                          className="text-sm"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold">Bandera / Equipo</Label>
+                        <Select
+                          value={form.imageKeyword ?? 'custom'}
+                          onValueChange={(v) => setForm(prev => ({ ...prev, imageKeyword: v }))}
+                        >
+                          <SelectTrigger className="text-sm"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            {KEYWORD_OPTIONS.map(opt => (
+                              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold flex items-center gap-1">
+                          <Star className="w-3 h-3" /> Destacada
+                        </Label>
+                        <div className="flex items-center gap-2 h-9">
+                          <Switch
+                            checked={form.featured ?? false}
+                            onCheckedChange={(v) => setForm(prev => ({ ...prev, featured: v }))}
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {(form.featured) ? 'Aparecera como destacada' : 'Noticia normal'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* CONTENT TAB */}
+                  <TabsContent value="contenido" className="mt-4 space-y-4">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold flex items-center gap-1">
+                        <FileImage className="w-3 h-3" />
+                        Cuerpo de la Noticia
+                      </Label>
+                      <TextFormatToolbar onFormat={(fmt) => handleContentFormat(fmt, true, 'content')} />
+                      <Textarea
+                        value={form.content ?? ''}
+                        onChange={(e) => setForm(prev => ({ ...prev, content: e.target.value }))}
+                        placeholder="Escribe el contenido completo de la noticia aqui..."
+                        rows={12}
+                        className="text-sm leading-relaxed"
+                      />
+                      <p className="text-[10px] text-muted-foreground">
+                        {(form.content?.length || 0)} caracteres
+                        {form.content && form.content.length < 100 && (
+                          <span className="text-yellow-500 ml-2">Se recomienda al menos 100 caracteres</span>
+                        )}
+                      </p>
+                    </div>
+
+                    {/* Author and Source */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold flex items-center gap-1">
+                          <User className="w-3 h-3" /> Autor
+                        </Label>
+                        <Input
+                          value={form.author ?? ''}
+                          onChange={(e) => setForm(prev => ({ ...prev, author: e.target.value }))}
+                          placeholder="Ej: Carlos Mendez"
+                          className="text-sm"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold flex items-center gap-1">
+                          <Globe className="w-3 h-3" /> Fuente
+                        </Label>
+                        <Input
+                          value={form.source ?? ''}
+                          onChange={(e) => setForm(prev => ({ ...prev, source: e.target.value }))}
+                          placeholder="Ej: ESPN, TyC Sports"
+                          className="text-sm"
+                        />
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* GALLERY TAB */}
+                  <TabsContent value="galeria" className="mt-4 space-y-4">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold flex items-center gap-1">
+                        <Images className="w-3 h-3" />
+                        Galeria de Fotos
+                      </Label>
+                      <p className="text-[10px] text-muted-foreground">
+                        Sube multiples fotos para crear una galeria. La primera foto se usara como portada si no hay foto de portada.
+                      </p>
+                      <GalleryUploader
+                        gallery={form.gallery ?? []}
+                        onGalleryChange={(gallery) => setForm(prev => ({ ...prev, gallery }))}
+                      />
+                    </div>
+                  </TabsContent>
+
+                  {/* ADVANCED TAB */}
+                  <TabsContent value="avanzado" className="mt-4 space-y-4">
+                    {/* Tags */}
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold flex items-center gap-1">
+                        <Tag className="w-3 h-3" /> Etiquetas
+                      </Label>
+                      <TagInput
+                        tags={form.tags ?? []}
+                        onTagsChange={(tags) => setForm(prev => ({ ...prev, tags }))}
+                      />
+                    </div>
+
+                    {/* Order and Status */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold">Orden</Label>
+                        <Input
+                          type="number" min="1" max="50"
+                          value={form.order ?? 1}
+                          onChange={(e) => setForm(prev => ({ ...prev, order: parseInt(e.target.value) || 1 }))}
+                          className="text-sm"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-xs font-semibold">Estado</Label>
+                        <div className="flex items-center gap-2 h-9">
+                          <Switch
+                            checked={form.active ?? true}
+                            onCheckedChange={(v) => setForm(prev => ({ ...prev, active: v }))}
+                          />
+                          <span className="text-xs text-muted-foreground">
+                            {(form.active ?? true) ? 'Publicada' : 'Borrador'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Stats */}
+                    <Separator />
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="bg-muted/30 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-muted-foreground">Portada</p>
+                        <p className="text-sm font-bold">{(form.imageUrl || form.imageDataUrl) ? 'Si' : 'No'}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-muted-foreground">Galeria</p>
+                        <p className="text-sm font-bold">{form.gallery?.length || 0} fotos</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-muted-foreground">Contenido</p>
+                        <p className="text-sm font-bold">{form.content?.length || 0} chars</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-2 text-center">
+                        <p className="text-[10px] text-muted-foreground">Etiquetas</p>
+                        <p className="text-sm font-bold">{form.tags?.length || 0}</p>
+                      </div>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+
+                {/* Live Preview - always visible */}
+                <Separator />
                 <div className="space-y-1.5">
                   <Label className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
                     <Eye className="w-3 h-3" /> Vista Previa en Tiempo Real
@@ -725,7 +1382,7 @@ export default function NewsEditor() {
 
       {/* ===== NEW NEWS DIALOG ===== */}
       <Dialog open={newDialog} onOpenChange={setNewDialog}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Plus className="w-5 h-5 text-nd-green" />
@@ -744,9 +1401,10 @@ export default function NewsEditor() {
               />
             </div>
 
-            {/* Summary */}
+            {/* Summary with format toolbar */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">Resumen</Label>
+              <TextFormatToolbar onFormat={(fmt) => handleContentFormat(fmt, false, 'summary')} />
               <Textarea
                 value={newForm.summary}
                 onChange={(e) => setNewForm(prev => ({ ...prev, summary: e.target.value }))}
@@ -755,10 +1413,24 @@ export default function NewsEditor() {
               />
             </div>
 
-            {/* Image upload */}
+            {/* Content */}
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold flex items-center gap-1">
-                <ImageIcon className="w-3 h-3" /> Foto de la Noticia
+                <FileImage className="w-3 h-3" /> Contenido Completo
+              </Label>
+              <TextFormatToolbar onFormat={(fmt) => handleContentFormat(fmt, false, 'content')} />
+              <Textarea
+                value={newForm.content}
+                onChange={(e) => setNewForm(prev => ({ ...prev, content: e.target.value }))}
+                placeholder="Escribe el contenido completo de la noticia..."
+                rows={6}
+              />
+            </div>
+
+            {/* Cover Image upload */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold flex items-center gap-1">
+                <ImageIcon className="w-3 h-3" /> Foto de Portada
               </Label>
               <NewsImageUploader
                 imageUrl={newForm.imageUrl}
@@ -768,7 +1440,18 @@ export default function NewsEditor() {
               />
             </div>
 
-            {/* Category, Date, Keyword */}
+            {/* Gallery Upload */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold flex items-center gap-1">
+                <Images className="w-3 h-3" /> Galeria de Fotos
+              </Label>
+              <GalleryUploader
+                gallery={newForm.gallery}
+                onGalleryChange={(gallery) => setNewForm(prev => ({ ...prev, gallery }))}
+              />
+            </div>
+
+            {/* Category, Date, Keyword, Author, Source */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">Categoria</Label>
@@ -806,6 +1489,52 @@ export default function NewsEditor() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold flex items-center gap-1">
+                  <User className="w-3 h-3" /> Autor
+                </Label>
+                <Input
+                  value={newForm.author}
+                  onChange={(e) => setNewForm(prev => ({ ...prev, author: e.target.value }))}
+                  placeholder="Ej: Carlos Mendez"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold flex items-center gap-1">
+                  <Globe className="w-3 h-3" /> Fuente
+                </Label>
+                <Input
+                  value={newForm.source}
+                  onChange={(e) => setNewForm(prev => ({ ...prev, source: e.target.value }))}
+                  placeholder="Ej: ESPN"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold flex items-center gap-1">
+                  <Star className="w-3 h-3" /> Destacada
+                </Label>
+                <div className="flex items-center gap-2 h-9">
+                  <Switch
+                    checked={newForm.featured}
+                    onCheckedChange={(v) => setNewForm(prev => ({ ...prev, featured: v }))}
+                  />
+                  <span className="text-xs text-muted-foreground">{newForm.featured ? 'Si' : 'No'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Tags */}
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold flex items-center gap-1">
+                <Tag className="w-3 h-3" /> Etiquetas
+              </Label>
+              <TagInput
+                tags={newForm.tags}
+                onTagsChange={(tags) => setNewForm(prev => ({ ...prev, tags }))}
+              />
             </div>
 
             {/* Preview */}

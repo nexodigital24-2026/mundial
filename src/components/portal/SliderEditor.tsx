@@ -15,7 +15,7 @@ import {
   Image as ImageIcon, Plus, Edit, Trash2, Save, X,
   ChevronUp, ChevronDown, Eye, Copy, GripVertical,
   Upload, Link, CheckCircle, ArrowUp, ArrowDown,
-  Settings2, Move, ZoomIn
+  Settings2, Move, ZoomIn, Layout, Zap, Trophy, Calendar, Star
 } from 'lucide-react';
 
 // ===================== IMAGE UPLOADER (inline, improved) =====================
@@ -456,6 +456,21 @@ export default function SliderEditor() {
   // Helper for match select in new slide dialog
   const availableMatches = matches.filter(m => m.status === 'live' || m.status === 'completed');
 
+  // Quick create from template
+  const createFromTemplate = (template: 'resultado' | 'envivo' | 'proximo' | 'especial') => {
+    const templates: Record<string, Partial<typeof newForm>> = {
+      resultado: { category: 'Resultado', bgColor: '#1B5E20', linkTo: 'resultados' },
+      envivo: { category: 'En Vivo', bgColor: '#B71C1C', linkTo: 'en-vivo' },
+      proximo: { category: 'Próximo', bgColor: '#E65100', linkTo: 'resultados' },
+      especial: { category: 'Especial', bgColor: '#4A148C', linkTo: 'inicio' },
+    };
+    const tmpl = templates[template];
+    setNewForm(prev => ({ ...prev, ...tmpl }));
+    setNewDialog(true);
+  };
+
+  const activeSlides = sorted.filter(s => s.active);
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -463,17 +478,101 @@ export default function SliderEditor() {
         <div>
           <h3 className="text-base font-bold flex items-center gap-2">
             <ImageIcon className="w-5 h-5 text-nd-green" />
-            Gestión del Slider Principal
+            Gestion del Slider Principal
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
-            {sorted.filter(s => s.active).length} activos de {sorted.length} slides totales
+            {activeSlides.length} activos de {sorted.length} slides totales
           </p>
         </div>
-        <Button size="sm" className="bg-nd-green hover:bg-nd-green-dark" onClick={() => setNewDialog(true)}>
-          <Plus className="w-4 h-4 mr-1" />
-          Nuevo Slide
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" className="text-xs" onClick={() => {
+            // Quick scroll to preview
+            document.getElementById('slider-full-preview')?.scrollIntoView({ behavior: 'smooth' });
+          }}>
+            <Layout className="w-3.5 h-3.5 mr-1" />
+            Vista Previa
+          </Button>
+          <Button size="sm" className="bg-nd-green hover:bg-nd-green-dark" onClick={() => setNewDialog(true)}>
+            <Plus className="w-4 h-4 mr-1" />
+            Nuevo Slide
+          </Button>
+        </div>
       </div>
+
+      {/* Quick Create Templates */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button
+          onClick={() => createFromTemplate('resultado')}
+          className="flex items-center gap-2 p-2.5 rounded-lg border-2 border-green-200 bg-green-50 hover:bg-green-100 hover:border-green-300 transition-all duration-200 group"
+        >
+          <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Trophy className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-xs font-bold text-green-800">Resultado</p>
+            <p className="text-[9px] text-green-600">Crear slide rapido</p>
+          </div>
+        </button>
+        <button
+          onClick={() => createFromTemplate('envivo')}
+          className="flex items-center gap-2 p-2.5 rounded-lg border-2 border-red-200 bg-red-50 hover:bg-red-100 hover:border-red-300 transition-all duration-200 group"
+        >
+          <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Zap className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-xs font-bold text-red-800">En Vivo</p>
+            <p className="text-[9px] text-red-600">Crear slide rapido</p>
+          </div>
+        </button>
+        <button
+          onClick={() => createFromTemplate('proximo')}
+          className="flex items-center gap-2 p-2.5 rounded-lg border-2 border-orange-200 bg-orange-50 hover:bg-orange-100 hover:border-orange-300 transition-all duration-200 group"
+        >
+          <div className="w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Calendar className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-xs font-bold text-orange-800">Proximo</p>
+            <p className="text-[9px] text-orange-600">Crear slide rapido</p>
+          </div>
+        </button>
+        <button
+          onClick={() => createFromTemplate('especial')}
+          className="flex items-center gap-2 p-2.5 rounded-lg border-2 border-purple-200 bg-purple-50 hover:bg-purple-100 hover:border-purple-300 transition-all duration-200 group"
+        >
+          <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Star className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-xs font-bold text-purple-800">Especial</p>
+            <p className="text-[9px] text-purple-600">Crear slide rapido</p>
+          </div>
+        </button>
+      </div>
+
+      {/* Full Slider Preview Strip */}
+      {activeSlides.length > 0 && (
+        <div id="slider-full-preview" className="space-y-2">
+          <div className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+            <Layout className="w-3 h-3" /> Vista Previa del Slider Completo
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar">
+            {activeSlides.map((slide) => {
+              const slideImage = slide.imageDataUrl || slide.imageUrl || '';
+              return (
+                <div
+                  key={slide.id}
+                  className="flex-shrink-0 w-64 cursor-pointer hover:ring-2 hover:ring-nd-green/50 rounded-xl overflow-hidden transition-all"
+                  onClick={() => startEdit(slide)}
+                >
+                  <SlidePreview slide={slide} compact />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Two-column layout: List + Editor */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">

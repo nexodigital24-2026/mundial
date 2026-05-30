@@ -1,6 +1,7 @@
 'use client';
 
-import { getTeamById, getTeamFlagUrl } from '@/lib/mock-data';
+import { useState } from 'react';
+import { getTeamById, getTeamFlagUrl, type NewsItem } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import { usePortalData } from '@/lib/portal-data-context';
 import LiveMatch from './LiveMatch';
@@ -9,6 +10,7 @@ import MatchSlider from './MatchSlider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Trophy,
   CircleDot,
@@ -16,20 +18,197 @@ import {
   BarChart3,
   Users,
   Star,
-  ArrowRight,
   Newspaper,
   Radio,
   Zap,
-  RadioTower,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Images,
+  User,
+  Globe,
+  Tag,
 } from 'lucide-react';
 
 interface HomeTabProps {
   onNavigate: (tab: string) => void;
 }
 
+// ===================== NEWS LIGHTBOX / GALLERY VIEWER =====================
+function NewsGalleryViewer({
+  newsItem,
+  open,
+  onClose,
+}: {
+  newsItem: NewsItem | null;
+  open: boolean;
+  onClose: () => void;
+}) {
+  const [currentIdx, setCurrentIdx] = useState(0);
+
+  if (!newsItem || !open) return null;
+
+  const allImages: { src: string; caption: string }[] = [];
+
+  // Add cover image first
+  const coverImage = newsItem.imageDataUrl || newsItem.imageUrl;
+  if (coverImage) {
+    allImages.push({ src: coverImage, caption: 'Portada' });
+  }
+
+  // Add gallery images
+  if (newsItem.gallery && newsItem.gallery.length > 0) {
+    newsItem.gallery
+      .sort((a, b) => a.order - b.order)
+      .forEach(img => {
+        const src = img.dataUrl || img.url;
+        if (src) allImages.push({ src, caption: img.caption || '' });
+      });
+  }
+
+  const goNext = () => setCurrentIdx(prev => (prev + 1) % allImages.length);
+  const goPrev = () => setCurrentIdx(prev => (prev - 1 + allImages.length) % allImages.length);
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
+        <DialogHeader className="sr-only">
+          <DialogTitle>{newsItem.title}</DialogTitle>
+        </DialogHeader>
+
+        <div className="flex flex-col h-full">
+          {/* Image viewer */}
+          {allImages.length > 0 ? (
+            <div className="relative bg-black flex-1 min-h-[300px] max-h-[60vh]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={allImages[currentIdx]?.src}
+                alt={allImages[currentIdx]?.caption || newsItem.title}
+                className="w-full h-full object-contain"
+              />
+
+              {/* Navigation arrows */}
+              {allImages.length > 1 && (
+                <>
+                  <button
+                    onClick={goPrev}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={goNext}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+
+              {/* Image counter */}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
+                {currentIdx + 1} / {allImages.length}
+              </div>
+
+              {/* Caption */}
+              {allImages[currentIdx]?.caption && (
+                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-4 py-1.5 rounded-lg max-w-[80%] text-center">
+                  {allImages[currentIdx].caption}
+                </div>
+              )}
+
+              {/* Thumbnail strip */}
+              {allImages.length > 1 && (
+                <div className="absolute bottom-2 right-2 flex gap-1">
+                  {allImages.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentIdx(idx)}
+                      className={`w-8 h-6 rounded overflow-hidden border-2 transition-all ${
+                        idx === currentIdx ? 'border-nd-orange scale-110' : 'border-white/30 opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={img.src} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-muted/30 flex-1 min-h-[200px] flex items-center justify-center">
+              <Newspaper className="w-12 h-12 text-muted-foreground/30" />
+            </div>
+          )}
+
+          {/* News details */}
+          <div className="p-4 bg-card space-y-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Badge variant="secondary" className="text-xs bg-nd-orange-light text-nd-green-dark">
+                {newsItem.category}
+              </Badge>
+              {newsItem.featured && (
+                <Badge className="text-xs bg-yellow-100 text-yellow-700">
+                  <Star className="w-3 h-3 mr-0.5" /> Destacada
+                </Badge>
+              )}
+              <span className="text-xs text-muted-foreground">{newsItem.date}</span>
+              {newsItem.author && (
+                <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                  <User className="w-3 h-3" /> {newsItem.author}
+                </span>
+              )}
+              {newsItem.source && (
+                <span className="text-xs text-muted-foreground flex items-center gap-0.5">
+                  <Globe className="w-3 h-3" /> {newsItem.source}
+                </span>
+              )}
+            </div>
+
+            <h3 className="text-lg font-bold text-foreground leading-tight">{newsItem.title}</h3>
+            <p className="text-sm text-muted-foreground">{newsItem.summary}</p>
+
+            {newsItem.content && (
+              <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line border-t pt-3">
+                {newsItem.content}
+              </div>
+            )}
+
+            {newsItem.tags && newsItem.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 pt-2">
+                {newsItem.tags.map(tag => (
+                  <Badge key={tag} variant="outline" className="text-[10px] px-1.5 py-0">
+                    <Tag className="w-2.5 h-2.5 mr-0.5" /> #{tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+
+            {allImages.length > 1 && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground pt-1">
+                <Images className="w-3.5 h-3.5" />
+                <span>{allImages.length} fotos en la galeria</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function HomeTab({ onNavigate }: HomeTabProps) {
   const { allMatches, goalEvents, connected } = useRealtime();
   const { slides, news } = usePortalData();
+
+  // Gallery viewer state
+  const [galleryNews, setGalleryNews] = useState<NewsItem | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+
+  const openGallery = (item: NewsItem) => {
+    setGalleryNews(item);
+    setGalleryOpen(true);
+  };
 
   const liveMatches = allMatches.filter((m) => m.status === 'live');
   const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
@@ -140,17 +319,33 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
             .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
             .map((item) => {
             const customImage = item.imageDataUrl || item.imageUrl || '';
+            const galleryImages = item.gallery || [];
             const teamId = newsTeamMap[item.imageKeyword];
             const team = teamId ? getTeamById(teamId) : null;
             const flagUrl = teamId ? getTeamFlagUrl(teamId, 320) : null;
             const gradient = newsGradientMap[item.category] || 'from-nd-green/20 to-nd-orange/10';
+            const hasGallery = galleryImages.length > 0;
+            const totalImages = (customImage ? 1 : 0) + galleryImages.length;
+
             return (
-              <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20">
+              <Card
+                key={item.id}
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20"
+                onClick={() => openGallery(item)}
+              >
                 <div className={`h-32 bg-gradient-to-br ${gradient} flex items-center justify-center relative overflow-hidden`}>
                   {customImage ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img
                       src={customImage}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
+                  ) : hasGallery && galleryImages[0] ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={galleryImages[0].dataUrl || galleryImages[0].url}
                       alt={item.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -169,18 +364,73 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                   ) : (
                     <span className="text-4xl group-hover:scale-110 transition-transform">⚽</span>
                   )}
+
+                  {/* Featured badge */}
+                  {item.featured && (
+                    <div className="absolute top-2 left-2">
+                      <Badge className="bg-yellow-500 text-white border-0 text-[9px] px-1.5 py-0">
+                        <Star className="w-2.5 h-2.5 mr-0.5" /> Destacada
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Gallery indicator */}
+                  {hasGallery && (
+                    <div className="absolute bottom-2 right-2">
+                      <Badge className="bg-black/60 text-white border-0 text-[9px] px-1.5 py-0">
+                        <Images className="w-2.5 h-2.5 mr-0.5" /> {totalImages}
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Gallery thumbnails strip */}
+                  {hasGallery && galleryImages.length > 1 && (
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5 flex gap-1 overflow-hidden">
+                      {galleryImages.slice(0, 4).map((img, i) => (
+                        <div key={img.id} className="w-6 h-4 rounded-sm overflow-hidden flex-shrink-0 border border-white/20">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={img.dataUrl || img.url} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ))}
+                      {galleryImages.length > 4 && (
+                        <span className="text-white text-[8px] self-center">+{galleryImages.length - 4}</span>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <CardHeader className="pb-2">
-                  <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
-                    {item.category}
-                  </Badge>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
+                      {item.category}
+                    </Badge>
+                    {item.author && (
+                      <span className="text-[9px] text-muted-foreground">Por {item.author}</span>
+                    )}
+                  </div>
                   <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-green transition-colors">
                     {item.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-xs text-muted-foreground line-clamp-2">{item.summary}</p>
-                  <p className="text-[10px] text-muted-foreground mt-2">{item.date}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <p className="text-[10px] text-muted-foreground">{item.date}</p>
+                    {item.source && (
+                      <span className="text-[9px] text-muted-foreground flex items-center gap-0.5">
+                        <Globe className="w-2.5 h-2.5" /> {item.source}
+                      </span>
+                    )}
+                  </div>
+                  {/* Tags */}
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-1.5">
+                      {item.tags.slice(0, 2).map(tag => (
+                        <Badge key={tag} variant="outline" className="text-[8px] px-1 py-0">
+                          #{tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
@@ -206,6 +456,13 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
           ))}
         </div>
       </section>
+
+      {/* News Gallery Viewer Dialog */}
+      <NewsGalleryViewer
+        newsItem={galleryNews}
+        open={galleryOpen}
+        onClose={() => { setGalleryOpen(false); setGalleryNews(null); }}
+      />
     </div>
   );
 }
