@@ -77,8 +77,8 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
   const hasImage = slideImage.length > 0 && !imgErrors[currentSlide.id];
 
   return (
-    <section className="relative rounded-2xl overflow-hidden text-white shadow-xl">
-      <div className="transition-all duration-500 ease-in-out relative">
+    <section className="relative rounded-2xl overflow-hidden text-white shadow-xl min-h-[320px] sm:min-h-[380px]">
+      <div className="transition-all duration-500 ease-in-out relative min-h-[320px] sm:min-h-[380px]">
         {/* Background image or gradient */}
         {hasImage ? (
           <div className="absolute inset-0">
@@ -90,7 +90,9 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               onError={() => setImgErrors(prev => ({ ...prev, [currentSlide.id]: true }))}
             />
             {/* Overlay gradient to ensure text readability */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/40" />
+            {/* Bottom gradient fade */}
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
           </div>
         ) : (
           <div
@@ -169,7 +171,8 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                       return (
                         <div className="flex items-center gap-1.5 rounded-lg px-2 py-1" style={{ backgroundColor: color }}>
                           {flagUrl ? (
-                            <img src={flagUrl} alt={homeTeam.name} className="w-6 h-4 object-cover rounded-sm" />
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={flagUrl} alt={homeTeam.name} className="w-6 h-4 object-cover rounded-sm" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                           ) : (
                             <span className="text-2xl">{homeTeam.flag}</span>
                           )}
@@ -202,7 +205,8 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                       return (
                         <div className="flex items-center gap-1.5 rounded-lg px-2 py-1" style={{ backgroundColor: color }}>
                           {flagUrl ? (
-                            <img src={flagUrl} alt={awayTeam.name} className="w-6 h-4 object-cover rounded-sm" />
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={flagUrl} alt={awayTeam.name} className="w-6 h-4 object-cover rounded-sm" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
                           ) : (
                             <span className="text-2xl">{awayTeam.flag}</span>
                           )}
@@ -219,7 +223,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                 {currentSlide.linkTo && (
                   <Button
                     onClick={() => onNavigate(currentSlide.linkTo)}
-                    className="bg-nd-orange text-nd-black hover:bg-nd-orange-dark font-bold"
+                    className="bg-nd-orange hover:bg-nd-orange-dark text-white font-bold shadow-lg shadow-nd-orange/30"
                   >
                     {isLive ? 'Ver En Vivo' : isUpcoming ? 'Ver Grupos' : 'Resultados'}
                     <ArrowRight className="w-4 h-4 ml-1" />
@@ -228,7 +232,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                 <Button
                   variant="outline"
                   onClick={() => onNavigate('grupos')}
-                  className="border-white/30 text-white hover:bg-white/10"
+                  className="border-white/50 text-white hover:bg-white/15 hover:border-white/70 font-semibold"
                 >
                   Ver Grupos
                 </Button>

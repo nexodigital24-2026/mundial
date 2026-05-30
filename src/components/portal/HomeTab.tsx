@@ -33,12 +33,12 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
 
   const quickLinks = [
-    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/30' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark', hoverColor: 'hover:bg-[#1a5c1e]', ring: 'ring-nd-green-dark/30' },
-    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange/30' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-[#d46a00]', ring: 'ring-nd-orange-dark/30' },
-    { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700', ring: 'ring-red-600/30' },
-    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/30' },
+    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-[#014d01]', hoverColor: 'hover:bg-[#003d01]', ring: 'ring-[#014d01]/40', shadow: 'shadow-[#014d01]/20' },
+    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange/40', shadow: 'shadow-nd-orange/20' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-[#CC5300]', hoverColor: 'hover:bg-[#a84200]', ring: 'ring-[#CC5300]/40', shadow: 'shadow-[#CC5300]/20' },
+    { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700', ring: 'ring-red-600/40', shadow: 'shadow-red-600/20' },
+    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
   ];
 
   // Map news keyword to team for flag image
@@ -56,7 +56,20 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   };
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="relative space-y-8 animate-fade-in">
+      {/* Background image — Argentina World Cup themed */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/slides/argentina-bg.webp"
+          alt=""
+          className="w-full h-full object-cover"
+          aria-hidden="true"
+        />
+        {/* Overlay to ensure content readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/98" />
+      </div>
+
       {/* Match Slider - Nexo Digital branding */}
       <MatchSlider slides={sliderSlides} onNavigate={onNavigate} />
 
@@ -182,9 +195,9 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
             <button
               key={link.id}
               onClick={() => onNavigate(link.id)}
-              className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-card border-2 ${link.ring} hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group`}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-card border-2 ${link.ring} hover:shadow-lg ${link.shadow} hover:-translate-y-0.5 transition-all duration-300 group`}
             >
-              <div className={`w-12 h-12 rounded-full ${link.color} ${link.hoverColor} flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-md ring-2 ring-white/30`}>
+              <div className={`w-12 h-12 rounded-full ${link.color} ${link.hoverColor} flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-md ${link.shadow} ring-2 ring-white/30`}>
                 <link.icon className="w-6 h-6 text-white drop-shadow-sm" />
               </div>
               <span className="text-sm font-bold text-foreground">{link.label}</span>
