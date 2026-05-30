@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { AuthProvider } from '@/lib/auth-context';
 import { RealtimeProvider, useRealtime } from '@/lib/realtime-context';
+import { PortalDataProvider } from '@/lib/portal-data-context';
 import Navbar from '@/components/portal/Navbar';
 import Footer from '@/components/portal/Footer';
 import HomeTab from '@/components/portal/HomeTab';
@@ -110,7 +111,9 @@ export default function HomePage() {
   return (
     <AuthProvider>
       <RealtimeProvider>
-        <AppContent />
+        <PortalDataProvider>
+          <AppContent />
+        </PortalDataProvider>
       </RealtimeProvider>
     </AuthProvider>
   );

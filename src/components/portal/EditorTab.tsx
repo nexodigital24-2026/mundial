@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { matches as initialMatches, news as initialNews, scorers as initialScorers, redCards as initialRedCards, matchSyntheses as initialSyntheses, sliderSlides as initialSliderSlides, getTeamById, type Match, type NewsItem, type Scorer, type RedCard, type MatchSynthesis, type SliderSlide } from '@/lib/mock-data';
+import { usePortalData } from '@/lib/portal-data-context';
+import { getTeamById, type Match, type NewsItem, type Scorer, type RedCard, type MatchSynthesis, type SliderSlide } from '@/lib/mock-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,12 +24,20 @@ import {
 
 export default function EditorTab() {
   const { isEditor } = useAuth();
-  const [localMatches, setLocalMatches] = useState<Match[]>(initialMatches);
-  const [localNews, setLocalNews] = useState<NewsItem[]>(initialNews);
-  const [localScorers, setLocalScorers] = useState<Scorer[]>(initialScorers);
-  const [localRedCards, setLocalRedCards] = useState<RedCard[]>(initialRedCards);
-  const [localSyntheses, setLocalSyntheses] = useState<MatchSynthesis[]>(initialSyntheses);
-  const [localSlides, setLocalSlides] = useState<SliderSlide[]>(initialSliderSlides);
+  const {
+    slides: localSlides,
+    news: localNews,
+    matches: localMatches,
+    scorers: localScorers,
+    redCards: localRedCards,
+    syntheses: localSyntheses,
+    updateSlides: setLocalSlides,
+    updateNews: setLocalNews,
+    updateMatches: setLocalMatches,
+    updateScorers: setLocalScorers,
+    updateRedCards: setLocalRedCards,
+    updateSyntheses: setLocalSyntheses,
+  } = usePortalData();
 
   // Slider editing state
   const [editingSlideId, setEditingSlideId] = useState<string | null>(null);

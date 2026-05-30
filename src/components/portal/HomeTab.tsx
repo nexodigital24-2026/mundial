@@ -1,7 +1,8 @@
 'use client';
 
-import { matches, news, getTeamById, getTeamFlagUrl, sliderSlides } from '@/lib/mock-data';
+import { getTeamById, getTeamFlagUrl } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
+import { usePortalData } from '@/lib/portal-data-context';
 import LiveMatch from './LiveMatch';
 import MatchCard from './MatchCard';
 import MatchSlider from './MatchSlider';
@@ -28,6 +29,7 @@ interface HomeTabProps {
 
 export default function HomeTab({ onNavigate }: HomeTabProps) {
   const { allMatches, goalEvents, connected } = useRealtime();
+  const { slides, news } = usePortalData();
 
   const liveMatches = allMatches.filter((m) => m.status === 'live');
   const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
@@ -57,21 +59,8 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
   return (
     <div className="relative space-y-8 animate-fade-in">
-      {/* Background image — Argentina World Cup themed */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/slides/argentina-bg.webp"
-          alt=""
-          className="w-full h-full object-cover"
-          aria-hidden="true"
-        />
-        {/* Overlay to ensure content readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/98" />
-      </div>
-
       {/* Match Slider - Nexo Digital branding */}
-      <MatchSlider slides={sliderSlides} onNavigate={onNavigate} />
+      <MatchSlider slides={slides} onNavigate={onNavigate} />
 
       {/* Live Matches with Real-time indicator */}
       {liveMatches.length > 0 && (
