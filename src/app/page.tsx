@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { AuthProvider } from '@/lib/auth-context';
 import { RealtimeProvider, useRealtime } from '@/lib/realtime-context';
 import { PortalDataProvider } from '@/lib/portal-data-context';
+import { ThemeProvider } from '@/lib/theme-context';
 import Navbar from '@/components/portal/Navbar';
 import Footer from '@/components/portal/Footer';
 import HomeTab from '@/components/portal/HomeTab';
@@ -89,16 +90,16 @@ function AppContent() {
           alt="Fondo Argentina"
           className="w-full h-full object-cover"
         />
-        {/* Gradient overlay for readability — blue tinted */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#E6F7FF]/90 via-[#F0F9FF]/93 to-background/97" />
+        {/* Gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-nd-green-light/90 via-white/93 to-background/97" />
         {/* Subtle confetti particles */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
-          <div className="absolute top-[10%] left-[15%] w-2 h-2 rounded-full bg-[#0099FF] animate-confetti" style={{ animationDelay: '0s', animationDuration: '4s' }} />
-          <div className="absolute top-[5%] left-[45%] w-1.5 h-1.5 rounded-full bg-[#FFD700] animate-confetti" style={{ animationDelay: '1s', animationDuration: '5s' }} />
+          <div className="absolute top-[10%] left-[15%] w-2 h-2 rounded-full bg-nd-green animate-confetti" style={{ animationDelay: '0s', animationDuration: '4s' }} />
+          <div className="absolute top-[5%] left-[45%] w-1.5 h-1.5 rounded-full bg-nd-yellow animate-confetti" style={{ animationDelay: '1s', animationDuration: '5s' }} />
           <div className="absolute top-[8%] left-[75%] w-2.5 h-2.5 rounded-sm bg-white animate-confetti" style={{ animationDelay: '2s', animationDuration: '3.5s' }} />
-          <div className="absolute top-[3%] left-[30%] w-1 h-1 rounded-full bg-[#FF6600] animate-confetti" style={{ animationDelay: '0.5s', animationDuration: '4.5s' }} />
-          <div className="absolute top-[12%] left-[60%] w-2 h-2 rounded-full bg-[#75AADB] animate-confetti" style={{ animationDelay: '1.5s', animationDuration: '3.8s' }} />
-          <div className="absolute top-[6%] left-[90%] w-1.5 h-1.5 rounded-sm bg-[#FFD700] animate-confetti" style={{ animationDelay: '2.5s', animationDuration: '4.2s' }} />
+          <div className="absolute top-[3%] left-[30%] w-1 h-1 rounded-full bg-nd-orange animate-confetti" style={{ animationDelay: '0.5s', animationDuration: '4.5s' }} />
+          <div className="absolute top-[12%] left-[60%] w-2 h-2 rounded-full bg-nd-green-dark animate-confetti" style={{ animationDelay: '1.5s', animationDuration: '3.8s' }} />
+          <div className="absolute top-[6%] left-[90%] w-1.5 h-1.5 rounded-sm bg-nd-yellow animate-confetti" style={{ animationDelay: '2.5s', animationDuration: '4.2s' }} />
         </div>
       </div>
 
@@ -119,11 +120,13 @@ function AppContent() {
 export default function HomePage() {
   return (
     <AuthProvider>
-      <RealtimeProvider>
-        <PortalDataProvider>
-          <AppContent />
-        </PortalDataProvider>
-      </RealtimeProvider>
+      <ThemeProvider>
+        <RealtimeProvider>
+          <PortalDataProvider>
+            <AppContent />
+          </PortalDataProvider>
+        </RealtimeProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
