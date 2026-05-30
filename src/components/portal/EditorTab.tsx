@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { usePortalData } from '@/lib/portal-data-context';
-import { getTeamById, type Match, type NewsItem, type Scorer } from '@/lib/mock-data';
+import { getTeamById, type Match, type Scorer } from '@/lib/mock-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import SliderEditor from './SliderEditor';
+import NewsEditor from './NewsEditor';
 import {
   PenTool, Shield, Trophy, Newspaper,
   Plus, Edit, Trash2, Save, X, AlertTriangle, BarChart3,
@@ -23,12 +24,10 @@ import {
 export default function EditorTab() {
   const { isEditor } = useAuth();
   const {
-    news: localNews,
     matches: localMatches,
     scorers: localScorers,
     redCards: localRedCards,
     syntheses: localSyntheses,
-    updateNews: setLocalNews,
     updateMatches: setLocalMatches,
     updateScorers: setLocalScorers,
     updateRedCards: setLocalRedCards,
@@ -41,11 +40,6 @@ export default function EditorTab() {
   const [editHomeScore, setEditHomeScore] = useState('0');
   const [editAwayScore, setEditAwayScore] = useState('0');
   const [editSynthesis, setEditSynthesis] = useState('');
-
-  // News dialog
-  const [newsDialog, setNewsDialog] = useState(false);
-  const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
-  const [newsForm, setNewsForm] = useState({ title: '', summary: '', category: 'Resultados' });
 
   // Scorer dialog
   const [scorerDialog, setScorerDialog] = useState(false);
@@ -81,44 +75,6 @@ export default function EditorTab() {
         : m
     ));
     setEditMatchDialog(false);
-  };
-
-  const saveNews = () => {
-    if (editingNews) {
-      setLocalNews(prev => prev.map(n =>
-        n.id === editingNews.id
-          ? { ...n, ...newsForm }
-          : n
-      ));
-    } else {
-      const newNewsItem: NewsItem = {
-        id: `n${Date.now()}`,
-        title: newsForm.title,
-        summary: newsForm.summary,
-        category: newsForm.category,
-        date: new Date().toISOString().split('T')[0],
-        imageKeyword: 'news',
-      };
-      setLocalNews(prev => [newNewsItem, ...prev]);
-    }
-    setNewsDialog(false);
-    setEditingNews(null);
-    setNewsForm({ title: '', summary: '', category: 'Resultados' });
-  };
-
-  const deleteNews = (id: string) => {
-    setLocalNews(prev => prev.filter(n => n.id !== id));
-  };
-
-  const openEditNews = (item: NewsItem | null) => {
-    if (item) {
-      setEditingNews(item);
-      setNewsForm({ title: item.title, summary: item.summary, category: item.category });
-    } else {
-      setEditingNews(null);
-      setNewsForm({ title: '', summary: '', category: 'Resultados' });
-    }
-    setNewsDialog(true);
   };
 
   const saveScorer = () => {
@@ -197,44 +153,9 @@ export default function EditorTab() {
           </Card>
         </TabsContent>
 
-        {/* NEWS TAB */}
-        <TabsContent value="news" className="mt-4 space-y-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-base font-bold flex items-center gap-2">
-                <Newspaper className="w-5 h-5 text-primary" />
-                Gestión de Noticias
-              </CardTitle>
-              <Button size="sm" onClick={() => openEditNews(null)}>
-                <Plus className="w-4 h-4 mr-1" />
-                Nueva Noticia
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="max-h-96 overflow-y-auto custom-scrollbar space-y-2">
-                {localNews.map((item) => (
-                  <div key={item.id} className="flex items-start justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="secondary" className="text-[10px]">{item.category}</Badge>
-                        <span className="text-[11px] text-muted-foreground">{item.date}</span>
-                      </div>
-                      <p className="text-sm font-medium text-foreground line-clamp-1">{item.title}</p>
-                      <p className="text-xs text-muted-foreground line-clamp-1">{item.summary}</p>
-                    </div>
-                    <div className="flex gap-1 flex-shrink-0">
-                      <Button variant="ghost" size="icon" className="w-8 h-8" onClick={() => openEditNews(item)}>
-                        <Edit className="w-3.5 h-3.5" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="w-8 h-8 text-red-500 hover:text-red-700" onClick={() => deleteNews(item.id)}>
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* NEWS TAB — now uses dedicated NewsEditor component */}
+        <TabsContent value="news" className="mt-4">
+          <NewsEditor />
         </TabsContent>
 
         {/* PLAYERS TAB */}
@@ -413,59 +334,6 @@ export default function EditorTab() {
               </div>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* News Dialog */}
-      <Dialog open={newsDialog} onOpenChange={setNewsDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{editingNews ? 'Editar Noticia' : 'Nueva Noticia'}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div className="space-y-2">
-              <Label>Título</Label>
-              <Input
-                placeholder="Título de la noticia"
-                value={newsForm.title}
-                onChange={(e) => setNewsForm(prev => ({ ...prev, title: e.target.value }))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Resumen</Label>
-              <Textarea
-                placeholder="Resumen de la noticia..."
-                value={newsForm.summary}
-                onChange={(e) => setNewsForm(prev => ({ ...prev, summary: e.target.value }))}
-                rows={3}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Categoría</Label>
-              <Select value={newsForm.category} onValueChange={(v) => setNewsForm(prev => ({ ...prev, category: v }))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="En Vivo">En Vivo</SelectItem>
-                  <SelectItem value="Especial">Especial</SelectItem>
-                  <SelectItem value="Análisis">Análisis</SelectItem>
-                  <SelectItem value="Resultados">Resultados</SelectItem>
-                  <SelectItem value="Clasificación">Clasificación</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={saveNews} className="flex-1" disabled={!newsForm.title || !newsForm.summary}>
-                <Save className="w-4 h-4 mr-1" />
-                {editingNews ? 'Actualizar' : 'Crear'}
-              </Button>
-              <Button variant="outline" onClick={() => setNewsDialog(false)}>
-                <X className="w-4 h-4 mr-1" />
-                Cancelar
-              </Button>
-            </div>
-          </div>
         </DialogContent>
       </Dialog>
 

@@ -72,6 +72,10 @@ export interface NewsItem {
   category: string;
   date: string;
   imageKeyword: string;
+  imageUrl: string;       // Custom image URL (uploaded or external)
+  imageDataUrl: string;   // Base64 data URL for uploaded images (client-side preview)
+  order: number;          // Display order
+  active: boolean;        // Whether to show this news item
 }
 
 export interface MatchSynthesis {
@@ -767,6 +771,10 @@ export const news: NewsItem[] = [
     category: 'En Vivo',
     date: '2026-06-16',
     imageKeyword: 'messi',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 1,
+    active: true,
   },
   {
     id: 'n2',
@@ -775,6 +783,10 @@ export const news: NewsItem[] = [
     category: 'Especial',
     date: '2026-06-15',
     imageKeyword: 'yamal',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 2,
+    active: true,
   },
   {
     id: 'n3',
@@ -783,6 +795,10 @@ export const news: NewsItem[] = [
     category: 'En Vivo',
     date: '2026-06-20',
     imageKeyword: 'haaland',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 3,
+    active: true,
   },
   {
     id: 'n4',
@@ -791,6 +807,10 @@ export const news: NewsItem[] = [
     category: 'Análisis',
     date: '2026-06-18',
     imageKeyword: 'mexico',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 4,
+    active: true,
   },
   {
     id: 'n5',
@@ -799,6 +819,10 @@ export const news: NewsItem[] = [
     category: 'Resultados',
     date: '2026-06-15',
     imageKeyword: 'spain',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 5,
+    active: true,
   },
   {
     id: 'n6',
@@ -807,6 +831,10 @@ export const news: NewsItem[] = [
     category: 'Especial',
     date: '2026-06-16',
     imageKeyword: 'ronaldo',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 6,
+    active: true,
   },
   {
     id: 'n7',
@@ -815,6 +843,10 @@ export const news: NewsItem[] = [
     category: 'Clasificación',
     date: '2026-06-17',
     imageKeyword: 'usa',
+    imageUrl: '',
+    imageDataUrl: '',
+    order: 7,
+    active: true,
   },
 ];
 

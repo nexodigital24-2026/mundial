@@ -135,15 +135,27 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
           Noticias Destacadas
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {news.map((item) => {
+          {news
+            .filter(n => n.active !== false)
+            .sort((a, b) => (a.order ?? 99) - (b.order ?? 99))
+            .map((item) => {
+            const customImage = item.imageDataUrl || item.imageUrl || '';
             const teamId = newsTeamMap[item.imageKeyword];
             const team = teamId ? getTeamById(teamId) : null;
             const flagUrl = teamId ? getTeamFlagUrl(teamId, 320) : null;
             const gradient = newsGradientMap[item.category] || 'from-nd-green/20 to-nd-orange/10';
             return (
               <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20">
-                <div className={`h-32 bg-gradient-to-br ${gradient} flex items-center justify-center relative`}>
-                  {flagUrl ? (
+                <div className={`h-32 bg-gradient-to-br ${gradient} flex items-center justify-center relative overflow-hidden`}>
+                  {customImage ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={customImage}
+                      alt={item.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                    />
+                  ) : flagUrl ? (
                     <div className="relative">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
