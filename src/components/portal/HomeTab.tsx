@@ -215,9 +215,9 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
   const quickLinks = [
     { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-[#0077CC]', hoverColor: 'hover:bg-[#005fa3]', ring: 'ring-[#0077CC]/40', shadow: 'shadow-[#0077CC]/20' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green-dark/40', shadow: 'shadow-nd-green-dark/20' },
     { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange/40', shadow: 'shadow-nd-orange/20' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-[#CC5300]', hoverColor: 'hover:bg-[#a84200]', ring: 'ring-[#CC5300]/40', shadow: 'shadow-[#CC5300]/20' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange-dark/40', shadow: 'shadow-nd-orange-dark/20' },
     { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700', ring: 'ring-red-600/40', shadow: 'shadow-red-600/20' },
     { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
   ];

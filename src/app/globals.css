@@ -41,20 +41,20 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Nexo Digital brand colors */
-  --color-nd-green: #0099FF;
-  --color-nd-green-dark: #0077CC;
-  --color-nd-green-light: #E6F7FF;
-  --color-nd-orange: #FF6600;
-  --color-nd-orange-dark: #CC5300;
-  --color-nd-orange-light: #FFF3E0;
-  --color-nd-orange-accent: #FF931E;
+  /* Nexo Digital brand colors — original green/orange scheme */
+  --color-nd-green: var(--nd-green, #026602);
+  --color-nd-green-dark: var(--nd-green-dark, #014C01);
+  --color-nd-green-light: var(--nd-green-light, #E8F5E9);
+  --color-nd-orange: var(--nd-orange, #FF6800);
+  --color-nd-orange-dark: var(--nd-orange-dark, #CC5300);
+  --color-nd-orange-light: var(--nd-orange-light, #FFF3E0);
+  --color-nd-orange-accent: var(--nd-orange-accent, #FF931E);
   --color-nd-gray: #F5F5F5;
   --color-nd-gray-dark: #E0E0E0;
-  --color-nd-black: #231F20;
-  --color-nd-yellow: #FF6800;
-  --color-nd-yellow-dark: #CC5300;
-  --color-nd-yellow-light: #FFF3E0;
+  --color-nd-black: var(--nd-black, #1a1a1a);
+  --color-nd-yellow: var(--nd-yellow, #FFD700);
+  --color-nd-yellow-dark: var(--nd-yellow-dark, #CC5300);
+  --color-nd-yellow-light: var(--nd-yellow-light, #FFF8E1);
   --color-gold: #FFD700;
   --color-silver: #C0C0C0;
   --color-bronze: #CD7F32;
@@ -62,37 +62,48 @@
 
 :root {
   --radius: 0.625rem;
+  --nd-green: #026602;
+  --nd-green-dark: #014C01;
+  --nd-green-light: #E8F5E9;
+  --nd-orange: #FF6800;
+  --nd-orange-dark: #CC5300;
+  --nd-orange-light: #FFF3E0;
+  --nd-orange-accent: #FF931E;
+  --nd-black: #1a1a1a;
+  --nd-yellow: #FFD700;
+  --nd-yellow-dark: #CC5300;
+  --nd-yellow-light: #FFF8E1;
   --background: #F5F5F5;
-  --foreground: #231F20;
+  --foreground: #1a1a1a;
   --card: #ffffff;
-  --card-foreground: #231F20;
+  --card-foreground: #1a1a1a;
   --popover: #ffffff;
-  --popover-foreground: #231F20;
-  --primary: #0099FF;
+  --popover-foreground: #1a1a1a;
+  --primary: #026602;
   --primary-foreground: #ffffff;
   --secondary: #FFF3E0;
-  --secondary-foreground: #231F20;
+  --secondary-foreground: #1a1a1a;
   --muted: #EEEEEE;
   --muted-foreground: #616161;
-  --accent: #FF6600;
-  --accent-foreground: #231F20;
+  --accent: #FF6800;
+  --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
   --border: #E0E0E0;
   --input: #E0E0E0;
-  --ring: #0099FF;
-  --chart-1: #0099FF;
-  --chart-2: #FF6600;
+  --ring: #026602;
+  --chart-1: #026602;
+  --chart-2: #FF6800;
   --chart-3: #FF931E;
-  --chart-4: #0077CC;
+  --chart-4: #014C01;
   --chart-5: #ef4444;
   --sidebar: #ffffff;
-  --sidebar-foreground: #231F20;
-  --sidebar-primary: #0099FF;
+  --sidebar-foreground: #1a1a1a;
+  --sidebar-primary: #026602;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #FFF3E0;
-  --sidebar-accent-foreground: #231F20;
+  --sidebar-accent-foreground: #1a1a1a;
   --sidebar-border: #E0E0E0;
-  --sidebar-ring: #0099FF;
+  --sidebar-ring: #026602;
 }
 
 .dark {
@@ -102,31 +113,31 @@
   --card-foreground: #F5F5F5;
   --popover: #2d2d2d;
   --popover-foreground: #F5F5F5;
-  --primary: #33AAFF;
+  --primary: #33AA55;
   --primary-foreground: #ffffff;
   --secondary: #3E2723;
   --secondary-foreground: #F5F5F5;
   --muted: #333333;
   --muted-foreground: #BDBDBD;
   --accent: #FF931E;
-  --accent-foreground: #231F20;
+  --accent-foreground: #1a1a1a;
   --destructive: #ef4444;
   --border: #424242;
   --input: #424242;
-  --ring: #33AAFF;
-  --chart-1: #33AAFF;
+  --ring: #33AA55;
+  --chart-1: #33AA55;
   --chart-2: #FF931E;
-  --chart-3: #FF6600;
-  --chart-4: #0099FF;
+  --chart-3: #FF6800;
+  --chart-4: #026602;
   --chart-5: #ef4444;
   --sidebar: #2d2d2d;
   --sidebar-foreground: #F5F5F5;
-  --sidebar-primary: #33AAFF;
+  --sidebar-primary: #33AA55;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #3E2723;
   --sidebar-accent-foreground: #F5F5F5;
   --sidebar-border: #424242;
-  --sidebar-ring: #33AAFF;
+  --sidebar-ring: #33AA55;
 }
 
 @layer base {

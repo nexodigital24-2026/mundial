@@ -12,8 +12,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ThemeCustomizer from './ThemeCustomizer';
 import {
-  Shield, Users, Megaphone, FileEdit, Activity,
+  Shield, Users, Megaphone, FileEdit, Activity, Palette,
   Plus, UserCheck, UserX, Clock, Eye, BarChart3
 } from 'lucide-react';
 
@@ -99,8 +101,8 @@ export default function AdminTab() {
 
   const getRoleBadgeColor = (role: string) => {
     if (role === 'admin') return 'bg-red-100 text-red-700 hover:bg-red-100';
-    if (role === 'editor') return 'bg-blue-100 text-blue-700 hover:bg-blue-100';
-    return 'bg-green-100 text-green-700 hover:bg-green-100';
+    if (role === 'editor') return 'bg-nd-green-light text-nd-green-dark hover:bg-nd-green-light';
+    return 'bg-nd-orange-light text-nd-orange-dark hover:bg-nd-orange-light';
   };
 
   const getRoleLabel = (role: string) => {
@@ -111,7 +113,7 @@ export default function AdminTab() {
 
   const getActionBadge = (action: string) => {
     if (action === 'create') return 'bg-green-100 text-green-700 hover:bg-green-100';
-    if (action === 'update') return 'bg-blue-100 text-blue-700 hover:bg-blue-100';
+    if (action === 'update') return 'bg-nd-green-light text-nd-green-dark hover:bg-nd-green-light';
     return 'bg-red-100 text-red-700 hover:bg-red-100';
   };
 
@@ -128,191 +130,212 @@ export default function AdminTab() {
         Panel de Administración
       </h2>
 
-      {/* Stats overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card className="border-primary/20">
-          <CardContent className="p-4 text-center">
-            <Users className="w-8 h-8 text-primary mx-auto mb-2" />
-            <p className="text-2xl font-bold text-primary">{users.length}</p>
-            <p className="text-xs text-muted-foreground">Total Usuarios</p>
-          </CardContent>
-        </Card>
-        <Card className="border-green-200">
-          <CardContent className="p-4 text-center">
-            <UserCheck className="w-8 h-8 text-green-500 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-green-600">{activeUsers}</p>
-            <p className="text-xs text-muted-foreground">Usuarios Activos</p>
-          </CardContent>
-        </Card>
-        <Card className="border-red-200">
-          <CardContent className="p-4 text-center">
-            <UserX className="w-8 h-8 text-red-500 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-red-600">{inactiveUsers}</p>
-            <p className="text-xs text-muted-foreground">Inactivos</p>
-          </CardContent>
-        </Card>
-        <Card className="border-amber-200">
-          <CardContent className="p-4 text-center">
-            <FileEdit className="w-8 h-8 text-amber-500 mx-auto mb-2" />
-            <p className="text-2xl font-bold text-amber-600">{edits.length}</p>
-            <p className="text-xs text-muted-foreground">Ediciones</p>
-          </CardContent>
-        </Card>
-      </div>
+      <Tabs defaultValue="theme" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-3 max-w-md">
+          <TabsTrigger value="theme" className="text-xs sm:text-sm flex items-center gap-1">
+            <Palette className="w-4 h-4" />
+            Colores
+          </TabsTrigger>
+          <TabsTrigger value="users" className="text-xs sm:text-sm">Usuarios</TabsTrigger>
+          <TabsTrigger value="activity" className="text-xs sm:text-sm">Actividad</TabsTrigger>
+        </TabsList>
 
-      {/* User Management */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
-            <Users className="w-5 h-5 text-primary" />
-            Gestión de Usuarios
-          </CardTitle>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <Plus className="w-4 h-4 mr-1" />
-                Nuevo Usuario
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Crear Nuevo Usuario</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 pt-2">
-                <div className="space-y-2">
-                  <Label>Nombre</Label>
-                  <Input
-                    placeholder="Nombre completo"
-                    value={newUser.name}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Correo Electrónico</Label>
-                  <Input
-                    type="email"
-                    placeholder="correo@nexodigitalmundial.com"
-                    value={newUser.email}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Rol</Label>
-                  <Select
-                    value={newUser.role}
-                    onValueChange={(v) => setNewUser(prev => ({ ...prev, role: v }))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="admin">Administrador</SelectItem>
-                      <SelectItem value="editor">Editor</SelectItem>
-                      <SelectItem value="comercial">Comercial</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button className="w-full" onClick={handleCreateUser} disabled={!newUser.email || !newUser.name}>
-                  Crear Usuario
-                </Button>
+        {/* ========== THEME TAB ========== */}
+        <TabsContent value="theme" className="mt-4">
+          <ThemeCustomizer />
+        </TabsContent>
+
+        {/* ========== USERS TAB ========== */}
+        <TabsContent value="users" className="mt-4 space-y-4">
+          {/* Stats overview */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card className="border-primary/20">
+              <CardContent className="p-4 text-center">
+                <Users className="w-8 h-8 text-primary mx-auto mb-2" />
+                <p className="text-2xl font-bold text-primary">{users.length}</p>
+                <p className="text-xs text-muted-foreground">Total Usuarios</p>
+              </CardContent>
+            </Card>
+            <Card className="border-green-200">
+              <CardContent className="p-4 text-center">
+                <UserCheck className="w-8 h-8 text-green-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-green-600">{activeUsers}</p>
+                <p className="text-xs text-muted-foreground">Usuarios Activos</p>
+              </CardContent>
+            </Card>
+            <Card className="border-red-200">
+              <CardContent className="p-4 text-center">
+                <UserX className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-red-600">{inactiveUsers}</p>
+                <p className="text-xs text-muted-foreground">Inactivos</p>
+              </CardContent>
+            </Card>
+            <Card className="border-amber-200">
+              <CardContent className="p-4 text-center">
+                <FileEdit className="w-8 h-8 text-amber-500 mx-auto mb-2" />
+                <p className="text-2xl font-bold text-amber-600">{edits.length}</p>
+                <p className="text-xs text-muted-foreground">Ediciones</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* User Management */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Users className="w-5 h-5 text-primary" />
+                Gestión de Usuarios
+              </CardTitle>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="sm">
+                    <Plus className="w-4 h-4 mr-1" />
+                    Nuevo Usuario
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Crear Nuevo Usuario</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-2">
+                    <div className="space-y-2">
+                      <Label>Nombre</Label>
+                      <Input
+                        placeholder="Nombre completo"
+                        value={newUser.name}
+                        onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Correo Electrónico</Label>
+                      <Input
+                        type="email"
+                        placeholder="correo@nexodigitalmundial.com"
+                        value={newUser.email}
+                        onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Rol</Label>
+                      <Select
+                        value={newUser.role}
+                        onValueChange={(v) => setNewUser(prev => ({ ...prev, role: v }))}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="admin">Administrador</SelectItem>
+                          <SelectItem value="editor">Editor</SelectItem>
+                          <SelectItem value="comercial">Comercial</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button className="w-full" onClick={handleCreateUser} disabled={!newUser.email || !newUser.name}>
+                      Crear Usuario
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Usuario</TableHead>
+                      <TableHead>Rol</TableHead>
+                      <TableHead>Estado</TableHead>
+                      <TableHead>Creado</TableHead>
+                      <TableHead className="text-right">Acción</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((u) => (
+                      <TableRow key={u.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="w-8 h-8">
+                              <AvatarFallback className="text-xs bg-primary/10 text-primary font-semibold">
+                                {u.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-sm font-medium">{u.name}</p>
+                              <p className="text-[11px] text-muted-foreground">{u.email}</p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={`text-[11px] ${getRoleBadgeColor(u.role)}`}>
+                            {getRoleLabel(u.role)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={`text-[11px] ${u.active ? 'bg-green-100 text-green-700 hover:bg-green-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-100'}`}>
+                            {u.active ? 'Activo' : 'Inactivo'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-xs text-muted-foreground">{u.createdAt}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Switch
+                              checked={u.active}
+                              onCheckedChange={() => toggleUserActive(u.id)}
+                            />
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
-            </DialogContent>
-          </Dialog>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Usuario</TableHead>
-                  <TableHead>Rol</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Creado</TableHead>
-                  <TableHead className="text-right">Acción</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="w-8 h-8">
-                          <AvatarFallback className="text-xs bg-primary/10 text-primary font-semibold">
-                            {u.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium">{u.name}</p>
-                          <p className="text-[11px] text-muted-foreground">{u.email}</p>
-                        </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ========== ACTIVITY TAB ========== */}
+        <TabsContent value="activity" className="mt-4 space-y-4">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-bold flex items-center gap-2">
+                <Activity className="w-5 h-5 text-primary" />
+                Registro de Actividad
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="max-h-96 overflow-y-auto custom-scrollbar space-y-2">
+                {edits.map((edit) => (
+                  <div key={edit.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {edit.action === 'create' ? <Plus className="w-4 h-4 text-green-500" /> :
+                       edit.action === 'update' ? <FileEdit className="w-4 h-4 text-nd-green" /> :
+                       <UserX className="w-4 h-4 text-red-500" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <Badge className={`text-[10px] ${getActionBadge(edit.action)}`}>
+                          {getActionLabel(edit.action)}
+                        </Badge>
+                        <Badge variant="outline" className="text-[10px]">
+                          {edit.section}
+                        </Badge>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={`text-[11px] ${getRoleBadgeColor(u.role)}`}>
-                        {getRoleLabel(u.role)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={`text-[11px] ${u.active ? 'bg-green-100 text-green-700 hover:bg-green-100' : 'bg-gray-100 text-gray-500 hover:bg-gray-100'}`}>
-                        {u.active ? 'Activo' : 'Inactivo'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">{u.createdAt}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Switch
-                          checked={u.active}
-                          onCheckedChange={() => toggleUserActive(u.id)}
-                        />
+                      <p className="text-sm text-foreground">{edit.details}</p>
+                      <div className="flex items-center gap-2 mt-1 text-[11px] text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        <span>{edit.createdAt}</span>
+                        <span>•</span>
+                        <span>Usuario: {edit.userId}</span>
                       </div>
-                    </TableCell>
-                  </TableRow>
+                    </div>
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Activity Log */}
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base font-bold flex items-center gap-2">
-            <Activity className="w-5 h-5 text-primary" />
-            Registro de Actividad
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="max-h-96 overflow-y-auto custom-scrollbar space-y-2">
-            {edits.map((edit) => (
-              <div key={edit.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  {edit.action === 'create' ? <Plus className="w-4 h-4 text-green-500" /> :
-                   edit.action === 'update' ? <FileEdit className="w-4 h-4 text-blue-500" /> :
-                   <UserX className="w-4 h-4 text-red-500" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <Badge className={`text-[10px] ${getActionBadge(edit.action)}`}>
-                      {getActionLabel(edit.action)}
-                    </Badge>
-                    <Badge variant="outline" className="text-[10px]">
-                      {edit.section}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-foreground">{edit.details}</p>
-                  <div className="flex items-center gap-2 mt-1 text-[11px] text-muted-foreground">
-                    <Clock className="w-3 h-3" />
-                    <span>{edit.createdAt}</span>
-                    <span>•</span>
-                    <span>Usuario: {edit.userId}</span>
-                  </div>
-                </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
