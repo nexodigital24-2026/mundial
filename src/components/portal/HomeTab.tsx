@@ -1,6 +1,6 @@
 'use client';
 
-import { matches, news, getTeamById, sliderSlides } from '@/lib/mock-data';
+import { matches, news, getTeamById, getTeamFlagUrl, sliderSlides } from '@/lib/mock-data';
 import { useRealtime } from '@/lib/realtime-context';
 import LiveMatch from './LiveMatch';
 import MatchCard from './MatchCard';
@@ -33,13 +33,27 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
 
   const quickLinks = [
-    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark', hoverColor: 'hover:bg-[#1a5c1e]' },
-    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-[#d46a00]' },
-    { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700' },
-    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark' },
+    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/30' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark', hoverColor: 'hover:bg-[#1a5c1e]', ring: 'ring-nd-green-dark/30' },
+    { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange/30' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-[#d46a00]', ring: 'ring-nd-orange-dark/30' },
+    { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700', ring: 'ring-red-600/30' },
+    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/30' },
   ];
+
+  // Map news keyword to team for flag image
+  const newsTeamMap: Record<string, string> = {
+    messi: 'arg', yamal: 'esp', haaland: 'nor', mexico: 'mex', spain: 'esp', ronaldo: 'por', usa: 'usa',
+  };
+
+  // Map news category to gradient colors
+  const newsGradientMap: Record<string, string> = {
+    'En Vivo': 'from-red-500/30 to-nd-orange/20',
+    'Especial': 'from-nd-orange/30 to-yellow-400/20',
+    'Análisis': 'from-nd-green/30 to-nd-green-light/20',
+    'Resultados': 'from-blue-500/30 to-nd-green/20',
+    'Clasificación': 'from-nd-green-dark/30 to-nd-orange/20',
+  };
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -119,25 +133,44 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
           Noticias Destacadas
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {news.map((item) => (
-            <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20">
-              <div className="h-32 bg-gradient-to-br from-nd-green/20 to-nd-orange/10 flex items-center justify-center">
-                <span className="text-4xl group-hover:scale-110 transition-transform">⚽</span>
-              </div>
-              <CardHeader className="pb-2">
-                <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
-                  {item.category}
-                </Badge>
-                <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-green transition-colors">
-                  {item.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground line-clamp-2">{item.summary}</p>
-                <p className="text-[10px] text-muted-foreground mt-2">{item.date}</p>
-              </CardContent>
-            </Card>
-          ))}
+          {news.map((item) => {
+            const teamId = newsTeamMap[item.imageKeyword];
+            const team = teamId ? getTeamById(teamId) : null;
+            const flagUrl = teamId ? getTeamFlagUrl(teamId, 320) : null;
+            const gradient = newsGradientMap[item.category] || 'from-nd-green/20 to-nd-orange/10';
+            return (
+              <Card key={item.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20">
+                <div className={`h-32 bg-gradient-to-br ${gradient} flex items-center justify-center relative`}>
+                  {flagUrl ? (
+                    <div className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={flagUrl}
+                        alt={team?.name || item.imageKeyword}
+                        className="w-20 h-14 object-cover rounded-md shadow-lg group-hover:scale-110 transition-transform duration-300"
+                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                      />
+                      <div className="absolute -bottom-1 -right-1 text-xl">{team?.flag}</div>
+                    </div>
+                  ) : (
+                    <span className="text-4xl group-hover:scale-110 transition-transform">⚽</span>
+                  )}
+                </div>
+                <CardHeader className="pb-2">
+                  <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
+                    {item.category}
+                  </Badge>
+                  <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-green transition-colors">
+                    {item.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{item.summary}</p>
+                  <p className="text-[10px] text-muted-foreground mt-2">{item.date}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       </section>
 
@@ -149,10 +182,10 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
             <button
               key={link.id}
               onClick={() => onNavigate(link.id)}
-              className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-card border-2 border-nd-green/20 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group`}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl bg-card border-2 ${link.ring} hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group`}
             >
-              <div className={`w-12 h-12 rounded-full ${link.color} ${link.hoverColor} flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-md`}>
-                <link.icon className="w-6 h-6 text-white" />
+              <div className={`w-12 h-12 rounded-full ${link.color} ${link.hoverColor} flex items-center justify-center group-hover:scale-110 transition-all duration-300 shadow-md ring-2 ring-white/30`}>
+                <link.icon className="w-6 h-6 text-white drop-shadow-sm" />
               </div>
               <span className="text-sm font-bold text-foreground">{link.label}</span>
             </button>

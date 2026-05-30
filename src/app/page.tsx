@@ -79,7 +79,19 @@ function AppContent() {
   const ActiveComponent = tabComponents[activeTab] ?? HomeTab;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background relative">
+      {/* Background image — Argentina themed */}
+      <div className="fixed inset-0 -z-10 pointer-events-none">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/uploads/backgrounds/argentina-bg.webp"
+          alt="Fondo Argentina"
+          className="w-full h-full object-cover"
+        />
+        {/* Gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/85 via-background/92 to-background/97" />
+      </div>
+
       <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8">
