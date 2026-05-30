@@ -223,16 +223,15 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                 {currentSlide.linkTo && (
                   <Button
                     onClick={() => onNavigate(currentSlide.linkTo)}
-                    className="bg-nd-orange hover:bg-nd-orange-dark text-white font-bold shadow-lg shadow-nd-orange/30"
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold shadow-lg shadow-red-600/30"
                   >
                     {isLive ? 'Ver En Vivo' : isUpcoming ? 'Ver Grupos' : 'Resultados'}
                     <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 )}
                 <Button
-                  variant="outline"
                   onClick={() => onNavigate('grupos')}
-                  className="border-white/50 text-white hover:bg-white/15 hover:border-white/70 font-semibold"
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold shadow-lg shadow-red-600/30"
                 >
                   Ver Grupos
                 </Button>
