@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  nexo-mundial:
+    image: nexo-mundial:latest
+    container_name: nexo-mundial
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - nexo-data:/app/data
+    networks:
+      - easypanel
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.nexo-mundial.rule=Host(`mundial.nexodigital24.com`)
+      - traefik.http.routers.nexo-mundial.entrypoints=https
+      - traefik.http.routers.nexo-mundial.tls=true
+      - traefik.http.routers.nexo-mundial.tls.certresolver=letsencrypt
+
+volumes:
+  nexo-data:
+
+networks:
+  easypanel:
+    external: true

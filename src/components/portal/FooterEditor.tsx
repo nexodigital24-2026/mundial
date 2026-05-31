@@ -118,6 +118,9 @@ export default function FooterEditor() {
     resetToDefault,
     exportFooter,
     importFooter,
+    serverSynced,
+    lastServerSync,
+    syncNow,
   } = useFooterData();
 
   const { toast } = useToast();
@@ -236,7 +239,20 @@ export default function FooterEditor() {
             <p className="text-sm text-muted-foreground">Configura todas las secciones, enlaces y redes sociales</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Sync indicator */}
+          <button
+            onClick={syncNow}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer"
+            style={{
+              backgroundColor: serverSynced ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
+              color: serverSynced ? '#16a34a' : '#dc2626',
+            }}
+            title={serverSynced ? 'Sincronizado con el servidor' : 'No sincronizado — tocar para reintentar'}
+          >
+            <div className={`w-1.5 h-1.5 rounded-full ${serverSynced ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`} />
+            {serverSynced ? 'Sincronizado' : 'Sin sincronizar'}
+          </button>
           <Switch
             checked={footerData.showFooter}
             onCheckedChange={(v) => updateFooterField('showFooter', v)}

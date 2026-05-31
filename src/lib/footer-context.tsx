@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 
 // ==================== FOOTER DATA TYPES ====================
 
@@ -139,6 +139,9 @@ interface FooterContextType {
   resetToDefault: () => void;
   exportFooter: () => string;
   importFooter: (json: string) => boolean;
+  serverSynced: boolean;
+  lastServerSync: number | null;
+  syncNow: () => Promise<void>;
 }
 
 const FooterContext = createContext<FooterContextType | null>(null);
@@ -155,14 +158,18 @@ export function useFooterData() {
 
 export function FooterDataProvider({ children }: { children: React.ReactNode }) {
   const [footerData, setFooterDataState] = useState<FooterData>(DEFAULT_FOOTER_DATA);
+  const [serverSynced, setServerSynced] = useState(false);
+  const [lastServerSync, setLastServerSync] = useState<number | null>(null);
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const initialLoadRef = useRef(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage first (instant), then from server (authoritative)
   useEffect(() => {
+    // 1. Load from localStorage for instant display
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as FooterData;
-        // Basic validation
         if (parsed.brandName && parsed.sections && Array.isArray(parsed.sections)) {
           setFooterDataState(parsed);
         }
@@ -170,6 +177,59 @@ export function FooterDataProvider({ children }: { children: React.ReactNode }) 
     } catch {
       // Ignore parse errors
     }
+
+    // 2. Load from server (source of truth)
+    const loadFromServer = async () => {
+      try {
+        const res = await fetch('/api/footer');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            const serverData = json.data as FooterData;
+            if (serverData.brandName && serverData.sections && Array.isArray(serverData.sections)) {
+              setFooterDataState(serverData);
+              // Update localStorage with server data
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
+              } catch { /* ignore */ }
+              setServerSynced(true);
+              setLastServerSync(json.timestamp || Date.now());
+            }
+          }
+        }
+      } catch {
+        // Network error — keep using localStorage data
+        console.log('Footer: No se pudo conectar al servidor, usando datos locales');
+      }
+      initialLoadRef.current = true;
+    };
+
+    loadFromServer();
+
+    // 3. Poll server every 30 seconds for updates (for other devices' changes)
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/footer');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            const serverData = json.data as FooterData;
+            if (serverData.brandName && serverData.sections) {
+              setFooterDataState(serverData);
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
+              } catch { /* ignore */ }
+              setServerSynced(true);
+              setLastServerSync(json.timestamp || Date.now());
+            }
+          }
+        }
+      } catch {
+        // Ignore polling errors
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Persist to localStorage whenever data changes
@@ -181,88 +241,175 @@ export function FooterDataProvider({ children }: { children: React.ReactNode }) 
     }
   }, [footerData]);
 
+  // Save to server with debounce (only when admin makes changes)
+  const saveToServer = useCallback(async (data: FooterData) => {
+    // Get auth info from localStorage
+    let authEmail = '';
+    let authRole = '';
+    try {
+      const authStored = localStorage.getItem('ndm-auth-user');
+      if (authStored) {
+        const authParsed = JSON.parse(authStored);
+        authEmail = authParsed.email || '';
+        authRole = authParsed.role || '';
+      }
+    } catch { /* ignore */ }
+
+    // Only save to server if user is admin
+    if (authRole !== 'admin') return;
+
+    try {
+      const res = await fetch('/api/footer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, authEmail, authRole }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success) {
+          setServerSynced(true);
+          setLastServerSync(json.timestamp || Date.now());
+        }
+      }
+    } catch {
+      console.log('Footer: No se pudo guardar en el servidor');
+    }
+  }, []);
+
+  // Debounced server save — saves 1 second after last change
+  const debouncedSave = useCallback((data: FooterData) => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
+    saveTimerRef.current = setTimeout(() => {
+      saveToServer(data);
+    }, 1000);
+  }, [saveToServer]);
+
   const setFooterData = useCallback((data: FooterData) => {
     setFooterDataState(data);
-  }, []);
+    debouncedSave(data);
+  }, [debouncedSave]);
 
   const updateFooterField = useCallback(<K extends keyof FooterData>(key: K, value: FooterData[K]) => {
-    setFooterDataState(prev => ({ ...prev, [key]: value }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = { ...prev, [key]: value };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const updateSection = useCallback((sectionId: string, updater: (section: FooterSection) => FooterSection) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      sections: prev.sections.map(s => s.id === sectionId ? updater(s) : s),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        sections: prev.sections.map(s => s.id === sectionId ? updater(s) : s),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const addSection = useCallback((section: FooterSection) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      sections: [...prev.sections, section],
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        sections: [...prev.sections, section],
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const removeSection = useCallback((sectionId: string) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      sections: prev.sections.filter(s => s.id !== sectionId),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        sections: prev.sections.filter(s => s.id !== sectionId),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const addLink = useCallback((sectionId: string, link: FooterLink) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      sections: prev.sections.map(s =>
-        s.id === sectionId ? { ...s, links: [...s.links, link] } : s
-      ),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        sections: prev.sections.map(s =>
+          s.id === sectionId ? { ...s, links: [...s.links, link] } : s
+        ),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const removeLink = useCallback((sectionId: string, linkId: string) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      sections: prev.sections.map(s =>
-        s.id === sectionId ? { ...s, links: s.links.filter(l => l.id !== linkId) } : s
-      ),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        sections: prev.sections.map(s =>
+          s.id === sectionId ? { ...s, links: s.links.filter(l => l.id !== linkId) } : s
+        ),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const updateLink = useCallback((sectionId: string, linkId: string, updater: (link: FooterLink) => FooterLink) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      sections: prev.sections.map(s =>
-        s.id === sectionId
-          ? { ...s, links: s.links.map(l => l.id === linkId ? updater(l) : l) }
-          : s
-      ),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        sections: prev.sections.map(s =>
+          s.id === sectionId
+            ? { ...s, links: s.links.map(l => l.id === linkId ? updater(l) : l) }
+            : s
+        ),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const addSocial = useCallback((social: FooterSocial) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      socials: [...prev.socials, social],
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        socials: [...prev.socials, social],
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const removeSocial = useCallback((socialId: string) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      socials: prev.socials.filter(s => s.id !== socialId),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        socials: prev.socials.filter(s => s.id !== socialId),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const updateSocial = useCallback((socialId: string, updater: (social: FooterSocial) => FooterSocial) => {
-    setFooterDataState(prev => ({
-      ...prev,
-      socials: prev.socials.map(s => s.id === socialId ? updater(s) : s),
-    }));
-  }, []);
+    setFooterDataState(prev => {
+      const updated = {
+        ...prev,
+        socials: prev.socials.map(s => s.id === socialId ? updater(s) : s),
+      };
+      debouncedSave(updated);
+      return updated;
+    });
+  }, [debouncedSave]);
 
   const resetToDefault = useCallback(() => {
     setFooterDataState(DEFAULT_FOOTER_DATA);
-  }, []);
+    debouncedSave(DEFAULT_FOOTER_DATA);
+  }, [debouncedSave]);
 
   const exportFooter = useCallback(() => {
     return JSON.stringify(footerData, null, 2);
@@ -273,11 +420,34 @@ export function FooterDataProvider({ children }: { children: React.ReactNode }) 
       const parsed = JSON.parse(json) as FooterData;
       if (parsed.brandName && parsed.sections && Array.isArray(parsed.sections)) {
         setFooterDataState(parsed);
+        debouncedSave(parsed);
         return true;
       }
       return false;
     } catch {
       return false;
+    }
+  }, [debouncedSave]);
+
+  const syncNow = useCallback(async () => {
+    try {
+      const res = await fetch('/api/footer');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const serverData = json.data as FooterData;
+          if (serverData.brandName && serverData.sections) {
+            setFooterDataState(serverData);
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(serverData));
+            } catch { /* ignore */ }
+            setServerSynced(true);
+            setLastServerSync(json.timestamp || Date.now());
+          }
+        }
+      }
+    } catch {
+      // Ignore
     }
   }, []);
 
@@ -299,6 +469,9 @@ export function FooterDataProvider({ children }: { children: React.ReactNode }) 
         resetToDefault,
         exportFooter,
         importFooter,
+        serverSynced,
+        lastServerSync,
+        syncNow,
       }}
     >
       {children}
