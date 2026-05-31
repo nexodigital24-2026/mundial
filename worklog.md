@@ -132,3 +132,26 @@ Stage Summary:
 - Site live at https://mundial.nexodigital24.com with all changes deployed
 - Docker image: nexo-mundial:latest (414MB)
 - All features working: footer editor, dark mode improvements, Traefik fix
+
+---
+Task ID: sync-footer-theme
+Agent: main
+Task: Implement server-side sync for footer and theme data so changes persist across devices
+
+Work Log:
+- Identified root cause: localStorage is per-device, so edits on PC don't appear on phone
+- Created API routes: /api/footer (GET/POST), /api/theme (GET/POST), /api/sync (GET)
+- API routes use JSON file storage in /app/data/ directory with Docker volume persistence
+- Modified footer-context.tsx to load from server on startup, save changes with debounce
+- Modified theme-context.tsx with same sync pattern
+- Added polling every 30s to detect changes from other devices
+- Added sync status indicators to FooterEditor and ThemeCustomizer
+- Updated docker-compose.prod.yml with nexo-data volume for persistence
+- Deployed to VPS, verified all APIs work correctly
+
+Stage Summary:
+- Footer and theme data now syncs across all devices via server-side storage
+- localStorage used as instant cache, server is source of truth
+- Admin changes auto-save to server with 1-second debounce
+- All devices poll server every 30 seconds for updates
+- VPS deployment: container running, volume mounted, APIs verified
