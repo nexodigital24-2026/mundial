@@ -60,3 +60,75 @@ Stage Summary:
 - content field provides full article body text for each news item
 - All mock data updated with Spanish-language content about World Cup 2026
 - No breaking changes to existing functionality
+
+---
+Task ID: 1
+Agent: main
+Task: Fix 404 error on mundial.nexodigital24.com
+
+Work Log:
+- Diagnosed that Traefik entrypoint was misconfigured (websecure vs https)
+- Fixed docker-compose.prod.yml labels to use correct entrypoint names (http/https)
+- Added HTTP→HTTPS redirect router
+- Restarted container successfully
+
+Stage Summary:
+- 404 error fixed, site returns HTTP 200
+- Traefik routers nexo-mundial@docker and nexo-mundial-http@docker now enabled
+- HTTP correctly redirects to HTTPS (301)
+
+---
+Task ID: 2
+Agent: main
+Task: Make footer fully editable from admin panel
+
+Work Log:
+- Created /src/lib/footer-context.tsx with FooterDataProvider, localStorage persistence
+- Created /src/components/portal/FooterEditor.tsx with 5 tabs: Brand, Sections, Socials, Contact, Tools
+- Updated /src/components/portal/Footer.tsx to use useFooterData() context
+- Added FooterDataProvider to page.tsx provider chain
+- Added "Footer" tab to AdminTab.tsx
+- Added footer navigation event system (footer-navigate custom event)
+
+Stage Summary:
+- Footer is now 100% editable: brand, sections, links, social media, contact info, sponsors, copyright
+- Import/export JSON, reset to default functionality
+- Live preview of footer changes
+- All data persists in localStorage
+- Navigation from footer links works via custom events
+
+---
+Task ID: 3
+Agent: main
+Task: Improve dark mode colors for mobile
+
+Work Log:
+- Updated .dark CSS variables with better color palette (darker backgrounds, better contrast)
+- Added dark mode brand color overrides (--nd-green: #4CAF50, --nd-orange: #FF931E, etc.)
+- Fixed background overlay for dark mode in page.tsx
+- Added dark mode badge/text color overrides for better readability
+- Added dark mode scrollbar styling
+- Added dark mode selection highlight
+
+Stage Summary:
+- Dark mode now uses deeper, more professional dark colors (#0f1419 base)
+- Card backgrounds (#1a2332) provide good contrast
+- Brand colors adapt in dark mode (lighter greens, warmer oranges)
+- Badges and text maintain readability on dark backgrounds
+
+---
+Task ID: 4
+Agent: main
+Task: Deploy all changes to VPS
+
+Work Log:
+- Created Dockerfile and .dockerignore for production deployment
+- Pushed all changes to GitHub (3 commits)
+- Built Docker image on VPS (414MB, Next.js 16.2.6)
+- Restarted container with new image
+- Verified HTTP 200 on https://mundial.nexodigital24.com
+
+Stage Summary:
+- Site live at https://mundial.nexodigital24.com with all changes deployed
+- Docker image: nexo-mundial:latest (414MB)
+- All features working: footer editor, dark mode improvements, Traefik fix
