@@ -5,6 +5,7 @@ import { AuthProvider } from '@/lib/auth-context';
 import { RealtimeProvider, useRealtime } from '@/lib/realtime-context';
 import { PortalDataProvider } from '@/lib/portal-data-context';
 import { ThemeProvider } from '@/lib/theme-context';
+import { FooterDataProvider } from '@/lib/footer-context';
 import Navbar from '@/components/portal/Navbar';
 import Footer from '@/components/portal/Footer';
 import HomeTab from '@/components/portal/HomeTab';
@@ -78,6 +79,20 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Listen for footer navigation events
+  useEffect(() => {
+    const handleFooterNav = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const tab = customEvent.detail as string;
+      if (tab) {
+        setActiveTab(tab);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('footer-navigate', handleFooterNav);
+    return () => window.removeEventListener('footer-navigate', handleFooterNav);
+  }, []);
+
   const ActiveComponent = tabComponents[activeTab] ?? HomeTab;
 
   return (
@@ -91,7 +106,7 @@ function AppContent() {
           className="w-full h-full object-cover"
         />
         {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-nd-green-light/90 via-white/93 to-background/97" />
+        <div className="absolute inset-0 bg-gradient-to-b from-nd-green-light/90 via-white/93 to-background/97 dark:from-[#0f1419]/95 dark:via-[#0f1419]/97 dark:to-background/99" />
         {/* Subtle confetti particles */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
           <div className="absolute top-[10%] left-[15%] w-2 h-2 rounded-full bg-nd-green animate-confetti" style={{ animationDelay: '0s', animationDuration: '4s' }} />
@@ -121,11 +136,13 @@ export default function HomePage() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <RealtimeProvider>
-          <PortalDataProvider>
-            <AppContent />
-          </PortalDataProvider>
-        </RealtimeProvider>
+        <FooterDataProvider>
+          <RealtimeProvider>
+            <PortalDataProvider>
+              <AppContent />
+            </PortalDataProvider>
+          </RealtimeProvider>
+        </FooterDataProvider>
       </ThemeProvider>
     </AuthProvider>
   );

@@ -14,8 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ThemeCustomizer from './ThemeCustomizer';
+import FooterEditor from './FooterEditor';
 import {
-  Shield, Users, Megaphone, FileEdit, Activity, Palette,
+  Shield, Users, Megaphone, FileEdit, Activity, Palette, LayoutTemplate,
   Plus, UserCheck, UserX, Clock, Eye, BarChart3
 } from 'lucide-react';
 
@@ -131,10 +132,14 @@ export default function AdminTab() {
       </h2>
 
       <Tabs defaultValue="theme" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 max-w-md">
+        <TabsList className="grid w-full grid-cols-4 max-w-lg">
           <TabsTrigger value="theme" className="text-xs sm:text-sm flex items-center gap-1">
             <Palette className="w-4 h-4" />
             Colores
+          </TabsTrigger>
+          <TabsTrigger value="footer" className="text-xs sm:text-sm flex items-center gap-1">
+            <LayoutTemplate className="w-4 h-4" />
+            Footer
           </TabsTrigger>
           <TabsTrigger value="users" className="text-xs sm:text-sm">Usuarios</TabsTrigger>
           <TabsTrigger value="activity" className="text-xs sm:text-sm">Actividad</TabsTrigger>
@@ -143,6 +148,11 @@ export default function AdminTab() {
         {/* ========== THEME TAB ========== */}
         <TabsContent value="theme" className="mt-4">
           <ThemeCustomizer />
+        </TabsContent>
+
+        {/* ========== FOOTER TAB ========== */}
+        <TabsContent value="footer" className="mt-4">
+          <FooterEditor />
         </TabsContent>
 
         {/* ========== USERS TAB ========== */}

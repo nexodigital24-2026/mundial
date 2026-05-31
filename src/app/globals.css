@@ -107,37 +107,49 @@
 }
 
 .dark {
-  --background: #1a1a1a;
-  --foreground: #F5F5F5;
-  --card: #2d2d2d;
-  --card-foreground: #F5F5F5;
-  --popover: #2d2d2d;
-  --popover-foreground: #F5F5F5;
-  --primary: #33AA55;
+  --background: #0f1419;
+  --foreground: #E8E8E8;
+  --card: #1a2332;
+  --card-foreground: #E8E8E8;
+  --popover: #1a2332;
+  --popover-foreground: #E8E8E8;
+  --primary: #4CAF50;
   --primary-foreground: #ffffff;
-  --secondary: #3E2723;
-  --secondary-foreground: #F5F5F5;
-  --muted: #333333;
-  --muted-foreground: #BDBDBD;
+  --secondary: #2d1f0e;
+  --secondary-foreground: #E8E8E8;
+  --muted: #1e2a3a;
+  --muted-foreground: #9BAAB8;
   --accent: #FF931E;
-  --accent-foreground: #1a1a1a;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
-  --border: #424242;
-  --input: #424242;
-  --ring: #33AA55;
-  --chart-1: #33AA55;
+  --border: #2a3a4a;
+  --input: #2a3a4a;
+  --ring: #4CAF50;
+  --chart-1: #4CAF50;
   --chart-2: #FF931E;
   --chart-3: #FF6800;
-  --chart-4: #026602;
+  --chart-4: #2E7D32;
   --chart-5: #ef4444;
-  --sidebar: #2d2d2d;
-  --sidebar-foreground: #F5F5F5;
-  --sidebar-primary: #33AA55;
+  --sidebar: #1a2332;
+  --sidebar-foreground: #E8E8E8;
+  --sidebar-primary: #4CAF50;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #3E2723;
-  --sidebar-accent-foreground: #F5F5F5;
-  --sidebar-border: #424242;
-  --sidebar-ring: #33AA55;
+  --sidebar-accent: #2d1f0e;
+  --sidebar-accent-foreground: #E8E8E8;
+  --sidebar-border: #2a3a4a;
+  --sidebar-ring: #4CAF50;
+  /* Dark mode brand overrides — lighter greens, warmer oranges */
+  --nd-green: #4CAF50;
+  --nd-green-dark: #2E7D32;
+  --nd-green-light: #1B3A1D;
+  --nd-orange: #FF931E;
+  --nd-orange-dark: #CC5300;
+  --nd-orange-light: #2d1f0e;
+  --nd-orange-accent: #FFB74D;
+  --nd-black: #E8E8E8;
+  --nd-yellow: #FFD54F;
+  --nd-yellow-dark: #F9A825;
+  --nd-yellow-light: #2d2606;
 }
 
 @layer base {
@@ -162,6 +174,12 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #9E9E9E;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4a5568;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5a6578;
 }
 
 /* Pulsing live animation */
@@ -215,4 +233,75 @@
 .animate-gradient {
   animation: gradient-shift 6s ease infinite;
   background-size: 200% 200%;
+}
+
+/* ==================== Dark Mode Specific Overrides ==================== */
+
+/* Dark mode background overlay — darker, less bright */
+.dark .bg-gradient-to-b.from-nd-green-light\/90.via-white\/93 {
+  --tw-gradient-from: rgba(15, 20, 25, 0.95) var(--tw-gradient-from-position);
+  --tw-gradient-via: rgba(15, 20, 25, 0.97) var(--tw-gradient-via-position);
+  --tw-gradient-to: rgba(15, 20, 25, 0.99) var(--tw-gradient-to-position);
+}
+
+/* Dark mode card improvements */
+.dark .bg-white {
+  background-color: var(--card);
+}
+
+/* Dark mode text improvements */
+.dark .text-nd-black {
+  color: #E8E8E8;
+}
+
+/* Dark mode green/orange light backgrounds — make them dark instead */
+.dark .bg-nd-green-light {
+  background-color: var(--nd-green-light);
+}
+.dark .bg-nd-orange-light {
+  background-color: var(--nd-orange-light);
+}
+.dark .bg-nd-yellow-light {
+  background-color: var(--nd-yellow-light);
+}
+
+/* Dark mode badge colors */
+.dark .bg-green-50 { background-color: rgba(76, 175, 80, 0.15); }
+.dark .bg-green-100 { background-color: rgba(76, 175, 80, 0.2); }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.15); }
+.dark .bg-red-100 { background-color: rgba(239, 68, 68, 0.2); }
+.dark .bg-amber-50 { background-color: rgba(255, 179, 0, 0.15); }
+.dark .bg-orange-50 { background-color: rgba(255, 147, 30, 0.15); }
+.dark .bg-purple-50 { background-color: rgba(156, 39, 176, 0.15); }
+.dark .bg-blue-50 { background-color: rgba(33, 150, 243, 0.15); }
+.dark .bg-gray-50 { background-color: rgba(158, 158, 158, 0.1); }
+.dark .bg-gray-100 { background-color: rgba(158, 158, 158, 0.15); }
+
+/* Dark mode badge text */
+.dark .text-green-700 { color: #81C784; }
+.dark .text-green-800 { color: #A5D6A7; }
+.dark .text-green-600 { color: #66BB6A; }
+.dark .text-red-700 { color: #EF9A9A; }
+.dark .text-red-800 { color: #E57373; }
+.dark .text-amber-600 { color: #FFB74D; }
+.dark .text-amber-800 { color: #FFCC80; }
+.dark .text-orange-800 { color: #FFCC80; }
+.dark .text-orange-600 { color: #FFB74D; }
+.dark .text-purple-700 { color: #CE93D8; }
+.dark .text-purple-800 { color: #BA68C8; }
+.dark .text-blue-700 { color: #90CAF9; }
+.dark .text-blue-800 { color: #64B5F6; }
+.dark .text-gray-500 { color: #9E9E9E; }
+.dark .text-gray-600 { color: #BDBDBD; }
+.dark .text-gray-700 { color: #BDBDBD; }
+.dark .text-gray-800 { color: #E0E0E0; }
+
+/* Dark mode explicit background fixes */
+.dark .bg-nd-gray { background-color: #1a2332; }
+.dark .bg-nd-gray-dark { background-color: #0f1419; }
+
+/* Dark mode selection highlight */
+.dark ::selection {
+  background-color: rgba(76, 175, 80, 0.3);
+  color: #ffffff;
 }
