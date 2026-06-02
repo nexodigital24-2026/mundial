@@ -1,0 +1,33 @@
+# ============================================
+# Nexo Digital Mundial - Docker Compose
+# Deploy: docker compose up -d
+# ============================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nexo-mundial
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=file:/app/data/mundial.db
+      - NEXT_PUBLIC_SITE_URL=https://mundial.nexodigital24.com
+      - API_SPORTS_KEY=${API_SPORTS_KEY}
+      - LIVESCORE_API_KEY=${LIVESCORE_API_KEY}
+      - LIVESCORE_API_SECRET=${LIVESCORE_API_SECRET}
+    volumes:
+      - nexo-data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  nexo-data:
+    driver: local

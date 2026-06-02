@@ -13,16 +13,16 @@ export default function ScorerRow({ scorer, rank }: ScorerRowProps) {
   const team = getTeamById(scorer.teamId);
 
   const getMedalColor = () => {
-    if (rank === 1) return 'bg-gold text-yellow-900';
+    if (rank === 1) return 'bg-nd-orange text-white';
     if (rank === 2) return 'bg-silver text-gray-700';
     if (rank === 3) return 'bg-bronze text-amber-900';
     return 'bg-muted text-muted-foreground';
   };
 
   const getRowStyle = () => {
-    if (rank === 1) return 'bg-yellow-50 border-l-4 border-l-gold';
-    if (rank === 2) return 'bg-gray-50 border-l-4 border-l-silver';
-    if (rank === 3) return 'bg-orange-50 border-l-4 border-l-bronze';
+    if (rank === 1) return 'bg-nd-orange-light dark:bg-nd-orange/10 border-l-4 border-l-nd-orange';
+    if (rank === 2) return 'bg-gray-50 dark:bg-white/5 border-l-4 border-l-silver';
+    if (rank === 3) return 'bg-amber-50 dark:bg-bronze/10 border-l-4 border-l-bronze';
     return 'border-l-4 border-l-transparent';
   };
 
@@ -69,7 +69,7 @@ export default function ScorerRow({ scorer, rank }: ScorerRowProps) {
       {/* Stats */}
       <div className="flex items-center gap-3 sm:gap-5 flex-shrink-0 text-center">
         <div>
-          <p className="text-lg font-bold text-primary">{scorer.goals}</p>
+          <p className="text-lg font-bold text-nd-orange">{scorer.goals}</p>
           <p className="text-[10px] text-muted-foreground uppercase">Goles</p>
         </div>
         <div>

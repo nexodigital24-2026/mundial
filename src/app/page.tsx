@@ -5,6 +5,7 @@ import { AuthProvider } from '@/lib/auth-context';
 import { RealtimeProvider, useRealtime } from '@/lib/realtime-context';
 import { PortalDataProvider } from '@/lib/portal-data-context';
 import { ThemeProvider } from '@/lib/theme-context';
+import { FooterDataProvider } from '@/lib/footer-context';
 import Navbar from '@/components/portal/Navbar';
 import Footer from '@/components/portal/Footer';
 import HomeTab from '@/components/portal/HomeTab';
@@ -50,14 +51,14 @@ function ConnectionIndicator({ connected }: { connected: boolean }) {
   return (
     <div className={`fixed bottom-20 right-4 z-40 flex items-center gap-2 px-3 py-2 rounded-full shadow-lg text-xs font-semibold transition-all duration-500 ${
       connected
-        ? 'bg-nd-green text-white'
+        ? 'bg-[#1A1A1A] text-white'
         : 'bg-red-500 text-white animate-pulse'
     }`}>
       {connected ? (
         <>
           <Wifi className="w-3.5 h-3.5" />
           <span>En vivo</span>
-          <span className="w-1.5 h-1.5 bg-green-300 rounded-full animate-pulse-live" />
+          <span className="w-1.5 h-1.5 bg-nd-orange rounded-full animate-pulse-live" />
         </>
       ) : (
         <>
@@ -78,28 +79,36 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Listen for footer navigation events
+  useEffect(() => {
+    const handleFooterNav = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const tab = customEvent.detail as string;
+      if (tab) {
+        setActiveTab(tab);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+    window.addEventListener('footer-navigate', handleFooterNav);
+    return () => window.removeEventListener('footer-navigate', handleFooterNav);
+  }, []);
+
   const ActiveComponent = tabComponents[activeTab] ?? HomeTab;
 
   return (
     <div className="min-h-screen flex flex-col bg-background relative">
-      {/* Background image — Argentina themed */}
+      {/* Background — clean gradient, no image */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/uploads/backgrounds/argentina-bg.webp"
-          alt="Fondo Argentina"
-          className="w-full h-full object-cover"
-        />
-        {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-nd-green-light/90 via-white/93 to-background/97" />
-        {/* Subtle confetti particles */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-30">
-          <div className="absolute top-[10%] left-[15%] w-2 h-2 rounded-full bg-nd-green animate-confetti" style={{ animationDelay: '0s', animationDuration: '4s' }} />
-          <div className="absolute top-[5%] left-[45%] w-1.5 h-1.5 rounded-full bg-nd-yellow animate-confetti" style={{ animationDelay: '1s', animationDuration: '5s' }} />
-          <div className="absolute top-[8%] left-[75%] w-2.5 h-2.5 rounded-sm bg-white animate-confetti" style={{ animationDelay: '2s', animationDuration: '3.5s' }} />
-          <div className="absolute top-[3%] left-[30%] w-1 h-1 rounded-full bg-nd-orange animate-confetti" style={{ animationDelay: '0.5s', animationDuration: '4.5s' }} />
-          <div className="absolute top-[12%] left-[60%] w-2 h-2 rounded-full bg-nd-green-dark animate-confetti" style={{ animationDelay: '1.5s', animationDuration: '3.8s' }} />
-          <div className="absolute top-[6%] left-[90%] w-1.5 h-1.5 rounded-sm bg-nd-yellow animate-confetti" style={{ animationDelay: '2.5s', animationDuration: '4.2s' }} />
+        {/* Subtle orange/gray gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-nd-orange-light/40 via-white/50 to-background/70 dark:from-[#0D0D0D]/95 dark:via-[#0D0D0D]/97 dark:to-background/99" />
+        {/* Subtle geometric accent dots — orange themed */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+          <div className="absolute top-[10%] left-[15%] w-2 h-2 rounded-full bg-nd-orange" style={{ animationDelay: '0s', animationDuration: '4s' }} />
+          <div className="absolute top-[5%] left-[45%] w-1.5 h-1.5 rounded-full bg-nd-orange-accent" style={{ animationDelay: '1s', animationDuration: '5s' }} />
+          <div className="absolute top-[8%] left-[75%] w-2.5 h-2.5 rounded-sm bg-nd-orange/60" style={{ animationDelay: '2s', animationDuration: '3.5s' }} />
+          <div className="absolute top-[3%] left-[30%] w-1 h-1 rounded-full bg-[#1A1A1A] dark:bg-white/30" style={{ animationDelay: '0.5s', animationDuration: '4.5s' }} />
+          <div className="absolute top-[12%] left-[60%] w-2 h-2 rounded-full bg-nd-orange-dark" style={{ animationDelay: '1.5s', animationDuration: '3.8s' }} />
+          <div className="absolute top-[6%] left-[90%] w-1.5 h-1.5 rounded-sm bg-nd-orange-accent/60" style={{ animationDelay: '2.5s', animationDuration: '4.2s' }} />
         </div>
       </div>
 
@@ -121,11 +130,13 @@ export default function HomePage() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <RealtimeProvider>
-          <PortalDataProvider>
-            <AppContent />
-          </PortalDataProvider>
-        </RealtimeProvider>
+        <FooterDataProvider>
+          <RealtimeProvider>
+            <PortalDataProvider>
+              <AppContent />
+            </PortalDataProvider>
+          </RealtimeProvider>
+        </FooterDataProvider>
       </ThemeProvider>
     </AuthProvider>
   );

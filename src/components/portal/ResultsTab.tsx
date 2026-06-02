@@ -22,9 +22,9 @@ export default function ResultsTab() {
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-foreground">Resultados de Partidos</h2>
+        <h2 className="text-xl font-bold text-foreground border-b-2 border-nd-orange pb-2">Resultados de Partidos</h2>
         {connected && (
-          <Badge className="bg-green-50 text-green-700 border-green-200 text-xs flex items-center gap-1">
+          <Badge className="bg-nd-orange-light text-nd-orange-dark border-nd-orange/20 text-xs flex items-center gap-1">
             <Zap className="w-3 h-3" />
             Tiempo Real
           </Badge>
@@ -33,10 +33,10 @@ export default function ResultsTab() {
 
       {/* Live matches in results */}
       {liveMatches.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+        <div className="bg-nd-orange/5 border border-nd-orange/20 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse-live" />
-            <h3 className="text-sm font-bold text-red-700 uppercase tracking-wider">En Vivo Ahora</h3>
+            <span className="w-2.5 h-2.5 bg-nd-orange rounded-full animate-pulse-live" />
+            <h3 className="text-sm font-bold text-nd-orange uppercase tracking-wider">En Vivo Ahora</h3>
           </div>
           <Accordion type="multiple" className="space-y-2">
             {liveMatches.map((match) => {
@@ -46,9 +46,9 @@ export default function ResultsTab() {
                 <AccordionItem
                   key={match.id}
                   value={match.id}
-                  className="border rounded-lg overflow-hidden bg-white shadow-sm"
+                  className="border rounded-lg overflow-hidden bg-white dark:bg-[#1A1A1A] shadow-sm"
                 >
-                  <AccordionTrigger className="px-4 py-2 hover:no-underline hover:bg-red-50/50 transition-colors">
+                  <AccordionTrigger className="px-4 py-2 hover:no-underline hover:bg-nd-orange/5 transition-colors">
                     <div className="flex items-center justify-between w-full gap-3">
                       <div className="flex items-center gap-2 flex-1 justify-end">
                         <span className="font-semibold text-sm text-foreground">{home?.name}</span>
@@ -70,9 +70,9 @@ export default function ResultsTab() {
                         })()}
                       </div>
                       <div className="flex items-center gap-2 px-3">
-                        <span className="text-lg font-bold text-red-600">{match.homeScore}</span>
+                        <span className="text-lg font-bold text-nd-orange">{match.homeScore}</span>
                         <span className="text-muted-foreground">-</span>
-                        <span className="text-lg font-bold text-red-600">{match.awayScore}</span>
+                        <span className="text-lg font-bold text-nd-orange">{match.awayScore}</span>
                       </div>
                       <div className="flex items-center gap-2 flex-1">
                         {(() => {
@@ -93,7 +93,7 @@ export default function ResultsTab() {
                         })()}
                         <span className="font-semibold text-sm text-foreground">{away?.name}</span>
                       </div>
-                      <Badge className="bg-red-100 text-red-700 text-xs ml-2 font-mono">
+                      <Badge className="bg-nd-orange/10 text-nd-orange text-xs ml-2 font-mono">
                         {match.minute}&apos;
                       </Badge>
                     </div>
@@ -182,14 +182,12 @@ export default function ResultsTab() {
 function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMatches'][0] }) {
   return (
     <div className="space-y-4 pt-2">
-      {/* Synthesis */}
       {match.synthesis && (
         <div className="bg-muted/50 rounded-lg p-3">
           <p className="text-sm text-foreground">{match.synthesis}</p>
         </div>
       )}
 
-      {/* Standout player */}
       {match.standoutPlayer && (
         <div className="flex items-center gap-2">
           <Star className="w-4 h-4 text-gold fill-gold" />
@@ -199,12 +197,10 @@ function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMat
         </div>
       )}
 
-      {/* Stats */}
       {match.possession && (
         <div className="space-y-3">
           <h4 className="text-sm font-semibold text-foreground">Estadísticas</h4>
 
-          {/* Possession */}
           <StatBar
             label="Posesión"
             homeValue={match.possession.home}
@@ -212,7 +208,6 @@ function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMat
             suffix="%"
           />
 
-          {/* Shots */}
           {match.shots && (
             <StatBar
               label="Tiros"
@@ -221,7 +216,6 @@ function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMat
             />
           )}
 
-          {/* Corners */}
           {match.corners && (
             <StatBar
               label="Córners"
@@ -230,7 +224,6 @@ function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMat
             />
           )}
 
-          {/* Fouls */}
           {match.fouls && (
             <StatBar
               label="Faltas"
@@ -241,7 +234,6 @@ function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMat
         </div>
       )}
 
-      {/* Scorers */}
       {match.scorers && match.scorers.length > 0 && (
         <div>
           <h4 className="text-sm font-semibold text-foreground mb-2">Goles</h4>
@@ -255,7 +247,6 @@ function MatchDetails({ match }: { match: ReturnType<typeof useRealtime>['allMat
         </div>
       )}
 
-      {/* Match info */}
       <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
         <span>📅 {match.date}</span>
         <span>🏟️ {match.venue}</span>
@@ -281,13 +272,13 @@ function StatBar({
   return (
     <div>
       <div className="flex items-center justify-between text-xs mb-1">
-        <span className="font-semibold text-primary">{homeValue}{suffix}</span>
+        <span className="font-semibold text-nd-orange">{homeValue}{suffix}</span>
         <span className="text-muted-foreground">{label}</span>
-        <span className="font-semibold text-primary">{awayValue}{suffix}</span>
+        <span className="font-semibold text-nd-orange">{awayValue}{suffix}</span>
       </div>
       <div className="flex gap-1">
         <div className="flex-1">
-          <Progress value={homePercent} className="h-2 [&>div]:bg-primary" />
+          <Progress value={homePercent} className="h-2 [&>div]:bg-nd-orange" />
         </div>
         <div className="flex-1">
           <Progress value={100 - homePercent} className="h-2 [&>div]:bg-muted-foreground" />

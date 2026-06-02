@@ -1,0 +1,11 @@
+node_modules
+.next
+.git
+.gitignore
+upload
+download
+skills
+examples
+agent-ctx
+*.md
+db

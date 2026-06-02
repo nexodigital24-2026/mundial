@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 
 // ==================== THEME TYPE DEFINITIONS ====================
 
@@ -26,14 +26,14 @@ export interface ThemePreset {
 }
 
 export const DEFAULT_COLORS: ThemeColors = {
-  ndGreen: '#026602',
-  ndGreenDark: '#014C01',
-  ndGreenLight: '#E8F5E9',
+  ndGreen: '#FF6800',
+  ndGreenDark: '#CC5300',
+  ndGreenLight: '#FFF3E0',
   ndOrange: '#FF6800',
   ndOrangeDark: '#CC5300',
   ndOrangeLight: '#FFF3E0',
   ndOrangeAccent: '#FF931E',
-  ndBlack: '#1a1a1a',
+  ndBlack: '#1A1A1A',
   ndYellow: '#FFD700',
   ndYellowDark: '#CC5300',
   ndYellowLight: '#FFF8E1',
@@ -41,9 +41,9 @@ export const DEFAULT_COLORS: ThemeColors = {
 
 export const THEME_PRESETS: ThemePreset[] = [
   {
-    id: 'default-green',
+    id: 'default-orange',
     name: 'Nexo Digital Original',
-    description: 'Esquema clásico verde y naranja del portal Nexo Digital Mundial',
+    description: 'Esquema clásico naranja y negro del portal Nexo Digital Mundial',
     colors: { ...DEFAULT_COLORS },
   },
   {
@@ -67,15 +67,15 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'midnight',
     name: 'Medianoche',
-    description: 'Azul oscuro profundo con acentos rojo intenso — elegante y dramático',
+    description: 'Azul oscuro profundo con acentos naranja intenso — elegante y dramático',
     colors: {
       ndGreen: '#1A237E',
       ndGreenDark: '#0D1254',
       ndGreenLight: '#E8EAF6',
-      ndOrange: '#D32F2F',
-      ndOrangeDark: '#A42525',
-      ndOrangeLight: '#FFEBEE',
-      ndOrangeAccent: '#EF5350',
+      ndOrange: '#FF6800',
+      ndOrangeDark: '#CC5300',
+      ndOrangeLight: '#FFF3E0',
+      ndOrangeAccent: '#FF931E',
       ndBlack: '#0A0A1A',
       ndYellow: '#FFC107',
       ndYellowDark: '#FF8F00',
@@ -85,11 +85,11 @@ export const THEME_PRESETS: ThemePreset[] = [
   {
     id: 'tropical',
     name: 'Tropical',
-    description: 'Verde esmeralda vibrante con amarillo tropical — energía y pasión',
+    description: 'Naranja vibrante con amarillo tropical — energía y pasión',
     colors: {
-      ndGreen: '#00897B',
-      ndGreenDark: '#00695C',
-      ndGreenLight: '#E0F2F1',
+      ndGreen: '#FF6800',
+      ndGreenDark: '#CC5300',
+      ndGreenLight: '#FFF3E0',
       ndOrange: '#FFB300',
       ndOrangeDark: '#FF8F00',
       ndOrangeLight: '#FFF8E1',
@@ -137,21 +137,21 @@ export const THEME_PRESETS: ThemePreset[] = [
     },
   },
   {
-    id: 'forest',
-    name: 'Bosque Nativo',
-    description: 'Verde bosque con terracota — naturaleza y autenticidad',
+    id: 'ember',
+    name: 'Brasa Intensa',
+    description: 'Naranja profundo con rojo fuego — pasión y fuerza',
     colors: {
-      ndGreen: '#2E7D32',
-      ndGreenDark: '#1B5E20',
-      ndGreenLight: '#E8F5E9',
-      ndOrange: '#BF360C',
-      ndOrangeDark: '#8D2B0B',
-      ndOrangeLight: '#FBE9E7',
-      ndOrangeAccent: '#E65100',
+      ndGreen: '#E65100',
+      ndGreenDark: '#BF360C',
+      ndGreenLight: '#FBE9E7',
+      ndOrange: '#FF6D00',
+      ndOrangeDark: '#CC5300',
+      ndOrangeLight: '#FFF3E0',
+      ndOrangeAccent: '#FF9100',
       ndBlack: '#1A1A1A',
-      ndYellow: '#F9A825',
-      ndYellowDark: '#F57F17',
-      ndYellowLight: '#FFF9C4',
+      ndYellow: '#FFAB00',
+      ndYellowDark: '#FF6D00',
+      ndYellowLight: '#FFF8E1',
     },
   },
 ];
@@ -168,6 +168,9 @@ interface ThemeContextType {
   exportTheme: () => string;
   importTheme: (json: string) => boolean;
   isCustom: boolean;
+  serverSynced: boolean;
+  lastServerSync: number | null;
+  syncNow: () => Promise<void>;
 }
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
@@ -175,25 +178,37 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 const STORAGE_KEY = 'nexo-digital-theme-colors';
 
 function generateDerivedColors(base: string): { dark: string; light: string } {
-  // Simple color derivation: darken for dark, lighten for light
   const hex = base.replace('#', '');
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
 
-  // Dark: reduce by ~30%
   const darkR = Math.max(0, Math.round(r * 0.7));
   const darkG = Math.max(0, Math.round(g * 0.7));
   const darkB = Math.max(0, Math.round(b * 0.7));
   const dark = `#${darkR.toString(16).padStart(2, '0')}${darkG.toString(16).padStart(2, '0')}${darkB.toString(16).padStart(2, '0')}`;
 
-  // Light: mix with white at 90%
   const lightR = Math.round(r + (255 - r) * 0.9);
   const lightG = Math.round(g + (255 - g) * 0.9);
   const lightB = Math.round(b + (255 - b) * 0.9);
   const light = `#${lightR.toString(16).padStart(2, '0')}${lightG.toString(16).padStart(2, '0')}${lightB.toString(16).padStart(2, '0')}`;
 
   return { dark, light };
+}
+
+function checkPresetMatch(colors: ThemeColors): { presetId: string | null; isCustom: boolean } {
+  const keys: (keyof ThemeColors)[] = [
+    'ndGreen', 'ndGreenDark', 'ndGreenLight',
+    'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
+    'ndBlack', 'ndYellow', 'ndYellowDark', 'ndYellowLight',
+  ];
+  const matchIdx = THEME_PRESETS.findIndex(p =>
+    keys.every(k => p.colors[k].toLowerCase() === colors[k].toLowerCase())
+  );
+  if (matchIdx >= 0) {
+    return { presetId: THEME_PRESETS[matchIdx].id, isCustom: false };
+  }
+  return { presetId: null, isCustom: true };
 }
 
 export function useTheme() {
@@ -206,16 +221,19 @@ export function useTheme() {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [colors, setColorsState] = useState<ThemeColors>(DEFAULT_COLORS);
-  const [activePresetId, setActivePresetId] = useState<string | null>('default-green');
+  const [activePresetId, setActivePresetId] = useState<string | null>('default-orange');
   const [isCustom, setIsCustom] = useState(false);
+  const [serverSynced, setServerSynced] = useState(false);
+  const [lastServerSync, setLastServerSync] = useState<number | null>(null);
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load from localStorage on mount
+  // Load from localStorage first (instant), then from server (authoritative)
   useEffect(() => {
+    // 1. Load from localStorage for instant display
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as ThemeColors;
-        // Validate it has the expected keys
         const keys: (keyof ThemeColors)[] = [
           'ndGreen', 'ndGreenDark', 'ndGreenLight',
           'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
@@ -224,29 +242,89 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const isValid = keys.every(k => typeof parsed[k] === 'string' && parsed[k].startsWith('#'));
         if (isValid) {
           setColorsState(parsed);
-          // Check if matches a preset
-          const matchIdx = THEME_PRESETS.findIndex(p =>
-            keys.every(k => p.colors[k].toLowerCase() === parsed[k].toLowerCase())
-          );
-          if (matchIdx >= 0) {
-            setActivePresetId(THEME_PRESETS[matchIdx].id);
-            setIsCustom(false);
-          } else {
-            setActivePresetId(null);
-            setIsCustom(true);
-          }
+          const match = checkPresetMatch(parsed);
+          setActivePresetId(match.presetId);
+          setIsCustom(match.isCustom);
         }
       }
     } catch {
       // Ignore parse errors
     }
+
+    // 2. Load from server (source of truth)
+    const loadFromServer = async () => {
+      try {
+        const res = await fetch('/api/theme');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            const serverColors = json.data as ThemeColors;
+            const keys: (keyof ThemeColors)[] = [
+              'ndGreen', 'ndGreenDark', 'ndGreenLight',
+              'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
+              'ndBlack', 'ndYellow', 'ndYellowDark', 'ndYellowLight',
+            ];
+            const isValid = keys.every(k => typeof serverColors[k] === 'string' && serverColors[k].startsWith('#'));
+            if (isValid) {
+              setColorsState(serverColors);
+              const match = checkPresetMatch(serverColors);
+              setActivePresetId(match.presetId);
+              setIsCustom(match.isCustom);
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(serverColors));
+              } catch { /* ignore */ }
+              setServerSynced(true);
+              setLastServerSync(json.timestamp || Date.now());
+            }
+          }
+        }
+      } catch {
+        console.log('Theme: No se pudo conectar al servidor, usando datos locales');
+      }
+    };
+
+    loadFromServer();
+
+    // 3. Poll server every 30 seconds for updates
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/theme');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data) {
+            const serverColors = json.data as ThemeColors;
+            const keys: (keyof ThemeColors)[] = [
+              'ndGreen', 'ndGreenDark', 'ndGreenLight',
+              'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
+              'ndBlack', 'ndYellow', 'ndYellowDark', 'ndYellowLight',
+            ];
+            const isValid = keys.every(k => typeof serverColors[k] === 'string' && serverColors[k].startsWith('#'));
+            if (isValid) {
+              setColorsState(serverColors);
+              const match = checkPresetMatch(serverColors);
+              setActivePresetId(match.presetId);
+              setIsCustom(match.isCustom);
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(serverColors));
+              } catch { /* ignore */ }
+              setServerSynced(true);
+              setLastServerSync(json.timestamp || Date.now());
+            }
+          }
+        }
+      } catch {
+        // Ignore polling errors
+      }
+    }, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Apply CSS variables whenever colors change
   useEffect(() => {
     const root = document.documentElement;
 
-    // Brand color variables
+    // Map ndGreen vars to primary (backward compat — ndGreen CSS vars now represent primary)
     root.style.setProperty('--nd-green', colors.ndGreen);
     root.style.setProperty('--nd-green-dark', colors.ndGreenDark);
     root.style.setProperty('--nd-green-light', colors.ndGreenLight);
@@ -259,7 +337,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     root.style.setProperty('--nd-yellow-dark', colors.ndYellowDark);
     root.style.setProperty('--nd-yellow-light', colors.ndYellowLight);
 
-    // Semantic color variables derived from brand
     root.style.setProperty('--primary', colors.ndGreen);
     root.style.setProperty('--primary-foreground', '#ffffff');
     root.style.setProperty('--accent', colors.ndOrange);
@@ -280,31 +357,60 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [colors]);
 
-  const setColors = useCallback((newColors: ThemeColors) => {
-    setColorsState(newColors);
-    // Check if matches a preset
-    const keys: (keyof ThemeColors)[] = [
-      'ndGreen', 'ndGreenDark', 'ndGreenLight',
-      'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
-      'ndBlack', 'ndYellow', 'ndYellowDark', 'ndYellowLight',
-    ];
-    const matchIdx = THEME_PRESETS.findIndex(p =>
-      keys.every(k => p.colors[k].toLowerCase() === newColors[k].toLowerCase())
-    );
-    if (matchIdx >= 0) {
-      setActivePresetId(THEME_PRESETS[matchIdx].id);
-      setIsCustom(false);
-    } else {
-      setActivePresetId(null);
-      setIsCustom(true);
+  // Save to server with debounce
+  const saveToServer = useCallback(async (data: ThemeColors) => {
+    let authEmail = '';
+    let authRole = '';
+    try {
+      const authStored = localStorage.getItem('ndm-auth-user');
+      if (authStored) {
+        const authParsed = JSON.parse(authStored);
+        authEmail = authParsed.email || '';
+        authRole = authParsed.role || '';
+      }
+    } catch { /* ignore */ }
+
+    if (authRole !== 'admin') return;
+
+    try {
+      const res = await fetch('/api/theme', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data, authEmail, authRole }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success) {
+          setServerSynced(true);
+          setLastServerSync(json.timestamp || Date.now());
+        }
+      }
+    } catch {
+      console.log('Theme: No se pudo guardar en el servidor');
     }
   }, []);
+
+  const debouncedSave = useCallback((data: ThemeColors) => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+    }
+    saveTimerRef.current = setTimeout(() => {
+      saveToServer(data);
+    }, 1000);
+  }, [saveToServer]);
+
+  const setColors = useCallback((newColors: ThemeColors) => {
+    setColorsState(newColors);
+    const match = checkPresetMatch(newColors);
+    setActivePresetId(match.presetId);
+    setIsCustom(match.isCustom);
+    debouncedSave(newColors);
+  }, [debouncedSave]);
 
   const updateColor = useCallback((key: keyof ThemeColors, value: string) => {
     setColorsState(prev => {
       const updated = { ...prev, [key]: value };
 
-      // Auto-derive dark/light variants for primary colors
       if (key === 'ndGreen') {
         const derived = generateDerivedColors(value);
         updated.ndGreenDark = derived.dark;
@@ -321,7 +427,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         updated.ndYellowLight = derived.light;
       }
 
-      // Auto-derive orange accent (lighter orange)
       if (key === 'ndOrange' || key === 'ndOrangeDark') {
         const hex = updated.ndOrange.replace('#', '');
         const r = Math.min(255, parseInt(hex.substring(0, 2), 16) + 40);
@@ -330,26 +435,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         updated.ndOrangeAccent = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
       }
 
-      // Check if matches a preset
-      const allKeys: (keyof ThemeColors)[] = [
-        'ndGreen', 'ndGreenDark', 'ndGreenLight',
-        'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
-        'ndBlack', 'ndYellow', 'ndYellowDark', 'ndYellowLight',
-      ];
-      const matchIdx = THEME_PRESETS.findIndex(p =>
-        allKeys.every(k => p.colors[k].toLowerCase() === updated[k].toLowerCase())
-      );
-      if (matchIdx >= 0) {
-        setActivePresetId(THEME_PRESETS[matchIdx].id);
-        setIsCustom(false);
-      } else {
-        setActivePresetId(null);
-        setIsCustom(true);
-      }
+      const match = checkPresetMatch(updated);
+      setActivePresetId(match.presetId);
+      setIsCustom(match.isCustom);
 
+      debouncedSave(updated);
       return updated;
     });
-  }, []);
+  }, [debouncedSave]);
 
   const applyPreset = useCallback((presetId: string) => {
     const preset = THEME_PRESETS.find(p => p.id === presetId);
@@ -357,14 +450,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setColorsState(preset.colors);
       setActivePresetId(presetId);
       setIsCustom(false);
+      debouncedSave(preset.colors);
     }
-  }, []);
+  }, [debouncedSave]);
 
   const resetToDefault = useCallback(() => {
     setColorsState(DEFAULT_COLORS);
-    setActivePresetId('default-green');
+    setActivePresetId('default-orange');
     setIsCustom(false);
-  }, []);
+    debouncedSave(DEFAULT_COLORS);
+  }, [debouncedSave]);
 
   const exportTheme = useCallback(() => {
     return JSON.stringify(colors, null, 2);
@@ -387,6 +482,37 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, [setColors]);
 
+  const syncNow = useCallback(async () => {
+    try {
+      const res = await fetch('/api/theme');
+      if (res.ok) {
+        const json = await res.json();
+        if (json.success && json.data) {
+          const serverColors = json.data as ThemeColors;
+          const keys: (keyof ThemeColors)[] = [
+            'ndGreen', 'ndGreenDark', 'ndGreenLight',
+            'ndOrange', 'ndOrangeDark', 'ndOrangeLight', 'ndOrangeAccent',
+            'ndBlack', 'ndYellow', 'ndYellowDark', 'ndYellowLight',
+          ];
+          const isValid = keys.every(k => typeof serverColors[k] === 'string' && serverColors[k].startsWith('#'));
+          if (isValid) {
+            setColorsState(serverColors);
+            const match = checkPresetMatch(serverColors);
+            setActivePresetId(match.presetId);
+            setIsCustom(match.isCustom);
+            try {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify(serverColors));
+            } catch { /* ignore */ }
+            setServerSynced(true);
+            setLastServerSync(json.timestamp || Date.now());
+          }
+        }
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
   return (
     <ThemeContext.Provider
       value={{
@@ -399,6 +525,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         exportTheme,
         importTheme,
         isCustom,
+        serverSynced,
+        lastServerSync,
+        syncNow,
       }}
     >
       {children}

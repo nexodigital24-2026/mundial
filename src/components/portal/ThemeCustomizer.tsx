@@ -261,6 +261,9 @@ export default function ThemeCustomizer() {
     exportTheme,
     importTheme,
     isCustom,
+    serverSynced,
+    lastServerSync,
+    syncNow,
   } = useTheme();
 
   const { toast } = useToast();
@@ -365,6 +368,19 @@ export default function ThemeCustomizer() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Sync indicator */}
+          <button
+            onClick={syncNow}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium transition-colors cursor-pointer"
+            style={{
+              backgroundColor: serverSynced ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.1)',
+              color: serverSynced ? '#16a34a' : '#dc2626',
+            }}
+            title={serverSynced ? 'Sincronizado con el servidor' : 'No sincronizado — tocar para reintentar'}
+          >
+            <div className={`w-1.5 h-1.5 rounded-full ${serverSynced ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`} />
+            {serverSynced ? 'Sincronizado' : 'Sin sincronizar'}
+          </button>
           {isCustom && (
             <Badge className="bg-purple-100 text-purple-700 text-xs">
               <Paintbrush className="w-3 h-3 mr-1" />

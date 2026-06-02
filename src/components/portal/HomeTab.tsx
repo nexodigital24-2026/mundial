@@ -50,13 +50,11 @@ function NewsGalleryViewer({
 
   const allImages: { src: string; caption: string }[] = [];
 
-  // Add cover image first
   const coverImage = newsItem.imageDataUrl || newsItem.imageUrl;
   if (coverImage) {
     allImages.push({ src: coverImage, caption: 'Portada' });
   }
 
-  // Add gallery images
   if (newsItem.gallery && newsItem.gallery.length > 0) {
     newsItem.gallery
       .sort((a, b) => a.order - b.order)
@@ -77,7 +75,6 @@ function NewsGalleryViewer({
         </DialogHeader>
 
         <div className="flex flex-col h-full">
-          {/* Image viewer */}
           {allImages.length > 0 ? (
             <div className="relative bg-black flex-1 min-h-[300px] max-h-[60vh]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -87,7 +84,6 @@ function NewsGalleryViewer({
                 className="w-full h-full object-contain"
               />
 
-              {/* Navigation arrows */}
               {allImages.length > 1 && (
                 <>
                   <button
@@ -105,19 +101,16 @@ function NewsGalleryViewer({
                 </>
               )}
 
-              {/* Image counter */}
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full">
                 {currentIdx + 1} / {allImages.length}
               </div>
 
-              {/* Caption */}
               {allImages[currentIdx]?.caption && (
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-4 py-1.5 rounded-lg max-w-[80%] text-center">
                   {allImages[currentIdx].caption}
                 </div>
               )}
 
-              {/* Thumbnail strip */}
               {allImages.length > 1 && (
                 <div className="absolute bottom-2 right-2 flex gap-1">
                   {allImages.map((img, idx) => (
@@ -141,10 +134,9 @@ function NewsGalleryViewer({
             </div>
           )}
 
-          {/* News details */}
           <div className="p-4 bg-card space-y-3">
             <div className="flex items-center gap-2 flex-wrap">
-              <Badge variant="secondary" className="text-xs bg-nd-orange-light text-nd-green-dark">
+              <Badge variant="secondary" className="text-xs bg-nd-orange-light text-nd-orange-dark">
                 {newsItem.category}
               </Badge>
               {newsItem.featured && (
@@ -201,7 +193,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const { allMatches, goalEvents, connected } = useRealtime();
   const { slides, news } = usePortalData();
 
-  // Gallery viewer state
   const [galleryNews, setGalleryNews] = useState<NewsItem | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
 
@@ -214,41 +205,39 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
   const upcomingMatches = allMatches.filter((m) => m.status === 'upcoming').slice(0, 3);
 
   const quickLinks = [
-    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
-    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-nd-green-dark', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green-dark/40', shadow: 'shadow-nd-green-dark/20' },
+    { id: 'grupos', label: 'Grupos', icon: Flag, color: 'bg-[#1A1A1A]', hoverColor: 'hover:bg-nd-orange', ring: 'ring-nd-orange/40', shadow: 'shadow-nd-orange/20' },
+    { id: 'resultados', label: 'Resultados', icon: CircleDot, color: 'bg-[#1A1A1A]', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange-dark/40', shadow: 'shadow-nd-orange-dark/20' },
     { id: 'goleadores', label: 'Goleadores', icon: Trophy, color: 'bg-nd-orange', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange/40', shadow: 'shadow-nd-orange/20' },
-    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-nd-orange-dark', ring: 'ring-nd-orange-dark/40', shadow: 'shadow-nd-orange-dark/20' },
+    { id: 'votacion', label: 'Votación', icon: Star, color: 'bg-nd-orange-dark', hoverColor: 'hover:bg-nd-orange', ring: 'ring-nd-orange-dark/40', shadow: 'shadow-nd-orange-dark/20' },
     { id: 'expulsados', label: 'Expulsados', icon: Users, color: 'bg-red-600', hoverColor: 'hover:bg-red-700', ring: 'ring-red-600/40', shadow: 'shadow-red-600/20' },
-    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-nd-green', hoverColor: 'hover:bg-nd-green-dark', ring: 'ring-nd-green/40', shadow: 'shadow-nd-green/20' },
+    { id: 'sintesis', label: 'Síntesis', icon: BarChart3, color: 'bg-[#1A1A1A]', hoverColor: 'hover:bg-nd-orange', ring: 'ring-nd-orange/40', shadow: 'shadow-nd-orange/20' },
   ];
 
-  // Map news keyword to team for flag image
   const newsTeamMap: Record<string, string> = {
     messi: 'arg', yamal: 'esp', haaland: 'nor', mexico: 'mex', spain: 'esp', ronaldo: 'por', usa: 'usa',
   };
 
-  // Map news category to gradient colors — updated to blue tones
   const newsGradientMap: Record<string, string> = {
-    'En Vivo': 'from-red-500/30 to-nd-orange/20',
+    'En Vivo': 'from-nd-orange/30 to-nd-orange-accent/20',
     'Especial': 'from-nd-orange/30 to-yellow-400/20',
-    'Análisis': 'from-nd-green/30 to-nd-green-light/20',
-    'Resultados': 'from-blue-500/30 to-nd-green/20',
-    'Clasificación': 'from-nd-green-dark/30 to-nd-orange/20',
+    'Análisis': 'from-[#1A1A1A]/20 to-nd-orange-light/20',
+    'Resultados': 'from-gray-500/20 to-nd-orange/20',
+    'Clasificación': 'from-nd-orange-dark/30 to-nd-orange/20',
   };
 
   return (
     <div className="relative space-y-8 animate-fade-in">
-      {/* Match Slider - Nexo Digital branding */}
+      {/* Match Slider */}
       <MatchSlider slides={slides} onNavigate={onNavigate} />
 
       {/* Live Matches with Real-time indicator */}
       {liveMatches.length > 0 && (
         <section>
           <div className="flex items-center gap-3 mb-4">
-            <span className="w-3 h-3 bg-red-500 rounded-full animate-pulse-live" />
+            <span className="w-3 h-3 bg-nd-orange rounded-full animate-pulse-live" />
             <h2 className="text-xl font-bold text-foreground">Partidos en Vivo</h2>
             {connected && (
-              <Badge className="bg-green-50 text-green-700 border-green-200 text-xs flex items-center gap-1">
+              <Badge className="bg-nd-orange-light text-nd-orange-dark border-nd-orange/20 text-xs flex items-center gap-1">
                 <Zap className="w-3 h-3" />
                 Tiempo Real
               </Badge>
@@ -274,7 +263,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                 {goalEvents.slice(0, 5).map((evt) => {
                   const team = getTeamById(evt.team);
                   return (
-                    <Badge key={evt.id} variant="secondary" className="text-xs bg-white border border-nd-orange/30">
+                    <Badge key={evt.id} variant="secondary" className="text-xs bg-white dark:bg-[#1A1A1A] border border-nd-orange/30">
                       ⚽ {evt.player} ({team?.flag} {team?.name}) {evt.minute}&apos;
                     </Badge>
                   );
@@ -296,8 +285,8 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
       {/* Upcoming Matches */}
       <section>
-        <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-          <CircleDot className="w-5 h-5 text-nd-green" />
+        <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2 border-b-2 border-nd-orange pb-2">
+          <CircleDot className="w-5 h-5 text-nd-orange" />
           Próximos Partidos
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -309,8 +298,8 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
       {/* News */}
       <section>
-        <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-          <Newspaper className="w-5 h-5 text-nd-green" />
+        <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2 border-b-2 border-nd-orange pb-2">
+          <Newspaper className="w-5 h-5 text-nd-orange" />
           Noticias Destacadas
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -323,14 +312,14 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
             const teamId = newsTeamMap[item.imageKeyword];
             const team = teamId ? getTeamById(teamId) : null;
             const flagUrl = teamId ? getTeamFlagUrl(teamId, 320) : null;
-            const gradient = newsGradientMap[item.category] || 'from-nd-green/20 to-nd-orange/10';
+            const gradient = newsGradientMap[item.category] || 'from-nd-orange/20 to-nd-orange-light/10';
             const hasGallery = galleryImages.length > 0;
             const totalImages = (customImage ? 1 : 0) + galleryImages.length;
 
             return (
               <Card
                 key={item.id}
-                className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-green/20"
+                className="overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group cursor-pointer border-nd-orange/10"
                 onClick={() => openGallery(item)}
               >
                 <div className={`h-32 bg-gradient-to-br ${gradient} flex items-center justify-center relative overflow-hidden`}>
@@ -365,7 +354,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                     <span className="text-4xl group-hover:scale-110 transition-transform">⚽</span>
                   )}
 
-                  {/* Featured badge */}
                   {item.featured && (
                     <div className="absolute top-2 left-2">
                       <Badge className="bg-yellow-500 text-white border-0 text-[9px] px-1.5 py-0">
@@ -374,7 +362,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                     </div>
                   )}
 
-                  {/* Gallery indicator */}
                   {hasGallery && (
                     <div className="absolute bottom-2 right-2">
                       <Badge className="bg-black/60 text-white border-0 text-[9px] px-1.5 py-0">
@@ -383,7 +370,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                     </div>
                   )}
 
-                  {/* Gallery thumbnails strip */}
                   {hasGallery && galleryImages.length > 1 && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5 flex gap-1 overflow-hidden">
                       {galleryImages.slice(0, 4).map((img, i) => (
@@ -400,14 +386,14 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                 </div>
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-green-dark">
+                    <Badge variant="secondary" className="w-fit text-xs bg-nd-orange-light text-nd-orange-dark">
                       {item.category}
                     </Badge>
                     {item.author && (
                       <span className="text-[9px] text-muted-foreground">Por {item.author}</span>
                     )}
                   </div>
-                  <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-green transition-colors">
+                  <CardTitle className="text-sm leading-snug line-clamp-2 group-hover:text-nd-orange transition-colors">
                     {item.title}
                   </CardTitle>
                 </CardHeader>
@@ -421,7 +407,6 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
                       </span>
                     )}
                   </div>
-                  {/* Tags */}
                   {item.tags && item.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-1.5">
                       {item.tags.slice(0, 2).map(tag => (
@@ -440,7 +425,7 @@ export default function HomeTab({ onNavigate }: HomeTabProps) {
 
       {/* Quick Access */}
       <section>
-        <h2 className="text-xl font-bold text-foreground mb-4">Acceso Rápido</h2>
+        <h2 className="text-xl font-bold text-foreground mb-4 border-b-2 border-nd-orange pb-2">Acceso Rápido</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {quickLinks.map((link) => (
             <button

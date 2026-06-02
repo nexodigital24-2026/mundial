@@ -41,103 +41,121 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  /* Nexo Digital brand colors — original green/orange scheme */
-  --color-nd-green: var(--nd-green, #026602);
-  --color-nd-green-dark: var(--nd-green-dark, #014C01);
-  --color-nd-green-light: var(--nd-green-light, #E8F5E9);
+  /* Nexo Digital brand colors — orange + black scheme */
+  --color-nd-green: var(--nd-green, #FF6800);
+  --color-nd-green-dark: var(--nd-green-dark, #CC5300);
+  --color-nd-green-light: var(--nd-green-light, #FFF3E0);
   --color-nd-orange: var(--nd-orange, #FF6800);
   --color-nd-orange-dark: var(--nd-orange-dark, #CC5300);
   --color-nd-orange-light: var(--nd-orange-light, #FFF3E0);
   --color-nd-orange-accent: var(--nd-orange-accent, #FF931E);
   --color-nd-gray: #F5F5F5;
-  --color-nd-gray-dark: #E0E0E0;
-  --color-nd-black: var(--nd-black, #1a1a1a);
+  --color-nd-gray-dark: #E8E8E8;
+  --color-nd-black: var(--nd-black, #1A1A1A);
   --color-nd-yellow: var(--nd-yellow, #FFD700);
   --color-nd-yellow-dark: var(--nd-yellow-dark, #CC5300);
   --color-nd-yellow-light: var(--nd-yellow-light, #FFF8E1);
   --color-gold: #FFD700;
   --color-silver: #C0C0C0;
   --color-bronze: #CD7F32;
+  /* Surface colors */
+  --color-nd-surface: #F5F5F5;
+  --color-nd-surface-medium: #E8E8E8;
+  --color-nd-text-muted: #6B6B6B;
+  --color-nd-secondary-dark: #0D0D0D;
 }
 
 :root {
   --radius: 0.625rem;
-  --nd-green: #026602;
-  --nd-green-dark: #014C01;
-  --nd-green-light: #E8F5E9;
+  /* Green vars now map to orange for backward compatibility */
+  --nd-green: #FF6800;
+  --nd-green-dark: #CC5300;
+  --nd-green-light: #FFF3E0;
   --nd-orange: #FF6800;
   --nd-orange-dark: #CC5300;
   --nd-orange-light: #FFF3E0;
   --nd-orange-accent: #FF931E;
-  --nd-black: #1a1a1a;
+  --nd-black: #1A1A1A;
   --nd-yellow: #FFD700;
   --nd-yellow-dark: #CC5300;
   --nd-yellow-light: #FFF8E1;
   --background: #F5F5F5;
-  --foreground: #1a1a1a;
+  --foreground: #1A1A1A;
   --card: #ffffff;
-  --card-foreground: #1a1a1a;
+  --card-foreground: #1A1A1A;
   --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-  --primary: #026602;
+  --popover-foreground: #1A1A1A;
+  --primary: #FF6800;
   --primary-foreground: #ffffff;
   --secondary: #FFF3E0;
-  --secondary-foreground: #1a1a1a;
+  --secondary-foreground: #1A1A1A;
   --muted: #EEEEEE;
-  --muted-foreground: #616161;
-  --accent: #FF6800;
-  --accent-foreground: #1a1a1a;
+  --muted-foreground: #6B6B6B;
+  --accent: #FF931E;
+  --accent-foreground: #1A1A1A;
   --destructive: #ef4444;
-  --border: #E0E0E0;
-  --input: #E0E0E0;
-  --ring: #026602;
-  --chart-1: #026602;
-  --chart-2: #FF6800;
-  --chart-3: #FF931E;
-  --chart-4: #014C01;
+  --border: #E8E8E8;
+  --input: #E8E8E8;
+  --ring: #FF6800;
+  --chart-1: #FF6800;
+  --chart-2: #FF931E;
+  --chart-3: #CC5300;
+  --chart-4: #1A1A1A;
   --chart-5: #ef4444;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1a1a1a;
-  --sidebar-primary: #026602;
+  --sidebar-foreground: #1A1A1A;
+  --sidebar-primary: #FF6800;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #FFF3E0;
-  --sidebar-accent-foreground: #1a1a1a;
-  --sidebar-border: #E0E0E0;
-  --sidebar-ring: #026602;
+  --sidebar-accent-foreground: #1A1A1A;
+  --sidebar-border: #E8E8E8;
+  --sidebar-ring: #FF6800;
 }
 
 .dark {
-  --background: #1a1a1a;
+  --background: #0D0D0D;
   --foreground: #F5F5F5;
-  --card: #2d2d2d;
+  --card: #1A1A1A;
   --card-foreground: #F5F5F5;
-  --popover: #2d2d2d;
+  --popover: #1A1A1A;
   --popover-foreground: #F5F5F5;
-  --primary: #33AA55;
+  --primary: #FF931E;
   --primary-foreground: #ffffff;
-  --secondary: #3E2723;
+  --secondary: #252525;
   --secondary-foreground: #F5F5F5;
-  --muted: #333333;
-  --muted-foreground: #BDBDBD;
-  --accent: #FF931E;
-  --accent-foreground: #1a1a1a;
+  --muted: #252525;
+  --muted-foreground: #9CA3AF;
+  --accent: #FF6800;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
-  --border: #424242;
-  --input: #424242;
-  --ring: #33AA55;
-  --chart-1: #33AA55;
-  --chart-2: #FF931E;
-  --chart-3: #FF6800;
-  --chart-4: #026602;
+  --border: #333333;
+  --input: #333333;
+  --ring: #FF6800;
+  --chart-1: #FF931E;
+  --chart-2: #FF6800;
+  --chart-3: #CC5300;
+  --chart-4: #F5F5F5;
   --chart-5: #ef4444;
-  --sidebar: #2d2d2d;
+  --sidebar: #1A1A1A;
   --sidebar-foreground: #F5F5F5;
-  --sidebar-primary: #33AA55;
+  --sidebar-primary: #FF931E;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #3E2723;
+  --sidebar-accent: #252525;
   --sidebar-accent-foreground: #F5F5F5;
-  --sidebar-border: #424242;
-  --sidebar-ring: #33AA55;
+  --sidebar-border: #333333;
+  --sidebar-ring: #FF6800;
+  /* Dark mode brand overrides — orange/black */
+  --nd-green: #FF931E;
+  --nd-green-dark: #CC5300;
+  --nd-green-light: #2d1f0e;
+  --nd-orange: #FF931E;
+  --nd-orange-dark: #CC5300;
+  --nd-orange-light: #2d1f0e;
+  --nd-orange-accent: #FFB74D;
+  --nd-black: #F5F5F5;
+  --nd-yellow: #FFD54F;
+  --nd-yellow-dark: #F9A825;
+  --nd-yellow-light: #2d2606;
 }
 
 @layer base {
@@ -162,6 +180,12 @@
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #9E9E9E;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #4a5568;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #5a6578;
 }
 
 /* Pulsing live animation */
@@ -206,13 +230,73 @@
   animation: confetti-fall 3s ease-in infinite;
 }
 
-/* Gradient shift animation */
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+/* ==================== Dark Mode Specific Overrides ==================== */
+
+/* Dark mode background overlay */
+.dark .bg-gradient-to-b.from-nd-green-light\/90.via-white\/93 {
+  --tw-gradient-from: rgba(13, 13, 13, 0.95) var(--tw-gradient-from-position);
+  --tw-gradient-via: rgba(13, 13, 13, 0.97) var(--tw-gradient-via-position);
+  --tw-gradient-to: rgba(13, 13, 13, 0.99) var(--tw-gradient-to-position);
 }
 
-.animate-gradient {
-  animation: gradient-shift 6s ease infinite;
-  background-size: 200% 200%;
+/* Dark mode card improvements */
+.dark .bg-white {
+  background-color: var(--card);
+}
+
+/* Dark mode text improvements */
+.dark .text-nd-black {
+  color: #F5F5F5;
+}
+
+/* Dark mode orange light backgrounds — make them dark instead */
+.dark .bg-nd-green-light {
+  background-color: var(--nd-green-light);
+}
+.dark .bg-nd-orange-light {
+  background-color: var(--nd-orange-light);
+}
+.dark .bg-nd-yellow-light {
+  background-color: var(--nd-yellow-light);
+}
+
+/* Dark mode badge colors */
+.dark .bg-green-50 { background-color: rgba(76, 175, 80, 0.15); }
+.dark .bg-green-100 { background-color: rgba(76, 175, 80, 0.2); }
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.15); }
+.dark .bg-red-100 { background-color: rgba(239, 68, 68, 0.2); }
+.dark .bg-amber-50 { background-color: rgba(255, 179, 0, 0.15); }
+.dark .bg-orange-50 { background-color: rgba(255, 147, 30, 0.15); }
+.dark .bg-purple-50 { background-color: rgba(156, 39, 176, 0.15); }
+.dark .bg-blue-50 { background-color: rgba(33, 150, 243, 0.15); }
+.dark .bg-gray-50 { background-color: rgba(158, 158, 158, 0.1); }
+.dark .bg-gray-100 { background-color: rgba(158, 158, 158, 0.15); }
+
+/* Dark mode badge text */
+.dark .text-green-700 { color: #81C784; }
+.dark .text-green-800 { color: #A5D6A7; }
+.dark .text-green-600 { color: #66BB6A; }
+.dark .text-red-700 { color: #EF9A9A; }
+.dark .text-red-800 { color: #E57373; }
+.dark .text-amber-600 { color: #FFB74D; }
+.dark .text-amber-800 { color: #FFCC80; }
+.dark .text-orange-800 { color: #FFCC80; }
+.dark .text-orange-600 { color: #FFB74D; }
+.dark .text-purple-700 { color: #CE93D8; }
+.dark .text-purple-800 { color: #BA68C8; }
+.dark .text-blue-700 { color: #90CAF9; }
+.dark .text-blue-800 { color: #64B5F6; }
+.dark .text-gray-500 { color: #9E9E9E; }
+.dark .text-gray-600 { color: #BDBDBD; }
+.dark .text-gray-700 { color: #BDBDBD; }
+.dark .text-gray-800 { color: #E0E0E0; }
+
+/* Dark mode explicit background fixes */
+.dark .bg-nd-gray { background-color: #1A1A1A; }
+.dark .bg-nd-gray-dark { background-color: #0D0D0D; }
+
+/* Dark mode selection highlight */
+.dark ::selection {
+  background-color: rgba(255, 104, 0, 0.3);
+  color: #ffffff;
 }

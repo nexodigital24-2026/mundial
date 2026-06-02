@@ -22,7 +22,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
   const [cycleCount, setCycleCount] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<string, boolean>>({});
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const MAX_CYCLES = 4; // 4 full passes then stop auto-rotation
+  const MAX_CYCLES = 4;
 
   const activeSlides = slides.filter(s => s.active).sort((a, b) => a.order - b.order);
   const activeSlidesCount = activeSlides.length;
@@ -72,14 +72,13 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
   const isLive = currentSlide.category === 'En Vivo';
   const isUpcoming = currentSlide.category === 'Próximo';
 
-  // Resolve image: prefer uploaded imageDataUrl, then imageUrl, then fallback to bgColor
   const slideImage = currentSlide.imageDataUrl || currentSlide.imageUrl || '';
   const hasImage = slideImage.length > 0 && !imgErrors[currentSlide.id];
 
   return (
     <section className="relative rounded-2xl overflow-hidden text-white shadow-xl min-h-[320px] sm:min-h-[380px]">
       <div className="transition-all duration-500 ease-in-out relative min-h-[320px] sm:min-h-[380px]">
-        {/* Background image or gradient */}
+        {/* Background — dark gradient with orange accent */}
         {hasImage ? (
           <div className="absolute inset-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,39 +88,21 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               className="w-full h-full object-cover"
               onError={() => setImgErrors(prev => ({ ...prev, [currentSlide.id]: true }))}
             />
-            {/* Overlay gradient to ensure text readability */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/65 to-black/40" />
-            {/* Bottom gradient fade */}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
           </div>
         ) : (
-          <div
-            style={{
-              background: `linear-gradient(135deg, ${currentSlide.bgColor} 0%, ${currentSlide.bgColor}dd 40%, ${currentSlide.bgColor}99 100%)`,
-            }}
-            className="absolute inset-0"
-          />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1A] via-[#0D0D0D] to-[#1A1A1A]" />
         )}
 
-        {/* Decorative elements — blue + orange like the flyer */}
+        {/* Subtle orange gradient accent overlay */}
         <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-nd-orange blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-nd-green blur-3xl" />
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-nd-green blur-2xl" />
-          <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-nd-yellow blur-xl opacity-50" />
+          <div className="absolute top-4 right-4 sm:top-8 sm:right-8 w-40 h-40 sm:w-56 sm:h-56 rounded-full bg-nd-orange blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-nd-orange-accent blur-3xl opacity-60" />
         </div>
 
-        {/* Confetti-like decorative dots */}
-        <div className="absolute inset-0 pointer-events-none opacity-20">
-          <div className="absolute top-8 left-8 w-2 h-2 rounded-full bg-nd-yellow" />
-          <div className="absolute top-16 right-12 w-1.5 h-1.5 rounded-full bg-white" />
-          <div className="absolute bottom-20 left-1/4 w-2.5 h-2.5 rounded-sm bg-nd-green rotate-45" />
-          <div className="absolute bottom-12 right-1/3 w-1 h-1 rounded-full bg-nd-orange" />
-          <div className="absolute top-1/3 right-20 w-2 h-2 rounded-full bg-white" />
-        </div>
-
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+        {/* Clean geometric pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
           backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,0.1) 35px, rgba(255,255,255,0.1) 36px)',
         }} />
 
@@ -131,20 +112,20 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
             <div className={`flex-1 max-w-3xl transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
               {/* Top tags */}
               <div className="flex items-center gap-2 mb-3 flex-wrap">
-                <Badge className="bg-nd-orange text-nd-black border-0 font-bold text-xs">
+                <Badge className="bg-nd-orange text-white border-0 font-bold text-xs">
                   🌐 Nexo Digital
                 </Badge>
-                <Badge className="bg-white/20 text-white border-white/30 text-xs">
+                <Badge className="bg-white/15 text-white border-white/20 text-xs">
                   ⚽ Mundial 2026 — 12 Grupos
                 </Badge>
                 {isLive && (
-                  <Badge className="bg-red-500 text-white border-0 text-xs flex items-center gap-1.5 animate-pulse">
+                  <Badge className="bg-nd-orange text-white border-0 text-xs flex items-center gap-1.5 animate-pulse">
                     <span className="w-2 h-2 bg-white rounded-full animate-ping" />
                     En Vivo
                   </Badge>
                 )}
                 {!isLive && !isUpcoming && (
-                  <Badge className="bg-white/20 text-white border-0 text-xs">
+                  <Badge className="bg-white/15 text-white border-0 text-xs">
                     {currentSlide.category}
                   </Badge>
                 )}
@@ -165,7 +146,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               <h3 className="text-lg sm:text-2xl font-bold mb-1 text-white/90">
                 {currentSlide.title}
               </h3>
-              <p className="text-sm sm:text-base text-white/70 mb-4 max-w-xl">
+              <p className="text-sm sm:text-base text-white/60 mb-4 max-w-xl">
                 {currentSlide.subtitle}
               </p>
 
@@ -198,7 +179,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                     <span className="text-2xl sm:text-4xl font-extrabold">
                       {currentSlide.homeScore ?? '-'}
                     </span>
-                    <span className="text-lg sm:text-2xl text-white/50">:</span>
+                    <span className="text-lg sm:text-2xl text-white/30">:</span>
                     <span className="text-2xl sm:text-4xl font-extrabold">
                       {currentSlide.awayScore ?? '-'}
                     </span>
@@ -233,7 +214,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                 {currentSlide.linkTo && (
                   <Button
                     onClick={() => onNavigate(currentSlide.linkTo)}
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold shadow-lg shadow-red-600/30"
+                    className="bg-nd-orange hover:bg-nd-orange-dark text-white font-bold shadow-lg shadow-nd-orange/30"
                   >
                     {isLive ? 'Ver En Vivo' : isUpcoming ? 'Ver Grupos' : 'Resultados'}
                     <ArrowRight className="w-4 h-4 ml-1" />
@@ -241,7 +222,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                 )}
                 <Button
                   onClick={() => onNavigate('grupos')}
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold shadow-lg shadow-red-600/30"
+                  className="bg-[#1A1A1A] border border-white/20 text-white hover:bg-white/10 font-bold"
                 >
                   Ver Grupos
                 </Button>
@@ -250,11 +231,11 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
 
             {/* Right: Brand text */}
             <div className="hidden sm:flex flex-col items-center gap-2">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-3 flex flex-col items-center">
-                <span className="text-white font-extrabold text-xl tracking-tight">Nexo Digital</span>
-                <span className="text-nd-orange font-extrabold text-xl tracking-tight">Mundial</span>
+              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-3 flex flex-col items-center">
+                <span className="text-white font-extrabold text-xl tracking-tight">NEXO DIGITAL</span>
+                <span className="text-nd-orange font-extrabold text-xl tracking-tight">MUNDIAL</span>
               </div>
-              <span className="text-[10px] text-white/60 font-semibold tracking-wider">NEXO DIGITAL</span>
+              <span className="text-[10px] text-white/40 font-semibold tracking-wider">FIFA WORLD CUP 2026</span>
             </div>
           </div>
 
@@ -269,7 +250,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
                   className={`h-2 rounded-full transition-all duration-300 ${
                     i === currentIndex
                       ? 'bg-nd-orange w-8'
-                      : 'bg-white/40 hover:bg-white/60 w-2'
+                      : 'bg-white/30 hover:bg-white/50 w-2'
                   }`}
                   aria-label={`Ir a slide ${i + 1}`}
                 />
@@ -281,7 +262,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-8 h-8 text-white/70 hover:text-white hover:bg-white/10"
+                className="w-8 h-8 text-white/60 hover:text-white hover:bg-white/10"
                 onClick={() => { goPrev(); setCycleCount(0); }}
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -289,7 +270,7 @@ export default function MatchSlider({ slides, onNavigate }: MatchSliderProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-8 h-8 text-white/70 hover:text-white hover:bg-white/10"
+                className="w-8 h-8 text-white/60 hover:text-white hover:bg-white/10"
                 onClick={() => { goNext(); setCycleCount(0); }}
               >
                 <ChevronRight className="w-5 h-5" />

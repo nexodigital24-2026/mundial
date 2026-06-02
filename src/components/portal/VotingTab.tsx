@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Star, Check, Vote } from 'lucide-react';
 
 interface VotingState {
-  [matchId: string]: string; // matchId -> candidateId
+  [matchId: string]: string;
 }
 
 function loadVotesFromStorage(): VotingState {
@@ -39,18 +39,16 @@ export default function VotingTab() {
   const [localVoteData, setLocalVoteData] = useState<VotingMatch[]>(buildLocalVoteData);
   const { allMatches } = useRealtime();
 
-  // Save votes to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('ndm-votes', JSON.stringify(votes));
   }, [votes]);
 
   const handleVote = useCallback((matchId: string, candidateId: string) => {
     setVotes((prev) => {
-      if (prev[matchId]) return prev; // Already voted
+      if (prev[matchId]) return prev;
       return { ...prev, [matchId]: candidateId };
     });
 
-    // Increment vote count locally
     setLocalVoteData((prev) =>
       prev.map((vm) =>
         vm.matchId === matchId
@@ -67,8 +65,8 @@ export default function VotingTab() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-        <Star className="w-5 h-5 text-gold" />
+      <h2 className="text-xl font-bold text-foreground flex items-center gap-2 border-b-2 border-nd-orange pb-2">
+        <Star className="w-5 h-5 text-nd-orange" />
         Votación — Figura del Partido
       </h2>
 
@@ -119,7 +117,7 @@ export default function VotingTab() {
                     <span>{away?.name}</span>
                   </span>
                   {hasVoted && (
-                    <Badge className="bg-green-100 text-green-700 hover:bg-green-100 text-xs">
+                    <Badge className="bg-nd-orange-light text-nd-orange-dark hover:bg-nd-orange-light text-xs">
                       <Check className="w-3 h-3 mr-1" /> Votado
                     </Badge>
                   )}
@@ -143,10 +141,10 @@ export default function VotingTab() {
                         key={candidate.id}
                         className={`rounded-xl p-3 sm:p-4 transition-all duration-300 ${
                           isSelected
-                            ? 'bg-primary/10 border-2 border-primary'
+                            ? 'bg-nd-orange/10 border-2 border-nd-orange'
                             : isLeading && hasVoted
-                            ? 'bg-yellow-50 border border-yellow-300'
-                            : 'bg-muted/30 border border-transparent hover:bg-muted/50'
+                            ? 'bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-300 dark:border-yellow-700'
+                            : 'bg-muted/30 border border-transparent hover:bg-muted/50 hover:border-nd-orange/30'
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -154,8 +152,8 @@ export default function VotingTab() {
                             <AvatarFallback
                               className={`font-semibold text-sm ${
                                 isSelected
-                                  ? 'bg-primary text-white'
-                                  : 'bg-primary/10 text-primary'
+                                  ? 'bg-nd-orange text-white'
+                                  : 'bg-nd-orange/10 text-nd-orange'
                               }`}
                             >
                               {candidate.name
@@ -188,21 +186,21 @@ export default function VotingTab() {
                                 <span>{candidateTeam?.name}</span>
                               </span>
                               {isLeading && hasVoted && (
-                                <Badge className="bg-yellow-100 text-yellow-700 text-[10px] py-0">
+                                <Badge className="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-[10px] py-0">
                                   Líder
                                 </Badge>
                               )}
                             </div>
 
-                            {/* Vote bar */}
+                            {/* Vote bar — orange fill */}
                             <div className="flex items-center gap-2">
                               <div className="flex-1">
                                 <Progress
                                   value={votePercent}
-                                  className="h-3"
+                                  className="h-3 [&>div]:bg-nd-orange"
                                 />
                               </div>
-                              <span className="text-sm font-bold text-primary w-12 text-right">
+                              <span className="text-sm font-bold text-nd-orange w-12 text-right">
                                 {votePercent}%
                               </span>
                             </div>
@@ -211,19 +209,19 @@ export default function VotingTab() {
                             </p>
                           </div>
 
-                          {/* Vote button */}
+                          {/* Vote button — orange */}
                           {!hasVoted && (
                             <Button
                               size="sm"
                               onClick={() => handleVote(vm.matchId, candidate.id)}
-                              className="flex-shrink-0"
+                              className="flex-shrink-0 bg-nd-orange hover:bg-nd-orange-dark text-white"
                             >
                               <Vote className="w-4 h-4 mr-1" />
                               Votar
                             </Button>
                           )}
                           {isSelected && (
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-nd-orange flex items-center justify-center">
                               <Check className="w-5 h-5 text-white" />
                             </div>
                           )}

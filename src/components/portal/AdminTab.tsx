@@ -14,8 +14,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ThemeCustomizer from './ThemeCustomizer';
+import FooterEditor from './FooterEditor';
 import {
-  Shield, Users, Megaphone, FileEdit, Activity, Palette,
+  Shield, Users, Megaphone, FileEdit, Activity, Palette, LayoutTemplate,
   Plus, UserCheck, UserX, Clock, Eye, BarChart3
 } from 'lucide-react';
 
@@ -101,7 +102,7 @@ export default function AdminTab() {
 
   const getRoleBadgeColor = (role: string) => {
     if (role === 'admin') return 'bg-red-100 text-red-700 hover:bg-red-100';
-    if (role === 'editor') return 'bg-nd-green-light text-nd-green-dark hover:bg-nd-green-light';
+    if (role === 'editor') return 'bg-nd-orange-light text-nd-orange-dark hover:bg-nd-orange-light';
     return 'bg-nd-orange-light text-nd-orange-dark hover:bg-nd-orange-light';
   };
 
@@ -113,7 +114,7 @@ export default function AdminTab() {
 
   const getActionBadge = (action: string) => {
     if (action === 'create') return 'bg-green-100 text-green-700 hover:bg-green-100';
-    if (action === 'update') return 'bg-nd-green-light text-nd-green-dark hover:bg-nd-green-light';
+    if (action === 'update') return 'bg-nd-orange-light text-nd-orange-dark hover:bg-nd-orange-light';
     return 'bg-red-100 text-red-700 hover:bg-red-100';
   };
 
@@ -131,10 +132,14 @@ export default function AdminTab() {
       </h2>
 
       <Tabs defaultValue="theme" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 max-w-md">
+        <TabsList className="grid w-full grid-cols-4 max-w-lg">
           <TabsTrigger value="theme" className="text-xs sm:text-sm flex items-center gap-1">
             <Palette className="w-4 h-4" />
             Colores
+          </TabsTrigger>
+          <TabsTrigger value="footer" className="text-xs sm:text-sm flex items-center gap-1">
+            <LayoutTemplate className="w-4 h-4" />
+            Footer
           </TabsTrigger>
           <TabsTrigger value="users" className="text-xs sm:text-sm">Usuarios</TabsTrigger>
           <TabsTrigger value="activity" className="text-xs sm:text-sm">Actividad</TabsTrigger>
@@ -143,6 +148,11 @@ export default function AdminTab() {
         {/* ========== THEME TAB ========== */}
         <TabsContent value="theme" className="mt-4">
           <ThemeCustomizer />
+        </TabsContent>
+
+        {/* ========== FOOTER TAB ========== */}
+        <TabsContent value="footer" className="mt-4">
+          <FooterEditor />
         </TabsContent>
 
         {/* ========== USERS TAB ========== */}
@@ -309,7 +319,7 @@ export default function AdminTab() {
                   <div key={edit.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
                     <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                       {edit.action === 'create' ? <Plus className="w-4 h-4 text-green-500" /> :
-                       edit.action === 'update' ? <FileEdit className="w-4 h-4 text-nd-green" /> :
+                       edit.action === 'update' ? <FileEdit className="w-4 h-4 text-nd-orange" /> :
                        <UserX className="w-4 h-4 text-red-500" />}
                     </div>
                     <div className="flex-1 min-w-0">

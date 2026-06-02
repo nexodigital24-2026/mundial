@@ -21,7 +21,6 @@ export default function GroupsTab() {
   const completedGroupMatches = groupMatches.filter((m) => m.status === 'completed');
   const liveGroupMatches = groupMatches.filter((m) => m.status === 'live');
 
-  // Top scorer of the group
   const groupTeams = getTeamsByGroup(activeGroup as GroupLetter);
   const groupTeamIds = groupTeams.map(t => t.id);
   const groupScorers = scorers
@@ -43,11 +42,11 @@ export default function GroupsTab() {
     <div className="space-y-6 animate-fade-in">
       {/* Group Navigation */}
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-primary" />
+        <h2 className="text-xl font-bold text-foreground flex items-center gap-2 border-b-2 border-nd-orange pb-2">
+          <Trophy className="w-5 h-5 text-nd-orange" />
           Grupos del Mundial
           {connected && (
-            <Badge className="bg-green-50 text-green-700 border-green-200 text-[10px] flex items-center gap-0.5">
+            <Badge className="bg-nd-orange-light text-nd-orange-dark border-nd-orange/20 text-[10px] flex items-center gap-0.5">
               <Zap className="w-2.5 h-2.5" />
               Live
             </Badge>
@@ -71,7 +70,7 @@ export default function GroupsTab() {
         <Tabs value={activeGroup} onValueChange={setActiveGroup}>
           <TabsList className="inline-grid grid-cols-12 w-max min-w-full">
             {allGroups.map((g) => (
-              <TabsTrigger key={g} value={g} className="font-semibold text-xs px-3 py-2">
+              <TabsTrigger key={g} value={g} className="font-semibold text-xs px-3 py-2 data-[state=active]:bg-nd-orange data-[state=active]:text-white">
                 {g}
               </TabsTrigger>
             ))}
@@ -90,7 +89,6 @@ export default function GroupsTab() {
                     className="relative rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
                     style={{ backgroundColor: team.color }}
                   >
-                    {/* Flag image as background with overlay */}
                     {flagUrl && (
                       <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -102,7 +100,6 @@ export default function GroupsTab() {
                         />
                       </div>
                     )}
-                    {/* Gradient overlay for readability */}
                     <div
                       className="absolute inset-0"
                       style={{
@@ -111,7 +108,6 @@ export default function GroupsTab() {
                     />
 
                     <div className="relative p-3 sm:p-4 flex items-center gap-3">
-                      {/* Flag image */}
                       <div className="flex-shrink-0 w-10 h-7 sm:w-12 sm:h-8 rounded-sm overflow-hidden shadow-md border border-white/20">
                         {flagUrl ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
@@ -163,7 +159,7 @@ export default function GroupsTab() {
 
             {/* Top scorer */}
             {topScorer && (
-              <Card className="border-gold/50 bg-gradient-to-r from-yellow-50 to-orange-50">
+              <Card className="border-gold/50 bg-gradient-to-r from-nd-orange-light to-yellow-50 dark:from-nd-orange/10 dark:to-yellow-900/10">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-full bg-gold flex items-center justify-center">
@@ -187,7 +183,7 @@ export default function GroupsTab() {
             {liveGroupMatches.length > 0 && (
               <div>
                 <h3 className="text-lg font-bold text-foreground mb-3 flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 bg-red-500 rounded-full animate-pulse-live" />
+                  <span className="w-2.5 h-2.5 bg-nd-orange rounded-full animate-pulse-live" />
                   En Vivo
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

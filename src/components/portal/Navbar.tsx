@@ -44,9 +44,9 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
   };
 
   const getRoleBadgeColor = () => {
-    if (isAdmin) return 'bg-nd-orange/40 text-nd-black hover:bg-nd-orange/40';
-    if (isEditor) return 'bg-white/30 text-white hover:bg-white/30';
-    if (isComercial) return 'bg-nd-orange/40 text-nd-black hover:bg-nd-orange/40';
+    if (isAdmin) return 'bg-nd-orange/40 text-white hover:bg-nd-orange/40';
+    if (isEditor) return 'bg-white/20 text-white hover:bg-white/20';
+    if (isComercial) return 'bg-nd-orange/40 text-white hover:bg-nd-orange/40';
     return '';
   };
 
@@ -58,14 +58,14 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
   };
 
   return (
-    <nav className="sticky top-0 z-50 shadow-lg">
-      {/* Blue top strip with branding */}
-      <div className="bg-nd-green text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-9">
+    <nav className="sticky top-0 z-50">
+      {/* Top strip - black with orange accent */}
+      <div className="bg-black text-white border-b border-nd-orange/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-8">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold tracking-wider opacity-90">🌐 Nexo Digital</span>
           </div>
-          <span className="text-[10px] font-medium tracking-widest uppercase opacity-70 hidden sm:block">Nexo Digital</span>
+          <span className="text-[10px] font-medium tracking-widest uppercase opacity-50 hidden sm:block">FIFA World Cup 2026</span>
           <div className="flex items-center gap-3">
             {isAuthenticated && user ? (
               <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                   className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                 >
                   <Avatar className="w-5 h-5">
-                    <AvatarFallback className="text-[8px] bg-white/20 text-white font-semibold">
+                    <AvatarFallback className="text-[8px] bg-nd-orange text-white font-semibold">
                       {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
@@ -94,7 +94,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
             ) : (
               <button
                 onClick={() => handleTabClick('login')}
-                className="flex items-center gap-1.5 text-[11px] font-bold bg-nd-orange text-nd-black px-2.5 py-1 rounded-md hover:bg-nd-orange-dark transition-colors"
+                className="flex items-center gap-1.5 text-[11px] font-bold bg-nd-orange text-white px-2.5 py-1 rounded-md hover:bg-nd-orange-dark transition-colors"
               >
                 <LogIn className="w-3 h-3" />
                 Ingresar
@@ -104,26 +104,26 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
         </div>
       </div>
 
-      {/* Main nav bar - blue gradient */}
-      <div className="bg-gradient-to-r from-nd-green via-nd-green-dark to-nd-green animate-gradient">
+      {/* Main nav bar - rich black */}
+      <div className="bg-[#1A1A1A] shadow-lg shadow-black/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-16">
             {/* Brand */}
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleTabClick('inicio')}>
-              <span className="text-white font-extrabold text-lg tracking-tight">Nexo Digital</span>
-              <span className="text-nd-orange font-extrabold text-lg tracking-tight">Mundial</span>
+            <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleTabClick('inicio')}>
+              <span className="text-white font-extrabold text-lg tracking-tight">NEXO DIGITAL</span>
+              <span className="text-nd-orange font-extrabold text-lg tracking-tight">MUNDIAL</span>
             </div>
 
             {/* Desktop nav */}
-            <div className="hidden lg:flex items-center gap-0.5">
+            <div className="hidden lg:flex items-center gap-1">
               {publicTabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all duration-200 border ${
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 ${
                     activeTab === tab.id
-                      ? 'bg-nd-orange text-nd-black border-nd-orange shadow-md'
-                      : 'text-white/90 border-white/10 hover:bg-white/15 hover:text-white hover:border-white/25'
+                      ? 'bg-nd-orange text-white shadow-md shadow-nd-orange/30'
+                      : 'text-gray-300 hover:text-white hover:bg-white/10'
                   }`}
                 >
                   {tab.label}
@@ -131,7 +131,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
               ))}
 
               {/* Separator */}
-              <div className="w-px h-5 bg-white/20 mx-1" />
+              <div className="w-px h-5 bg-white/20 mx-2" />
 
               {adminTabs.map((tab) => {
                 const accessible = hasAccess(tab.role);
@@ -139,16 +139,16 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                   <button
                     key={tab.id}
                     onClick={() => handleTabClick(tab.id)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all duration-200 flex items-center gap-1 border ${
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-200 flex items-center gap-1.5 ${
                       activeTab === tab.id
-                        ? 'bg-nd-orange text-nd-black border-nd-orange shadow-md'
+                        ? 'bg-nd-orange text-white shadow-md shadow-nd-orange/30'
                         : accessible
-                        ? 'text-white/80 border-white/10 hover:bg-white/15 hover:text-white hover:border-white/25'
-                        : 'text-white/35 cursor-not-allowed border-transparent'
+                        ? 'text-gray-400 hover:text-white hover:bg-white/10'
+                        : 'text-white/25 cursor-not-allowed'
                     }`}
                     title={accessible ? tab.label : `Requiere rol ${tab.role}`}
                   >
-                    <tab.icon className="w-3 h-3" />
+                    <tab.icon className="w-3.5 h-3.5" />
                     <span className="hidden xl:inline">{tab.label}</span>
                     {!accessible && <Lock className="w-2.5 h-2.5" />}
                   </button>
@@ -167,27 +167,29 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
             </Button>
           </div>
         </div>
+        {/* Orange brand accent line */}
+        <div className="h-0.5 bg-nd-orange" />
       </div>
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-nd-green-dark border-t border-white/10 animate-fade-in">
+        <div className="lg:hidden bg-[#1A1A1A] border-t border-white/10 animate-fade-in">
           <div className="px-4 py-2 space-y-1">
             {publicTabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => handleTabClick(tab.id)}
-                className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-bold transition-all duration-200 border ${
+                className={`w-full text-left px-4 py-2.5 rounded-full text-sm font-bold transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'bg-nd-orange text-nd-black border-nd-orange'
-                    : 'text-white/90 border-transparent hover:bg-white/10 hover:text-white'
+                    ? 'bg-nd-orange text-white'
+                    : 'text-gray-300 hover:text-white hover:bg-white/10'
                 }`}
               >
                 {tab.label}
               </button>
             ))}
 
-            <div className="w-full h-px bg-white/20 my-2" />
+            <div className="w-full h-px bg-white/10 my-2" />
 
             {adminTabs.map((tab) => {
               const accessible = hasAccess(tab.role);
@@ -195,12 +197,12 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 <button
                   key={tab.id}
                   onClick={() => handleTabClick(tab.id)}
-                  className={`w-full text-left px-4 py-2.5 rounded-md text-sm font-bold transition-all duration-200 flex items-center gap-2 border ${
+                  className={`w-full text-left px-4 py-2.5 rounded-full text-sm font-bold transition-all duration-200 flex items-center gap-2 ${
                     activeTab === tab.id
-                      ? 'bg-nd-orange text-nd-black border-nd-orange'
+                      ? 'bg-nd-orange text-white'
                       : accessible
-                      ? 'text-white/80 border-transparent hover:bg-white/10 hover:text-white'
-                      : 'text-white/35 cursor-not-allowed border-transparent'
+                      ? 'text-gray-400 hover:text-white hover:bg-white/10'
+                      : 'text-white/25 cursor-not-allowed'
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
@@ -210,13 +212,13 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
               );
             })}
 
-            <div className="w-full h-px bg-white/20 my-2" />
+            <div className="w-full h-px bg-white/10 my-2" />
 
             {isAuthenticated && user ? (
               <div className="px-4 py-3">
                 <div className="flex items-center gap-3 mb-3">
                   <Avatar className="w-8 h-8">
-                    <AvatarFallback className="text-xs bg-nd-orange text-nd-black font-bold">
+                    <AvatarFallback className="text-xs bg-nd-orange text-white font-bold">
                       {user.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
@@ -230,7 +232,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    className="flex-1 bg-nd-orange text-nd-black hover:bg-nd-orange-dark font-semibold"
+                    className="flex-1 bg-nd-orange text-white hover:bg-nd-orange-dark font-semibold"
                     onClick={() => handleTabClick('login')}
                   >
                     Mi Cuenta
@@ -249,7 +251,7 @@ export default function Navbar({ activeTab, onTabChange }: NavbarProps) {
             ) : (
               <button
                 onClick={() => handleTabClick('login')}
-                className="w-full text-left px-4 py-2.5 rounded-md text-sm font-semibold text-white/80 hover:bg-white/10 hover:text-white flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 rounded-full text-sm font-semibold text-gray-300 hover:text-white hover:bg-white/10 flex items-center gap-2"
               >
                 <LogIn className="w-4 h-4" />
                 Iniciar Sesión

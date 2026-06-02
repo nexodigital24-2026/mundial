@@ -41,7 +41,7 @@ export default function ScorersTab() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="text-xl font-bold text-foreground">Tabla de Goleadores</h2>
+      <h2 className="text-xl font-bold text-foreground border-b-2 border-nd-orange pb-2">Tabla de Goleadores</h2>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -51,14 +51,14 @@ export default function ScorersTab() {
             placeholder="Buscar jugador o equipo..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="pl-9 focus-visible:ring-nd-orange"
           />
         </div>
         <Select
           value={groupFilter}
           onValueChange={(v) => setGroupFilter(v)}
         >
-          <SelectTrigger className="w-full sm:w-44">
+          <SelectTrigger className="w-full sm:w-44 focus:ring-nd-orange">
             <Filter className="w-4 h-4 mr-2" />
             <SelectValue placeholder="Filtrar grupo" />
           </SelectTrigger>

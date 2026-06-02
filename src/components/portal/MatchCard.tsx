@@ -13,7 +13,6 @@ interface MatchCardProps {
 export default function MatchCard({ match: initialMatch }: MatchCardProps) {
   const { allMatches, connected } = useRealtime();
 
-  // Find the latest version of this match from real-time state
   const match = allMatches.find(m => m.id === initialMatch.id) || initialMatch;
 
   const home = getTeamById(match.homeTeamId);
@@ -27,7 +26,6 @@ export default function MatchCard({ match: initialMatch }: MatchCardProps) {
   const prevHomeScore = useRef(match.homeScore);
   const prevAwayScore = useRef(match.awayScore);
 
-  // Detect goal changes
   useEffect(() => {
     const homeChanged = match.homeScore !== prevHomeScore.current;
     const awayChanged = match.awayScore !== prevAwayScore.current;
@@ -52,22 +50,22 @@ export default function MatchCard({ match: initialMatch }: MatchCardProps) {
     : '';
 
   return (
-    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 overflow-hidden relative ${
+    <div className={`bg-white dark:bg-[#1A1A1A] rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5 overflow-hidden relative ${
       goalFlash ? 'border-nd-orange shadow-nd-orange/20' : 'border-border'
     }`}>
       {/* Goal flash overlay */}
       {goalFlash && (
-        <div className="absolute inset-0 bg-gradient-to-b from-yellow-300/20 to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-nd-orange/20 to-transparent z-10 pointer-events-none" />
       )}
 
       {/* Status bar */}
       <div className={`px-3 py-1.5 text-xs font-medium flex items-center justify-between ${
-        isLive ? 'bg-red-50 text-red-700' :
-        isCompleted ? 'bg-blue-50 text-blue-700' :
-        'bg-nd-orange-light text-nd-orange-dark'
+        isLive ? 'bg-nd-orange/10 text-nd-orange-dark dark:text-nd-orange' :
+        isCompleted ? 'bg-gray-100 text-gray-600 dark:bg-white/5 dark:text-gray-400' :
+        'bg-nd-orange-light text-nd-orange-dark dark:bg-nd-orange/10 dark:text-nd-orange'
       }`}>
         <span className="flex items-center gap-1.5">
-          {isLive && <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse-live" />}
+          {isLive && <span className="w-2 h-2 bg-nd-orange rounded-full animate-pulse-live" />}
           {isLive ? 'En Vivo' : isCompleted ? 'Finalizado' : 'Próximo'}
         </span>
         {isLive && (
@@ -158,14 +156,14 @@ export default function MatchCard({ match: initialMatch }: MatchCardProps) {
         {isLive && match.possession && (
           <div className="mt-3 pt-2 border-t border-border">
             <div className="flex items-center gap-1.5 text-[9px] text-muted-foreground">
-              <span className="font-semibold text-nd-green">{match.possession.home}%</span>
-              <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+              <span className="font-semibold text-nd-orange">{match.possession.home}%</span>
+              <div className="flex-1 h-1 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-nd-green rounded-full transition-all duration-1000"
+                  className="h-full bg-nd-orange rounded-full transition-all duration-1000"
                   style={{ width: `${match.possession.home}%` }}
                 />
               </div>
-              <span className="font-semibold text-nd-orange">{match.possession.away}%</span>
+              <span className="font-semibold text-nd-orange-dark">{match.possession.away}%</span>
             </div>
           </div>
         )}

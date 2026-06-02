@@ -24,7 +24,7 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
       <Table>
         <TableHeader>
           <TableRow className="bg-primary/5 hover:bg-primary/5">
-            <TableHead className="w-10 text-center font-bold">#</TableHead>
+            <TableHead className="w-10 text-center font-bold text-nd-orange">#</TableHead>
             <TableHead className="font-bold">Equipo</TableHead>
             <TableHead className="text-center font-bold">PJ</TableHead>
             <TableHead className="text-center font-bold">PG</TableHead>
@@ -37,7 +37,7 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
           </TableRow>
         </TableHeader>
         <TableBody>
-          {standings.map((s) => {
+          {standings.map((s, idx) => {
             const team = getTeamById(s.teamId);
             const isQualified = s.pos <= 2;
             const teamColor = team?.color ?? '#666666';
@@ -49,9 +49,9 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
                 key={s.teamId}
                 className={`transition-colors ${
                   isQualified
-                    ? 'bg-green-50 hover:bg-green-100/70 border-l-4 border-l-green-500'
+                    ? 'bg-nd-orange-light/50 dark:bg-nd-orange/10 hover:bg-nd-orange-light/70 dark:hover:bg-nd-orange/15 border-l-4 border-l-nd-orange'
                     : 'hover:bg-muted/50 border-l-4 border-l-transparent'
-                }`}
+                } ${idx % 2 === 1 ? 'bg-[#F5F5F5]/50 dark:bg-white/[0.02]' : ''}`}
               >
                 <TableCell className="text-center font-semibold">{s.pos}</TableCell>
                 <TableCell>
@@ -80,7 +80,7 @@ export default function StandingsTable({ standings, groupName }: StandingsTableP
                     </div>
                     <span className="font-medium">{team?.name}</span>
                     {isQualified && (
-                      <span className="text-[10px] bg-green-500 text-white px-1.5 py-0.5 rounded-full font-semibold">
+                      <span className="text-[10px] bg-nd-orange text-white px-1.5 py-0.5 rounded-full font-semibold">
                         CLASIFICA
                       </span>
                     )}

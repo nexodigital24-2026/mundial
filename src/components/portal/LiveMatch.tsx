@@ -13,7 +13,6 @@ interface LiveMatchProps {
 export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
   const { allMatches, goalEvents, connected } = useRealtime();
 
-  // Find the latest version of this match from real-time state
   const match = allMatches.find(m => m.id === initialMatch.id) || initialMatch;
 
   const home = getTeamById(match.homeTeamId);
@@ -24,7 +23,6 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
   const prevHomeScore = useRef(match.homeScore);
   const prevAwayScore = useRef(match.awayScore);
 
-  // Detect goal changes and flash
   useEffect(() => {
     if (match.homeScore !== prevHomeScore.current && match.homeScore !== null && prevHomeScore.current !== null) {
       if (match.homeScore > prevHomeScore.current) {
@@ -62,17 +60,17 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
                         `${minute}'`;
 
   return (
-    <div className={`bg-white rounded-xl border-2 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden relative ${
-      isMatchLive ? 'border-red-500/40' : 'border-blue-500/40'
+    <div className={`bg-white dark:bg-[#1A1A1A] rounded-xl border-2 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden relative ${
+      isMatchLive ? 'border-nd-orange/40' : 'border-gray-300 dark:border-white/10'
     }`}>
-      {/* Goal flash overlay */}
+      {/* Goal flash overlay — orange glow */}
       {goalFlash && (
-        <div className="absolute inset-0 bg-gradient-to-b from-yellow-300/30 to-transparent z-10 pointer-events-none animate-fade-in" />
+        <div className="absolute inset-0 bg-gradient-to-b from-nd-orange/20 to-transparent z-10 pointer-events-none animate-fade-in" />
       )}
 
-      {/* Live header */}
+      {/* Live header — orange instead of red */}
       <div className={`px-4 py-2 flex items-center justify-between ${
-        isMatchLive ? 'bg-red-600 text-white' : 'bg-nd-green text-white'
+        isMatchLive ? 'bg-nd-orange text-white' : 'bg-[#1A1A1A] text-white'
       }`}>
         <div className="flex items-center gap-2">
           {isMatchLive ? (
@@ -101,7 +99,7 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
 
       {/* Goal notification banner */}
       {latestGoal && (
-        <div className="bg-nd-orange text-nd-black px-4 py-2 text-center font-bold text-sm animate-fade-in">
+        <div className="bg-nd-orange text-white px-4 py-2 text-center font-bold text-sm animate-fade-in">
           {latestGoal}
         </div>
       )}
@@ -190,18 +188,18 @@ export default function LiveMatch({ match: initialMatch }: LiveMatchProps) {
           </div>
         )}
 
-        {/* Live stats mini-bar */}
+        {/* Live stats mini-bar — orange fills */}
         {isMatchLive && match.possession && (
           <div className="mt-3 pt-2 border-t border-border">
             <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-              <span className="font-semibold text-nd-green">{match.possession.home}%</span>
-              <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <span className="font-semibold text-nd-orange">{match.possession.home}%</span>
+              <div className="flex-1 h-1.5 bg-gray-200 dark:bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-nd-green rounded-full transition-all duration-1000"
+                  className="h-full bg-nd-orange rounded-full transition-all duration-1000"
                   style={{ width: `${match.possession.home}%` }}
                 />
               </div>
-              <span className="font-semibold text-nd-orange">{match.possession.away}%</span>
+              <span className="font-semibold text-nd-orange-dark">{match.possession.away}%</span>
             </div>
             <div className="flex justify-between text-[9px] text-muted-foreground mt-1">
               <span>Tiros: {match.shots?.home ?? 0}</span>
